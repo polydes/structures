@@ -197,7 +197,7 @@ public class Structures
 				for(Entry<String, String> entry : s.getUnknownData().entrySet())
 					toWrite.add(entry.getKey() + "=" + entry.getValue());
 			
-			FileUtils.writeLines(new File(file, item.getName()), toWrite);
+			FileUtils.writeLines(new File(file, item.getName()), toWrite, "\n");
 		}
 	}
 

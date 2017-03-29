@@ -104,7 +104,7 @@ public class Text
 	{
 		try
 		{
-			FileUtils.writeLines(file, lines);
+			FileUtils.writeLines(file, lines, "\n");
 		}
 		catch (IOException e)
 		{
