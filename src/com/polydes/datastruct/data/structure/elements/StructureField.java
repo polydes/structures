@@ -31,6 +31,8 @@ import com.polydes.common.ext.RORealizer;
 import com.polydes.common.io.XML;
 import com.polydes.common.nodes.DefaultBranch;
 import com.polydes.common.nodes.DefaultLeaf;
+import com.polydes.common.res.ResourceLoader;
+import com.polydes.common.res.Resources;
 import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.common.util.ColorUtil;
 import com.polydes.datastruct.DataStructuresExtension;
@@ -43,7 +45,6 @@ import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.data.types.HaxeTypeConverter;
 import com.polydes.datastruct.data.types.HaxeTypes;
 import com.polydes.datastruct.data.types.StructureType;
-import com.polydes.datastruct.res.Resources;
 import com.polydes.datastruct.ui.objeditors.StructureFieldPanel;
 import com.polydes.datastruct.ui.page.StructureDefinitionsWindow;
 import com.polydes.datastruct.ui.table.Card;
@@ -54,6 +55,8 @@ import com.polydes.datastruct.ui.table.RowGroup;
 
 public class StructureField extends SDE implements RORealizer<HaxeDataType>
 {
+	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	
 	private StructureDefinition owner;
 	
 	private String varname;
@@ -259,7 +262,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			sdeClass = StructureField.class;
 			tag = "field";
 			isBranchNode = false;
-			icon = Resources.thumb("field.png", 16);
+			icon = res.loadThumbnail("field.png", 16);
 			childTypes = null;
 		}
 		

@@ -22,9 +22,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.polydes.common.comp.UpdatingCombo;
 import com.polydes.common.comp.utils.Layout;
+import com.polydes.common.res.ResourceLoader;
+import com.polydes.common.res.Resources;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.StructureDefinition;
-import com.polydes.datastruct.res.Resources;
 import com.polydes.datastruct.ui.UIConsts;
 import com.polydes.datastruct.ui.utils.ImageImporter;
 
@@ -40,6 +41,8 @@ import stencyl.sw.util.dg.StencylDialog;
 
 public class CreateStructureDefinitionDialog extends StencylDialog
 {
+	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	
 	FieldVerifier nameVerifier;
 	FieldVerifier classVerifier;
 	FieldVerifier packageVerifier;
@@ -152,14 +155,7 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 		iconLabel.setPreferredSize(new Dimension(64, 64));
 		iconLabel.setMaximumSize(new Dimension(64, 64));
 		
-		try
-		{
-			iconImg = ImageIO.read(Resources.getUrlStream("newStructureDef.png"));
-		}
-		catch (IOException e1)
-		{
-			e1.printStackTrace();
-		}
+		iconImg = res.loadImage("newStructureDef.png");
 		
 		GroupButton button = new GroupButton(4);
 		button.setText("Choose an Image");

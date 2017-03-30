@@ -5,12 +5,15 @@ import javax.swing.JPanel;
 
 import com.polydes.common.nodes.DefaultLeaf;
 import com.polydes.common.nodes.DefaultViewableBranch;
+import com.polydes.common.res.ResourceLoader;
+import com.polydes.common.res.Resources;
 import com.polydes.common.ui.object.EditableObject;
 import com.polydes.common.util.Lang;
-import com.polydes.datastruct.res.Resources;
 
 public class Folder extends DefaultViewableBranch
 {
+	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	
 	public static FolderPolicy DEFAULT_POLICY;
 	static
 	{
@@ -23,7 +26,7 @@ public class Folder extends DefaultViewableBranch
 	}
 	protected FolderPolicy policy;
 	
-	public static final ImageIcon folderIcon = Resources.loadIcon("page/folder-small.png");
+	public static final ImageIcon folderIcon = res.loadIcon("page/folder-small.png");
 	
 	public Folder(String name)
 	{

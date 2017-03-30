@@ -22,7 +22,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import com.polydes.datastruct.res.Resources;
+import com.polydes.common.res.ResourceLoader;
+import com.polydes.common.res.Resources;
 
 import stencyl.sw.lnf.Theme;
 import stencyl.sw.loc.LanguagePack;
@@ -30,6 +31,8 @@ import stencyl.sw.util.comp.GroupButton;
 
 public abstract class LightweightWindow extends SnappingDialog
 {
+	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	
 	private static final LanguagePack lang = LanguagePack.get();
 	
 	private WindowDragger dragger;
@@ -87,8 +90,8 @@ public abstract class LightweightWindow extends SnappingDialog
 	{
 		final JButton closeButton = new JButton();
 		
-		final Icon normalIcon = Resources.loadIcon("window_close.png");
-		final Icon hoverIcon = Resources.loadIcon("window_close_hovered.png");
+		final Icon normalIcon = res.loadIcon("window_close.png");
+		final Icon hoverIcon = res.loadIcon("window_close_hovered.png");
 		
 		closeButton.setBorderPainted(false);
 		closeButton.setContentAreaFilled(false);

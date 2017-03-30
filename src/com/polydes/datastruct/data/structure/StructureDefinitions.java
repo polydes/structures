@@ -17,6 +17,8 @@ import com.polydes.common.ext.ObjectRegistry;
 import com.polydes.common.io.XML;
 import com.polydes.common.nodes.DefaultBranch;
 import com.polydes.common.nodes.DefaultLeaf;
+import com.polydes.common.res.ResourceLoader;
+import com.polydes.common.res.Resources;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.folder.Folder;
 import com.polydes.datastruct.data.folder.FolderPolicy;
@@ -25,13 +27,14 @@ import com.polydes.datastruct.data.types.haxe.StructureHaxeType;
 import com.polydes.datastruct.io.Text;
 import com.polydes.datastruct.io.read.StructureDefinitionReader;
 import com.polydes.datastruct.io.write.StructureDefinitionWriter;
-import com.polydes.datastruct.res.Resources;
 
 import stencyl.sw.util.FileHelper;
 import stencyl.sw.util.Locations;
 
 public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 {
+	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	
 	public Folder root;
 	private HashMap<Folder, File> baseFolders;
 	
@@ -128,11 +131,7 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 	public StructureDefinition generatePlaceholder(String key)
 	{
 		StructureDefinition def = StructureDefinition.newUnknown(key);
-		try
-		{
-			def.setImage(ImageIO.read(Resources.getUrl("question-32.png")));
-		}
-		catch (IOException e){}
+		def.setImage(res.loadImage("question-32.png"));
 		return def;
 	}
 	

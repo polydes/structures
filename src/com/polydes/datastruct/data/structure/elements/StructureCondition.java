@@ -11,6 +11,8 @@ import org.w3c.dom.Element;
 import com.polydes.common.io.XML;
 import com.polydes.common.nodes.DefaultBranch;
 import com.polydes.common.nodes.DefaultLeaf;
+import com.polydes.common.res.ResourceLoader;
+import com.polydes.common.res.Resources;
 import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.common.util.Lang;
 import com.polydes.datastruct.data.structure.SDE;
@@ -21,7 +23,6 @@ import com.polydes.datastruct.grammar.ExpressionParser;
 import com.polydes.datastruct.grammar.RuntimeLanguage;
 import com.polydes.datastruct.grammar.SyntaxException;
 import com.polydes.datastruct.grammar.SyntaxNode;
-import com.polydes.datastruct.res.Resources;
 import com.polydes.datastruct.ui.objeditors.StructureConditionPanel;
 import com.polydes.datastruct.ui.table.Card;
 import com.polydes.datastruct.ui.table.GuiObject;
@@ -30,6 +31,8 @@ import com.polydes.datastruct.ui.table.RowGroup;
 
 public class StructureCondition extends SDE
 {
+	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	
 	public StructureDefinition def;
 	public SyntaxNode root;
 	
@@ -242,7 +245,7 @@ public class StructureCondition extends SDE
 			sdeClass = StructureCondition.class;
 			tag = "if";
 			isBranchNode = true;
-			icon = Resources.thumb("condition.png", 16);
+			icon = res.loadThumbnail("condition.png", 16);
 			childTypes = Lang.arraylist(
 				StructureCondition.class,
 				StructureField.class,

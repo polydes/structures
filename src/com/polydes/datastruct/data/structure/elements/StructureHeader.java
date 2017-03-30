@@ -7,11 +7,12 @@ import org.w3c.dom.Element;
 import com.polydes.common.io.XML;
 import com.polydes.common.nodes.DefaultBranch;
 import com.polydes.common.nodes.DefaultLeaf;
+import com.polydes.common.res.ResourceLoader;
+import com.polydes.common.res.Resources;
 import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.datastruct.data.structure.SDE;
 import com.polydes.datastruct.data.structure.SDEType;
 import com.polydes.datastruct.data.structure.StructureDefinition;
-import com.polydes.datastruct.res.Resources;
 import com.polydes.datastruct.ui.objeditors.StructureHeaderPanel;
 import com.polydes.datastruct.ui.table.Card;
 import com.polydes.datastruct.ui.table.GuiObject;
@@ -22,6 +23,8 @@ import stencyl.sw.util.comp.RoundedLabel;
 
 public class StructureHeader extends SDE
 {
+	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	
 	private String label;
 	
 	public StructureHeader(String label)
@@ -83,7 +86,7 @@ public class StructureHeader extends SDE
 			sdeClass = StructureHeader.class;
 			tag = "header";
 			isBranchNode = false;
-			icon = Resources.thumb("header.png", 16);
+			icon = res.loadThumbnail("header.png", 16);
 			childTypes = null;
 		}
 		
