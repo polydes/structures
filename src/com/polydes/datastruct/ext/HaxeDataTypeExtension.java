@@ -22,7 +22,8 @@ public class HaxeDataTypeExtension
 		ArrayList<HaxeDataType> types = new ArrayList<HaxeDataType>();
 		
 		for(File file : FileHelper.listFiles(f))
-			types.add(readType(file.getAbsolutePath()));
+			if(file.getName().endsWith(".xml"))
+				types.add(readType(file.getAbsolutePath()));
 		
 		return types;
 	}
