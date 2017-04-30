@@ -14,19 +14,20 @@ import com.polydes.datastruct.DataStructuresExtension;
 
 import stencyl.sw.util.FileHelper;
 import stencyl.sw.util.VerificationHelper;
+import stencyl.sw.util.Worker;
 
-public class V4_FullTypeNamesUpdate implements Runnable
+public class V4_FullTypeNamesUpdate implements Worker
 {
 	private static final Logger log = Logger.getLogger(V4_FullTypeNamesUpdate.class);
 	
 	@Override
-	public void run()
+	public void doWork()
 	{
 		DataStructuresExtension dse = DataStructuresExtension.get();
 		File data = new File(dse.getExtrasFolder(), "data");
 		File defs = new File(dse.getDataFolder(), "defs");
 		
-		TypenameUpdater tu = new TypenameUpdater();
+		TypenameUpdater tu = dse.getTypenameUpdater();
 		tu.addTypes(Lang.hashmap(
 			"Boolean", "Bool",
 			"Color", "com.polydes.datastruct.Color",
@@ -85,7 +86,7 @@ public class V4_FullTypeNamesUpdate implements Runnable
 				log.error(e.getMessage(), e);
 			}
 		}
-		for(File dataFile : FileHelper.listFiles(data, ""))
+		for(File dataFile : FileHelper.listFiles(data))
 		{
 			if(dataFile.getName().endsWith(".txt"))
 				continue;

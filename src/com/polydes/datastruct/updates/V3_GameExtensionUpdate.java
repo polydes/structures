@@ -7,11 +7,12 @@ import com.polydes.datastruct.DataStructuresExtension;
 import stencyl.core.lib.Game;
 import stencyl.sw.util.FileHelper;
 import stencyl.sw.util.Locations;
+import stencyl.sw.util.Worker;
 
-public class V3_GameExtensionUpdate implements Runnable
+public class V3_GameExtensionUpdate implements Worker
 {
 	@Override
-	public void run()
+	public void doWork()
 	{
 		DataStructuresExtension dse = DataStructuresExtension.get();
 		

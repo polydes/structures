@@ -20,14 +20,17 @@ import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.data.types.HaxeTypes;
 import com.polydes.datastruct.io.HXGenerator;
 import com.polydes.datastruct.io.Text;
+import com.polydes.datastruct.updates.TypenameUpdater;
 import com.polydes.datastruct.updates.V3_GameExtensionUpdate;
 import com.polydes.datastruct.updates.V4_FullTypeNamesUpdate;
 
 import stencyl.core.lib.Game;
+import stencyl.sw.SW;
 import stencyl.sw.editors.snippet.designer.Definitions.DefinitionMap;
 import stencyl.sw.ext.GameExtension;
 import stencyl.sw.ext.OptionsPanel;
 import stencyl.sw.util.Locations;
+import stencyl.sw.util.WorkerPriorityQueue;
 
 public class DataStructuresExtension extends GameExtension
 {
@@ -41,6 +44,8 @@ public class DataStructuresExtension extends GameExtension
 	
 	public static boolean forceUpdateData = false;
 	private boolean initialized = false;
+	
+	private TypenameUpdater typenameUpdater = new TypenameUpdater();
 	
 	public static DataStructuresExtension get()
 	{
@@ -60,6 +65,11 @@ public class DataStructuresExtension extends GameExtension
 	public StructureDefinitions getStructureDefinitions()
 	{
 		return structureDefinitions;
+	}
+	
+	public TypenameUpdater getTypenameUpdater()
+	{
+		return typenameUpdater;
 	}
 	
 	/*
@@ -201,7 +211,7 @@ public class DataStructuresExtension extends GameExtension
 	public void onInstalledForGame()
 	{
 		if(detectOldVersion())
-			updateFromVersion(2);
+			updateFromVersion(2, SW.get().getExtensionManager().getExtensionFormatUpdates());
 		else
 		{
 			new File(getExtrasFolder(), "data").mkdirs();
@@ -221,12 +231,12 @@ public class DataStructuresExtension extends GameExtension
 	}
 	
 	@Override
-	public void updateFromVersion(int fromVersion)
+	public void updateFromVersion(int fromVersion, WorkerPriorityQueue updateQueue)
 	{
 		if(fromVersion < 3)
-			new V3_GameExtensionUpdate().run();
+			updateQueue.add(new V3_GameExtensionUpdate());
 		if(fromVersion < 4)
-			new V4_FullTypeNamesUpdate().run();
+			updateQueue.after(V3_GameExtensionUpdate.class).add(new V4_FullTypeNamesUpdate());
 		forceUpdateData = true;
 	}
 	
