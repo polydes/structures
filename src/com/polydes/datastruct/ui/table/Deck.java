@@ -39,10 +39,7 @@ public class Deck extends JPanel implements GuiObject
 	
 	public int getDepth()
 	{
-		if(card instanceof Table)
-			return card.rows.length == 1 ? 0 : 1;
-		else
-			return card.deck.getDepth() + 1;
+		return card.getDepth() + 1;
 	}
 	
 	public void setCard(Card card)
