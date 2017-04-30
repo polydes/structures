@@ -3,6 +3,7 @@ package com.polydes.datastruct.ui.objeditors;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -192,6 +193,12 @@ public class StructureDefinitionEditor extends JPanel
 					}
 				}
 				return actions;
+			}
+			
+			@Override
+			public boolean attemptRemove(List<DefaultLeaf> toRemove)
+			{
+				return true;
 			}
 			
 			@Override
