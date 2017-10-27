@@ -158,6 +158,15 @@ public class StructurePage extends TreePage<DefaultLeaf,DefaultBranch>
 		}
 	}
 	
+	public static void disposeInstance()
+	{
+		if(_instance != null)
+		{
+			_instance.dispose();
+			_instance = null;
+		}
+	}
+	
 	@Override
 	public void dispose()
 	{
