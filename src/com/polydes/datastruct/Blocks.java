@@ -110,7 +110,8 @@ public class Blocks
 			null,
 			spec,
 			BlockType.ACTION,
-			AttributeType.VOID
+			AttributeType.VOID,
+			null
 		);
 		
 		blockDef.guiTemplate = spec;
@@ -139,7 +140,8 @@ public class Blocks
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeType.OBJECT
+			AttributeType.OBJECT,
+			null
 		);
 		
 		blockDef.guiTemplate = spec;
@@ -168,7 +170,8 @@ public class Blocks
 			null,
 			spec,
 			BlockType.ACTION,
-			AttributeType.VOID
+			AttributeType.VOID,
+			null
 		);
 		
 		blockDef.guiTemplate = spec;
@@ -197,7 +200,8 @@ public class Blocks
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeType.OBJECT
+			AttributeType.OBJECT,
+			null
 		);
 		
 		blockDef.guiTemplate = spec;
@@ -220,7 +224,8 @@ public class Blocks
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeType.OBJECT
+			AttributeType.OBJECT,
+			null
 		);
 		
 		blockDef.guiTemplate = spec;
