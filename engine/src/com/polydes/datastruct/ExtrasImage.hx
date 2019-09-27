@@ -2,6 +2,7 @@ package com.polydes.datastruct;
 
 import com.stencyl.Engine;
 import openfl.Assets;
+import openfl.utils.AssetType;
 import openfl.display.BitmapData;
 import openfl.geom.Matrix;
 
@@ -21,10 +22,10 @@ abstract ExtrasImage(BitmapData) from BitmapData to BitmapData
 			return Assets.getBitmapData("assets/data/"+ s +".png");
 		else
 		{
-			var toReturn = Assets.getBitmapData("assets/data/"+ s + "@" + Engine.IMG_BASE + ".png");
-			if(toReturn == null)
-				toReturn = scaleBitmap(Assets.getBitmapData("assets/data/"+ s +".png"), Engine.SCALE);
-			return toReturn;
+			if(Assets.exists("assets/data/"+ s + "@" + Engine.IMG_BASE + ".png", AssetType.IMAGE))
+			return Assets.getBitmapData("assets/data/"+ s + "@" + Engine.IMG_BASE + ".png");
+			
+			return scaleBitmap(Assets.getBitmapData("assets/data/"+ s +".png"), Engine.SCALE);
 		}
 	}
 
