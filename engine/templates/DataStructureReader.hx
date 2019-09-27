@@ -5,6 +5,8 @@ package com.polydes.datastruct;
 
 [IMPORTS]
 
+import haxe.CallStack;
+
 class DataStructureReader
 {
 	public static function readData():Void
@@ -42,7 +44,7 @@ class DataStructureReader
 		{
 			if(fname == "")
 				continue;
-
+				
 			var map:Map<String, String> = fmaps.get(fname);
 			var data:Dynamic = DataStructures.idMap.get(Std.parseInt(map.get("struct_id")));
 			map.remove("struct_id");
@@ -56,8 +58,13 @@ class DataStructureReader
 				}
 				catch(e:Dynamic)
 				{
-					trace("Warning: Couldn't load data.");
-					trace("- " + fname + ":: " + key + ":" + data.getTypeInfo(key) + " -> " + map.get(key));
+					trace(
+						"Warning: Couldn't load data." + "\n" +
+						"- Data file: " + fname + "\n" +
+						"- Key: " + key + "\n" +
+						"- Type: " + data.getTypeInfo(key) + "\n" +
+						"- StringData: " + map.get(key) + "\n" +
+						"- Error: " + e #if debug + "\n" + CallStack.toString(CallStack.exceptionStack()) #end);
 				}
 			}
 
