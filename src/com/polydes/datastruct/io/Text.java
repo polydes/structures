@@ -16,9 +16,12 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 public class Text
 {
+	private static final Logger log = Logger.getLogger(Text.class);
+	
 	private static HashMap<File, FileOutputStream> outstreams = new HashMap<File, FileOutputStream>();
 	private static HashMap<File, OutputStreamWriter> writers = new HashMap<File, OutputStreamWriter>();
 	
@@ -30,7 +33,7 @@ public class Text
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return new ArrayList<String>();
 		}
 	}
@@ -43,7 +46,7 @@ public class Text
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return new ArrayList<String>();
 		}
 	}
@@ -56,7 +59,7 @@ public class Text
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return "";
 		}
 	}
@@ -69,7 +72,7 @@ public class Text
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return "";
 		}
 	}
@@ -108,7 +111,7 @@ public class Text
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 	
@@ -121,7 +124,7 @@ public class Text
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		outstreams.put(file, os);
 		writers.put(file, new OutputStreamWriter(os, Charset.forName("UTF-8")));
@@ -135,7 +138,7 @@ public class Text
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 	
@@ -147,7 +150,7 @@ public class Text
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		writers.remove(file);
 		outstreams.remove(file);

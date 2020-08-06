@@ -51,14 +51,14 @@ public class StructureCondition extends SDE
 	
 	public boolean check(Structure s, Object listItem)
 	{
-		System.out.println("check");
+//		System.out.println("check");
 		
 		if(root == null)
 			return false;
 		
 		try
 		{
-			System.out.println("eval begin");
+//			System.out.println("eval begin");
 			structureRef = s;
 			idMap.put("this", s);
 			idMap.put("item", listItem);
@@ -66,7 +66,7 @@ public class StructureCondition extends SDE
 		}
 		catch (SyntaxException e)
 		{
-			System.out.println("Bad syntax, returning false");
+//			System.out.println("Bad syntax, returning false");
 //			System.out.println("===");
 //			e.printStackTrace();
 //			System.out.println("===");

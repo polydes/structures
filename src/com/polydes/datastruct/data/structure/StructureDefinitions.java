@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -33,6 +34,7 @@ import stencyl.sw.util.Locations;
 
 public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 {
+	private static final Logger log = Logger.getLogger(StructureDefinitions.class);
 	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
 	
 	public Folder root;
@@ -119,7 +121,7 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 		}
 		catch (IOException e)
 		{
-			System.out.println("Couldn't load icon for Structure Definition " + def.getName());
+			log.warn("Couldn't load icon for Structure Definition " + def.getName());
 		}
 		
 		registerItem(def);

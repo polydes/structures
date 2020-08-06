@@ -13,8 +13,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 public class Reflect
 {
+	private static final Logger log = Logger.getLogger(Reflect.class);
+	
 	public static HashMap<String, Field> getDeclaredFieldMap(Object o)
 	{
 		HashMap<String, Field> toReturn = new HashMap<String, Field>();
@@ -34,34 +38,18 @@ public class Reflect
 		{
 			ctor = cls.getDeclaredConstructor();
 		}
-		catch (SecurityException e1)
+		catch (NoSuchMethodException | SecurityException e)
 		{
-			e1.printStackTrace();
-		}
-		catch (NoSuchMethodException e1)
-		{
-			e1.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		try
 		{
 			return ctor.newInstance();
 		}
-		catch (IllegalArgumentException e)
+		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 		{
-			e.printStackTrace();
-		}
-		catch (InstantiationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e)
-		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		return null;
@@ -80,13 +68,9 @@ public class Reflect
 			else
 				f.set(o, value);
 		}
-		catch (IllegalArgumentException e)
+		catch (IllegalArgumentException | IllegalAccessException e)
 		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 	
@@ -104,13 +88,9 @@ public class Reflect
 			else
 				return f.get(o);
 		}
-		catch (IllegalArgumentException e)
+		catch (IllegalArgumentException | IllegalAccessException e)
 		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		
 		return null;
@@ -139,13 +119,9 @@ public class Reflect
 
 			return fields;
 		}
-		catch (SecurityException e)
+		catch (SecurityException | NoSuchFieldException e)
 		{
-			e.printStackTrace();
-		}
-		catch (NoSuchFieldException e)
-		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 
 		return null;
@@ -162,7 +138,7 @@ public class Reflect
 		}
 		catch (IntrospectionException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		PropertyDescriptor[] props = info.getPropertyDescriptors();
 		for (PropertyDescriptor pd : props)
@@ -185,13 +161,9 @@ public class Reflect
 			{
 				return ((Class<?>) o).getMethod(name, args);
 			}
-			catch (SecurityException e)
+			catch (SecurityException | NoSuchMethodException e)
 			{
-				e.printStackTrace();
-			}
-			catch (NoSuchMethodException e)
-			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 
@@ -202,7 +174,7 @@ public class Reflect
 		}
 		catch (IntrospectionException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		MethodDescriptor[] methods = info.getMethodDescriptors();
 		for (MethodDescriptor md : methods)
@@ -213,25 +185,17 @@ public class Reflect
 		return null;
 	}
 
-	public static Object invoke(Method toInvoke, Object invokeOn,
-			Object... args)
+	public static Object invoke(Method toInvoke, Object invokeOn, Object... args)
 	{
 		try
 		{
 			return toInvoke.invoke(invokeOn, args);
 		}
-		catch (IllegalArgumentException e)
+		catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
+		
 		return null;
 	}
 }

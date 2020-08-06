@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.polydes.common.comp.UpdatingCombo;
 import com.polydes.common.comp.utils.Layout;
@@ -41,6 +42,8 @@ import stencyl.sw.util.dg.StencylDialog;
 
 public class CreateStructureDefinitionDialog extends StencylDialog
 {
+	private static final Logger log = Logger.getLogger(CreateStructureDefinitionDialog.class);
+	
 	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
 	
 	FieldVerifier nameVerifier;
@@ -171,7 +174,7 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 				}
 				catch (IOException e1)
 				{
-					e1.printStackTrace();
+					log.error(e1.getMessage(), e1);
 				}
 			}
 		}));

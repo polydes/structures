@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.polydes.common.ui.darktree.DarkTree;
@@ -83,6 +85,8 @@ public class DataStructuresExtension extends GameExtension
 	{
 		super.onStartup();
 		
+		LogManager.getLogger("com.polydes.datastruct").setLevel(Level.DEBUG);
+		
 		instance = this;
 		
 		isInMenu = true;
@@ -149,7 +153,7 @@ public class DataStructuresExtension extends GameExtension
 			}
 			catch (IOException e1)
 			{
-				e1.printStackTrace();
+				log.error(e1.getMessage(), e1);
 			}
 			
 			if(forceUpdateData)
@@ -165,14 +169,14 @@ public class DataStructuresExtension extends GameExtension
 				temp.mkdirs();
 				boolean failedToSave = false;
 				
-				try{FileUtils.deleteDirectory(temp);}catch(IOException e){e.printStackTrace();}
+				try{FileUtils.deleteDirectory(temp);}catch(IOException e){log.error(e.getMessage(), e);}
 					temp.mkdirs();
-				try{Structures.get().saveChanges(temp);}catch(IOException e){failedToSave = true; e.printStackTrace();}
+				try{Structures.get().saveChanges(temp);}catch(IOException e){failedToSave = true; log.error(e.getMessage(), e);}
 				if(!failedToSave)
 				{
-					try{FileUtils.deleteDirectory(saveTo);}catch(IOException e){e.printStackTrace();}
+					try{FileUtils.deleteDirectory(saveTo);}catch(IOException e){log.error(e.getMessage(), e);}
 					saveTo.mkdirs();
-					try{FileUtils.copyDirectory(temp, saveTo);}catch(IOException e){e.printStackTrace();}
+					try{FileUtils.copyDirectory(temp, saveTo);}catch(IOException e){log.error(e.getMessage(), e);}
 				}
 			}
 		}

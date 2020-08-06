@@ -4,11 +4,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.log4j.Logger;
 
 import com.polydes.common.data.types.DataType;
 
 public class StringData
 {
+	private static final Logger log = Logger.getLogger(StringData.class);
+	
 	public static <T> T getStringAs(String s, DataType<T> type, T defaultValue)
 	{
 		if(s == null)
@@ -157,17 +160,9 @@ public class StringData
 				T val = (T) MethodUtils.invokeStaticMethod(StringData.class, "r" + gen.getSimpleName(), s2);
 				toReturn.add(val);
 			}
-			catch (NoSuchMethodException e)
+			catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
 			{
-				e.printStackTrace();
-			}
-			catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
-			}
-			catch (InvocationTargetException e)
-			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 		
@@ -183,17 +178,9 @@ public class StringData
 			{
 				toReturn += MethodUtils.invokeStaticMethod(StringData.class, "wr" + gen.getSimpleName(), a.get(i)) + (i < a.size() - 1 ? "," : "");
 			}
-			catch (NoSuchMethodException e)
+			catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
 			{
-				e.printStackTrace();
-			}
-			catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
-			}
-			catch (InvocationTargetException e)
-			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 				

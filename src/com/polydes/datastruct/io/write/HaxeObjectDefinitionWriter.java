@@ -3,6 +3,7 @@ package com.polydes.datastruct.io.write;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -14,6 +15,8 @@ import stencyl.sw.util.FileHelper;
 
 public class HaxeObjectDefinitionWriter
 {
+	private static final Logger log = Logger.getLogger(HaxeObjectDefinitionWriter.class);
+	
 	public static void write(HaxeObjectDefinition def, String path)
 	{
 		Document doc = FileHelper.newDocument();
@@ -51,7 +54,7 @@ public class HaxeObjectDefinitionWriter
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 }

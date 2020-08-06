@@ -74,8 +74,16 @@ public class TypenameUpdater
 	{
 		HashMap<String, String> props = Text.readKeyValues(dataFile);
 		String type = props.get("struct_type");
-		props.put("struct_type", Lang.or(typeBackMap.get(type), type));
-		System.out.println(props.get("struct_type"));
-		Text.writeKeyValues(dataFile, props);
+		String newtype = typeBackMap.get(type);
+		if(newtype != null)
+		{
+			props.put("struct_type", newtype);
+			log.debug(dataFile.getName() + " converted: " + type + " -> " + newtype);
+			Text.writeKeyValues(dataFile, props);
+		}
+		else
+		{
+			log.debug(dataFile.getName() + " is " + type);
+		}
 	}
 }

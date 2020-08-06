@@ -6,9 +6,12 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.log4j.Logger;
 
 public class DelayedInitialize
 {
+	private static final Logger log = Logger.getLogger(DelayedInitialize.class);
+	
 	private static HashMap<String, ArrayList<DelayedSet>> initList = new HashMap<String, ArrayList<DelayedSet>>();
 	
 	public static void addMethod(Object o, String name, Object[] args, String prop)
@@ -79,7 +82,7 @@ public class DelayedInitialize
 			}
 			catch (IllegalAccessException e)
 			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -101,17 +104,9 @@ public class DelayedInitialize
 			{
 				MethodUtils.invokeMethod(o, field, args);
 			}
-			catch (NoSuchMethodException e)
+			catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
 			{
-				e.printStackTrace();
-			}
-			catch (IllegalAccessException e)
-			{
-				e.printStackTrace();
-			}
-			catch (InvocationTargetException e)
-			{
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 	}

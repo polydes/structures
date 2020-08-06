@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.polydes.common.data.types.DataType;
 import com.polydes.common.data.types.EditorProperties;
@@ -19,6 +20,8 @@ import stencyl.sw.editors.snippet.designer.Definition;
 
 public abstract class HaxeDataType implements RegistryObject
 {
+	private static final Logger log = Logger.getLogger(HaxeDataType.class);
+	
 	public String stencylType;
 	private String haxeType; //registry key
 	
@@ -81,7 +84,7 @@ public abstract class HaxeDataType implements RegistryObject
 	 */
 	public /*abstract*/ void applyToFieldPanel(StructureFieldPanel panel)
 	{
-		System.out.println("APPLYING OTHER " + haxeType);
+		log.debug("APPLYING OTHER " + haxeType);
 	};
 	
 	public ArrayList<Definition> getBlocks()
