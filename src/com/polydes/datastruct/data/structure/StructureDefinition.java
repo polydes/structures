@@ -168,7 +168,7 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	
 	public void removeField(StructureField f)
 	{
-		fields.remove(f);
+		fields.remove(f.getVarname());
 	}
 
 	//=== For runtime updating
@@ -210,7 +210,7 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 		removedFields.add(f);
 		
 		s.clearProperty(f);
-		fields.remove(f);
+		fields.remove(f.getVarname());
 	}
 	
 	public void setFieldTypeForPreview(StructureField f, HaxeDataType type)
