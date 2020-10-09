@@ -126,7 +126,6 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 				((Card) guiMap.get(n)).layoutContainer();
 		
 		refreshVisibleComponents();
-		model.setDirty(false);
 		revalidate();
 		repaint();
 	}

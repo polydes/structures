@@ -494,7 +494,6 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 						model.setPropertyEnabled(f, enabler.isSelected());
 						if(!enabler.isSelected())
 							model.clearProperty(f);
-						model.setDirty(true);
 					}
 				}
 			});

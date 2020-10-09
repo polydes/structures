@@ -29,11 +29,4 @@ public class StructureTable extends StructureTab
 	public void revertChanges()
 	{
 	}
-	
-	@Override
-	public void setDirty(boolean value)
-	{
-		super.setDirty(value);
-		def.dref.setDirty(value);
-	}
 }

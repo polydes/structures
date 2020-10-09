@@ -60,6 +60,12 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 		
 		guiRoot = new Folder("root", new StructureTable(this));
 		guiRoot.setPolicy(STRUCTURE_DEFINITION_POLICY);
+		guiRoot.addListener(DefaultLeaf.DIRTY, event -> {
+			dref.setDirty(guiRoot.isDirty());
+		});
+		dref.addListener(DefaultLeaf.DIRTY, event -> {
+			guiRoot.setDirty(dref.isDirty());
+		});
 	}
 	
 	public void dispose()
@@ -169,6 +175,16 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	public void removeField(StructureField f)
 	{
 		fields.remove(f);
+	}
+	
+	public void setDirty(boolean value)
+	{
+		guiRoot.setDirty(value);
+	}
+	
+	public boolean isDirty()
+	{
+		return guiRoot.isDirty();
 	}
 
 	//=== For runtime updating
@@ -367,13 +383,6 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 		if(editor != null)
 			editor.dispose();
 		editor = null;
-	}
-	
-	@Override
-	public void setDirty(boolean value)
-	{
-		guiRoot.setDirty(value);
-		super.setDirty(value);
 	}
 	
 	static class StructureDefinitionEditingPolicy extends FolderPolicy

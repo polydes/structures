@@ -175,6 +175,7 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 	
 	public class DisposableSheetWrapper implements PropertiesSheetWrapper
 	{
+		private boolean editorsInitialized = false;
 		private HashMap<String, Integer> rowIndex = new HashMap<>();
 		
 		public void decrementGreaterThan(int pivot, int amount)
@@ -228,7 +229,7 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 		public void addField(FieldInfo newField, DataEditor<?> editor)
 		{
 			JComponent[] comps = buildRow(newField, editor);
-			editor.addListener(() -> {if(previewKey != null) previewKey.setDirty(true);});
+			editor.addListener(() -> {if(editorsInitialized && previewKey != null) previewKey.setDirty(true);});
 			
 			int row = addGenericRow(newField.getLabel(), comps);
 			rowIndex.put(newField.getVarname(), row);
@@ -238,7 +239,7 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 		public void changeField(String varname, FieldInfo field, DataEditor<?> editor)
 		{
 			JComponent[] comps = buildRow(field, editor);
-			editor.addListener(() -> {if(previewKey != null) previewKey.setDirty(true);});
+			editor.addListener(() -> {if(editorsInitialized && previewKey != null) previewKey.setDirty(true);});
 			
 			int row = rowIndex.get(varname);
 			removeGroup(row);
@@ -259,7 +260,9 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 		@Override
 		public void finish()
 		{
-			
+			//TODO: finish() is only called after adding fields, not after changing fields.
+			//may need to fix some dirtiness logic here.
+			editorsInitialized = true;
 		}
 		
 		@Override

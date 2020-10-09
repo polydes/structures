@@ -22,7 +22,6 @@ public class StructureFieldPanel extends StructureObjectPanel
 		super(style, field);
 		
 		this.field = field;
-		oldDirty = field.isDirty();
 
 		String nameHint = 
 			"Variable Name Format:<br/>" + 
@@ -144,6 +143,5 @@ public class StructureFieldPanel extends StructureObjectPanel
 	public void revert()
 	{
 		super.revertChanges();
-		field.setDirty(oldDirty);
 	}
 }

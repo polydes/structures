@@ -22,6 +22,7 @@ public class StructureDefinitionReader
 		if(root.hasAttribute("iconSource"))
 			model.iconSource = root.getAttribute("iconSource");
 		readFields(root, model, model.guiRoot);
+		model.setDirty(false);
 	}
 	
 	private static void readFields(Element parent, StructureDefinition model, DefaultBranch gui)
@@ -34,6 +35,10 @@ public class StructureDefinitionReader
 				if(ns == null)
 					ns = SDETypes.BASE_OWNER;
 				DataStructuresExtension.get().getSdeTypes().requestValue(ns, e.getLocalName(), type -> {
+					
+					//TODO: how does this affect dirtiness?
+					//We're simply loading data here, so nothing should
+					//be dirty here.
 					
 					SDE newItem = type.read(model, e);
 					

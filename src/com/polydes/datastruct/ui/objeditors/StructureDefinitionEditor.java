@@ -17,7 +17,6 @@ import com.polydes.common.nodes.DefaultEditableLeaf;
 import com.polydes.common.nodes.DefaultLeaf;
 import com.polydes.common.nodes.DefaultNodeCreator;
 import com.polydes.common.nodes.HierarchyModel;
-import com.polydes.common.nodes.Leaf;
 import com.polydes.common.nodes.NodeSelection;
 import com.polydes.common.nodes.NodeUtils;
 import com.polydes.common.ui.darktree.DarkTree;
@@ -131,11 +130,6 @@ public class StructureDefinitionEditor extends JPanel
 		this.def = def;
 		
 		model = new HierarchyModel<DefaultLeaf,DefaultBranch>(def.guiRoot, DefaultLeaf.class, DefaultBranch.class);
-		model.getRootBranch().addListener(Leaf.STATE, evt -> {
-			if(((Leaf<?,?>) evt.getSource()).isDirty())
-				def.setDirty(true);
-		});
-		
 		model.setUniqueLeafNames(false);
 		
 		tree = new DarkTree<DefaultLeaf,DefaultBranch>(model);
