@@ -1,5 +1,7 @@
 package com.polydes.datastruct.data.types.haxe;
 
+import static com.polydes.datastruct.data.types.ExtrasResourceType.RESOURCE_TYPE;
+
 import javax.swing.ImageIcon;
 
 import com.polydes.common.data.types.EditorProperties;
@@ -21,7 +23,7 @@ public class ExtrasImageHaxeType extends HaxeDataType
 	public EditorProperties loadExtras(ExtrasMap extras)
 	{
 		EditorProperties props = new EditorProperties();
-		props.put(ExtrasResourceType.RESOURCE_TYPE, ExtrasResourceType.ResourceType.IMAGE);
+		props.put(RESOURCE_TYPE, ExtrasResourceType.ResourceType.IMAGE);
 		return props;
 	}
 	

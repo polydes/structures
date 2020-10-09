@@ -15,6 +15,7 @@ import com.polydes.common.data.types.DataEditor;
 import com.polydes.common.data.types.DataEditorBuilder;
 import com.polydes.common.data.types.DataType;
 import com.polydes.common.data.types.EditorProperties;
+import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.nodes.Leaf;
 import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.common.util.PredicateUtil;
@@ -35,9 +36,9 @@ public class StructureType extends DataType<Structure>
 		this.def = def;
 	}
 	
-	public static final String SOURCE_FILTER = "sourceFilter";
-	public static final String ALLOW_SUBTYPES = "allowSubtypes";
-	public static final String RENDER_PREVIEW = "renderPreview";
+	public static final PropertyKey<StructureCondition> SOURCE_FILTER  = new PropertyKey<>("sourceFilter");
+	public static final PropertyKey<Boolean>            ALLOW_SUBTYPES = new PropertyKey<>("allowSubtypes");
+	public static final PropertyKey<Boolean>            RENDER_PREVIEW = new PropertyKey<>("renderPreview");
 	
 	@Override
 	public DataEditor<Structure> createEditor(EditorProperties props, PropertiesSheetStyle style)

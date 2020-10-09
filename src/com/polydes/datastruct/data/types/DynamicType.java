@@ -12,6 +12,7 @@ import com.polydes.common.data.types.DataEditor;
 import com.polydes.common.data.types.DataEditorBuilder;
 import com.polydes.common.data.types.DataType;
 import com.polydes.common.data.types.EditorProperties;
+import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.data.types.UpdateListener;
 import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.datastruct.DataStructuresExtension;
@@ -25,7 +26,7 @@ public class DynamicType extends DataType<Dynamic>
 	private static final EditorProperties noProps = new EditorProperties()
 	{
 		@Override
-		public Object put(String key, Object value)
+		public <T, U extends T> T put(PropertyKey<T> key, U value)
 		{
 			throw new RuntimeException();
 		};

@@ -1,10 +1,14 @@
 package com.polydes.datastruct.data.types.haxe;
 
+import static com.polydes.common.data.types.builtin.StencylResourceType.RENDER_PREVIEW;
+
 import javax.swing.ImageIcon;
 
 import com.polydes.common.data.types.EditorProperties;
+import com.polydes.common.data.types.Types;
 import com.polydes.common.data.types.builtin.StencylResourceType;
 import com.polydes.common.sw.Resources;
+import com.polydes.datastruct.data.types.ExtrasKey;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.ui.objeditors.StructureFieldPanel;
@@ -22,12 +26,15 @@ public class StencylResourceHaxeType<T extends Resource> extends HaxeDataType
 		this.srt = srt;
 	}
 	
+	//SERIALIZATION KEYS -- do not change these.
+	private static final ExtrasKey<Boolean> KEY_RENDER_PREVIEW = new ExtrasKey<>(RENDER_PREVIEW, "renderPreview");
+	
 	@Override
 	public EditorProperties loadExtras(ExtrasMap extras)
 	{
 		EditorProperties props = new EditorProperties();
-		if(extras.containsKey(StencylResourceType.RENDER_PREVIEW))
-			props.put(StencylResourceType.RENDER_PREVIEW, Boolean.TRUE);
+		if(extras.containsKey(KEY_RENDER_PREVIEW))
+			props.put(RENDER_PREVIEW, Boolean.TRUE);
 		return props;
 	}
 	
@@ -35,8 +42,8 @@ public class StencylResourceHaxeType<T extends Resource> extends HaxeDataType
 	public ExtrasMap saveExtras(EditorProperties props)
 	{
 		ExtrasMap extras = new ExtrasMap();
-		if(props.get(StencylResourceType.RENDER_PREVIEW) == Boolean.TRUE)
-			extras.put(StencylResourceType.RENDER_PREVIEW, "true");
+		if(props.get(RENDER_PREVIEW) == Boolean.TRUE)
+			extras.put(KEY_RENDER_PREVIEW, Types._Bool, Boolean.TRUE);
 		return extras;
 	}
 	
@@ -44,7 +51,7 @@ public class StencylResourceHaxeType<T extends Resource> extends HaxeDataType
 	public void applyToFieldPanel(StructureFieldPanel panel)
 	{
 		panel.getEditorSheet().build()
-			.field(StencylResourceType.RENDER_PREVIEW)._boolean().add()
+			.field(RENDER_PREVIEW.id)._boolean().add()
 			.finish();
 	}
 	

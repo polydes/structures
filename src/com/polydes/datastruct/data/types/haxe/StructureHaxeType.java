@@ -1,5 +1,9 @@
 package com.polydes.datastruct.data.types.haxe;
 
+import static com.polydes.datastruct.data.types.StructureType.ALLOW_SUBTYPES;
+import static com.polydes.datastruct.data.types.StructureType.RENDER_PREVIEW;
+import static com.polydes.datastruct.data.types.StructureType.SOURCE_FILTER;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +13,7 @@ import javax.swing.ImageIcon;
 import org.apache.commons.lang3.StringUtils;
 
 import com.polydes.common.data.types.EditorProperties;
+import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.data.types.Types;
 import com.polydes.common.nodes.DefaultBranch;
 import com.polydes.common.nodes.DefaultLeaf;
@@ -21,6 +26,7 @@ import com.polydes.datastruct.data.structure.Structure;
 import com.polydes.datastruct.data.structure.StructureDefinition;
 import com.polydes.datastruct.data.structure.elements.StructureCondition;
 import com.polydes.datastruct.data.structure.elements.StructureField;
+import com.polydes.datastruct.data.types.ExtrasKey;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.data.types.StructureType;
@@ -39,6 +45,8 @@ public class StructureHaxeType extends HaxeDataType
 		super(structureType, structureType.def.getFullClassname(), "OBJECT");
 		this.type = structureType;
 	}
+
+	private static final PropertyKey<String> FILTER_PROXY = new PropertyKey<>("_" + SOURCE_FILTER.id);
 	
 	@Override
 	public List<String> generateHaxeClass()
@@ -110,16 +118,21 @@ public class StructureHaxeType extends HaxeDataType
 		return Lang.arraylist("StringData.registerStructureReader(\"" + getHaxeType() + "\");");
 	}
 	
+	//SERIALIZATION KEYS -- do not change these.
+	private static final ExtrasKey<String>  KEY_SOURCE_FILTER  = new ExtrasKey<>(FILTER_PROXY, "sourceFilter");
+	private static final ExtrasKey<Boolean> KEY_ALLOW_SUBTYPES = new ExtrasKey<>(ALLOW_SUBTYPES, "allowSubtypes");
+	private static final ExtrasKey<Boolean> KEY_RENDER_PREVIEW = new ExtrasKey<>(RENDER_PREVIEW, "renderPreview");
+	
 	@Override
 	public EditorProperties loadExtras(ExtrasMap extras)
 	{
 		EditorProperties props = new EditorProperties();
-		String filterText = extras.get("sourceFilter", Types._String, null);
+		String filterText = extras.get(KEY_SOURCE_FILTER, Types._String, null);
 		if(filterText != null)
-			props.put(StructureType.SOURCE_FILTER, new StructureCondition(null, filterText));
-		if(extras.containsKey(StructureType.RENDER_PREVIEW))
-			props.put(StructureType.RENDER_PREVIEW, Boolean.TRUE);
-		props.put(StructureType.ALLOW_SUBTYPES, extras.get("allowSubclasses", Types._Bool, false));
+			props.put(SOURCE_FILTER, new StructureCondition(null, filterText));
+		if(extras.containsKey(KEY_RENDER_PREVIEW))
+			props.put(RENDER_PREVIEW, Boolean.TRUE);
+		props.put(ALLOW_SUBTYPES, extras.get(KEY_ALLOW_SUBTYPES, Types._Bool, false));
 		return props;
 	}
 
@@ -127,12 +140,12 @@ public class StructureHaxeType extends HaxeDataType
 	public ExtrasMap saveExtras(EditorProperties props)
 	{
 		ExtrasMap emap = new ExtrasMap();
-		if(props.containsKey(StructureType.SOURCE_FILTER))
-			emap.put("sourceFilter", props.<StructureCondition>get(StructureType.SOURCE_FILTER).getText());
-		if(props.get(StructureType.ALLOW_SUBTYPES) == Boolean.TRUE)
-			emap.put("allowSubclasses", "true");
-		if(props.get(StructureType.RENDER_PREVIEW) == Boolean.TRUE)
-			emap.put(StructureType.RENDER_PREVIEW, "true");
+		if(props.containsKey(SOURCE_FILTER))
+			emap.put(KEY_SOURCE_FILTER, Types._String, props.get(SOURCE_FILTER).getText());
+		if(props.get(ALLOW_SUBTYPES) == Boolean.TRUE)
+			emap.put(KEY_ALLOW_SUBTYPES, Types._Bool, Boolean.TRUE);
+		if(props.get(RENDER_PREVIEW) == Boolean.TRUE)
+			emap.put(KEY_RENDER_PREVIEW, Types._Bool, Boolean.TRUE);
 		return emap;
 	}
 	
@@ -144,17 +157,15 @@ public class StructureHaxeType extends HaxeDataType
 		
 		EditorProperties props = panel.getExtras();
 		
-		String filterProxy = "_" + StructureType.SOURCE_FILTER;
-		
 		PropertiesSheetSupport sheet = panel.getEditorSheet();
 		sheet.build()
-			.field(filterProxy).optional()._string().add()
-			.field(StructureType.RENDER_PREVIEW)._boolean().add()
+			.field(FILTER_PROXY.id).optional()._string().add()
+			.field(RENDER_PREVIEW.id)._boolean().add()
 			.finish();
 		
-		sheet.addPropertyChangeListener(StructureType.SOURCE_FILTER, event -> {
-			StructureCondition condition = props.get(StructureType.SOURCE_FILTER);
-			String conditionText = props.get(filterProxy);
+		sheet.addPropertyChangeListener(SOURCE_FILTER.id, event -> {
+			StructureCondition condition = props.get(SOURCE_FILTER);
+			String conditionText = props.get(FILTER_PROXY);
 			
 			if(condition == null && !conditionText.isEmpty())
 				condition = new StructureCondition(null, conditionText);
@@ -163,7 +174,7 @@ public class StructureHaxeType extends HaxeDataType
 			else if(condition != null && !conditionText.isEmpty())
 				condition.setText(conditionText);
 			
-			props.put(StructureType.SOURCE_FILTER, condition);
+			props.put(SOURCE_FILTER, condition);
 			preview.refreshLeaf(previewKey);
 		});
 	}

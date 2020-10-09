@@ -12,6 +12,7 @@ import com.polydes.common.data.types.DataEditor;
 import com.polydes.common.data.types.DataEditorBuilder;
 import com.polydes.common.data.types.DataType;
 import com.polydes.common.data.types.EditorProperties;
+import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.data.types.Types;
 import com.polydes.common.data.types.builtin.FileType;
 import com.polydes.common.data.types.builtin.FileType.DualFileFilter;
@@ -29,7 +30,7 @@ public class ExtrasResourceType extends DataType<ExtrasResource>
 		super(ExtrasResource.class);
 	}
 
-	public static final String RESOURCE_TYPE = "resourceType";
+	public static final PropertyKey<ResourceType> RESOURCE_TYPE = new PropertyKey<>("resourceType");
 	
 	@Override
 	public DataEditor<ExtrasResource> createEditor(EditorProperties props, PropertiesSheetStyle style)

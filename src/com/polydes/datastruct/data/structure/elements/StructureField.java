@@ -278,9 +278,9 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			boolean optional = take(map, "optional").equals("true");
 			String defaultValue = take(map, "default");
 			ExtrasMap emap = new ExtrasMap();
-			emap.putAll(map);
+			emap.backingPutAll(map);
 			if(e.hasChildNodes())
-				XML.children(e).forEach((child) -> emap.put(child.getTagName(), readExtrasFromElement(child)));
+				XML.children(e).forEach((child) -> emap.backingPut(child.getTagName(), readExtrasFromElement(child)));
 			
 			StructureField toAdd = new StructureField(model, name, type, label, hint, optional, defaultValue, emap);
 			model.addField(toAdd);
@@ -292,9 +292,9 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 		public static ExtrasMap readExtrasFromElement(Element e)
 		{
 			ExtrasMap emap = new ExtrasMap();
-			emap.putAll(XML.readMap(e));
+			emap.backingPutAll(XML.readMap(e));
 			if(e.hasChildNodes())
-				XML.children(e).forEach((child) -> emap.put(child.getTagName(), readExtrasFromElement(child)));
+				XML.children(e).forEach((child) -> emap.backingPut(child.getTagName(), readExtrasFromElement(child)));
 			return emap;
 		}
 		
@@ -319,7 +319,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 		
 		public static void writeExtrasToElement(Document doc, Element e, ExtrasMap emap)
 		{
-			for(Entry<String,Object> entry : emap.entrySet())
+			for(Entry<String,Object> entry : emap.backingEntrySet())
 			{
 				if(entry.getValue() instanceof ExtrasMap)
 				{
@@ -327,7 +327,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 					writeExtrasToElement(doc, child, (ExtrasMap) entry.getValue());
 					e.appendChild(child);
 				}
-				else
+				else if(entry.getValue() != null)
 					e.setAttribute(entry.getKey(), (String) entry.getValue());
 			}
 		}

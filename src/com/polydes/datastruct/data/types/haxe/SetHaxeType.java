@@ -1,14 +1,22 @@
 package com.polydes.datastruct.data.types.haxe;
 
-import java.util.Collection;
+import static com.polydes.common.data.types.builtin.extra.SetType.EDITOR;
+import static com.polydes.common.data.types.builtin.extra.SetType.GEN_TYPE;
+import static com.polydes.common.data.types.builtin.extra.SetType.SOURCE;
+import static com.polydes.common.data.types.builtin.extra.SetType.SOURCE_FILTER;
 
+import java.util.function.Predicate;
+
+import com.polydes.common.data.core.DataList;
 import com.polydes.common.data.types.EditorProperties;
+import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.data.types.Types;
 import com.polydes.common.data.types.builtin.extra.SetType;
 import com.polydes.common.data.types.builtin.extra.SetType.Editor;
 import com.polydes.common.ui.propsheet.PropertiesSheetSupport;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.Structures;
+import com.polydes.datastruct.data.types.ExtrasKey;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.data.types.HaxeTypes;
@@ -21,8 +29,12 @@ public class SetHaxeType extends HaxeDataType
 		super(Types._Set, "com.polydes.datastruct.Set", "OBJECT");
 	}
 	
-	public static final String SOURCE_TYPE = "sourceType";
-	public static final String SOURCE_ID = "sourceId";
+	public  static final PropertyKey<SourceType>                 SOURCE_TYPE            = new PropertyKey<>("sourceType");
+	public  static final PropertyKey<String>                     SOURCE_ID              = new PropertyKey<>("sourceId");
+	private static final PropertyKey<DataList>                   SOURCE_PROXY_LIST      = new PropertyKey<>("_" + SOURCE.id);
+	private static final PropertyKey<StencylResourceHaxeType<?>> SOURCE_PROXY_RESOURCE  = new PropertyKey<>("_" + SOURCE.id);
+	private static final PropertyKey<StructureHaxeType>          SOURCE_PROXY_STRUCTURE = new PropertyKey<>("_" + SOURCE.id);
+	private static final PropertyKey<Predicate<?>>               FILTER_PROXY           = new PropertyKey<>("_" + SOURCE_FILTER.id);
 	
 	public enum SourceType
 	{
@@ -31,29 +43,37 @@ public class SetHaxeType extends HaxeDataType
 		Custom
 	}
 	
+	//SERIALIZATION KEYS -- do not change these.
+	private static final ExtrasKey<Editor>        KEY_EDITOR        = new ExtrasKey<>(EDITOR, "editor");
+	private static final ExtrasKey<SourceType>    KEY_SOURCE_TYPE   = new ExtrasKey<>(SOURCE_TYPE, "sourceType");
+	private static final ExtrasKey<String>        KEY_SOURCE_ID     = new ExtrasKey<>(SOURCE_ID, "sourceId");
+	private static final ExtrasKey<DataList>      KEY_SOURCE        = new ExtrasKey<>(SOURCE_PROXY_LIST, "source");
+//	private static final ExtrasKey<Predicate<?>>  KEY_SOURCE_FILTER = new ExtrasKey<>(SOURCE_FILTER, "sourceFilter");
+//	private static final ExtrasKey<DataType<?>>   KEY_GEN_TYPE      = new ExtrasKey<>(GEN_TYPE, "genType");
+	
 	@Override
 	public EditorProperties loadExtras(ExtrasMap extras)
 	{
 		EditorProperties props = new EditorProperties();
-		props.put(SetType.EDITOR, extras.get("editor", Editor.Checklist));
-		props.put(SOURCE_TYPE, extras.get(SOURCE_TYPE, SourceType.Custom));
-		String sourceId = extras.get(SOURCE_ID, Types._String, null);
-		switch(props.<SourceType>get(SOURCE_TYPE))
+		props.put(EDITOR, extras.getEnum(KEY_EDITOR, Editor.Checklist));
+		props.put(SOURCE_TYPE, extras.getEnum(KEY_SOURCE_TYPE, SourceType.Custom));
+		String sourceId = extras.get(KEY_SOURCE_ID, Types._String, null);
+		switch(props.get(SOURCE_TYPE))
 		{
 			case Custom:
-				props.put(SetType.SOURCE, extras.getTyped("source", Types._Array, null));
-				props.put(SetType.GEN_TYPE, Types._String);
+				props.put(SOURCE, extras.getTyped(KEY_SOURCE, Types._Array, null));
+				props.put(GEN_TYPE, Types._String);
 				break;
 			case Resource:
 				DataStructuresExtension.get().getHaxeTypes().requestValue(sourceId, htype -> {
-					props.put(SetType.SOURCE, ((StencylResourceHaxeType<?>) htype).srt.getList());
-					props.put(SetType.GEN_TYPE, htype.dataType);
+					props.put(SOURCE, ((StencylResourceHaxeType<?>) htype).srt.getList());
+					props.put(GEN_TYPE, htype.dataType);
 				});
 				break;
 			case Structure:
 				DataStructuresExtension.get().getHaxeTypes().requestValue(sourceId, htype -> {
-					props.put(SetType.SOURCE, Structures.getList(((StructureHaxeType) htype).type.def));
-					props.put(SetType.GEN_TYPE, htype.dataType);
+					props.put(SOURCE, Structures.getList(((StructureHaxeType) htype).type.def));
+					props.put(GEN_TYPE, htype.dataType);
 				});
 				break;
 		}
@@ -66,22 +86,19 @@ public class SetHaxeType extends HaxeDataType
 	public ExtrasMap saveExtras(EditorProperties props)
 	{
 		ExtrasMap emap = new ExtrasMap();
-		emap.put("editor", props.get(SetType.EDITOR));
+		emap.putEnum(KEY_EDITOR, props.get(EDITOR));
 		
 		SourceType sourceType = props.get(SOURCE_TYPE);
-		emap.put(SOURCE_TYPE, sourceType.name());
+		emap.putEnum(KEY_SOURCE_TYPE, sourceType);
 		if(sourceType == SourceType.Custom)
-			emap.putTyped("source", Types._Array, props.<Collection<?>>get("source"));
+			emap.putTyped(KEY_SOURCE, Types._Array, (DataList) props.get(SOURCE));
 		else
-			emap.put(SOURCE_ID, props.<String>get(SOURCE_ID)); 
+			emap.put(KEY_SOURCE_ID, Types._String, props.get(SOURCE_ID)); 
 		//TODO transform a predicate into a string
 //		if(props.containsKey(SetType.SOURCE_FILTER))
 //			emap.put("sourceFilter", props.get(SetType.SOURCE_FILTER));
 		return emap;
 	}
-	
-	private static final String SOURCE_PROXY = "_" + SetType.SOURCE;
-	private static final String FILTER_PROXY = "_" + SetType.SOURCE_FILTER;
 	
 	@Override
 	public void applyToFieldPanel(final StructureFieldPanel panel)
@@ -90,20 +107,20 @@ public class SetHaxeType extends HaxeDataType
 		
 		PropertiesSheetSupport sheet = panel.getEditorSheet();
 		
-		props.remove(SOURCE_PROXY);
+		props.remove(SOURCE_PROXY_LIST);
 		props.remove(FILTER_PROXY);
 		
 		sheet.build()
-			.field(SOURCE_TYPE)._enum(SourceType.class).add()
-			.field(SOURCE_PROXY)._array().simpleEditor().genType(Types._String).add()
-			.field(FILTER_PROXY).optional()._string().add()
+			.field(SOURCE_TYPE.id)._enum(SourceType.class).add()
+			.field(SOURCE_PROXY_LIST.id)._array().simpleEditor().genType(Types._String).add()
+			.field(FILTER_PROXY.id).optional()._string().add()
 			.finish();
 		
-		sheet.addPropertyChangeListener(SOURCE_TYPE, event -> {
+		sheet.addPropertyChangeListener(SOURCE_TYPE.id, event -> {
 			updateSourceType(panel, sheet, props);
 		});
 		
-		sheet.addPropertyChangeListener(SOURCE_PROXY, event -> {
+		sheet.addPropertyChangeListener(SOURCE_PROXY_LIST.id, event -> {
 			updateSource(panel, sheet, props);
 		});
 		
@@ -116,47 +133,47 @@ public class SetHaxeType extends HaxeDataType
 		
 		HaxeTypes types = DataStructuresExtension.get().getHaxeTypes();
 		
-		props.remove(SOURCE_PROXY);
+		props.remove(SOURCE_PROXY_LIST);
 		
 		switch(type)
 		{
 			case Custom:
-				sheet.change().field(SOURCE_PROXY)
+				sheet.change().field(SOURCE_PROXY_LIST.id)
 					._array().simpleEditor().genType(Types._String).change().finish();
 				break;
 			case Resource:
-				sheet.change().field(SOURCE_PROXY)
+				sheet.change().field(SOURCE_PROXY_RESOURCE.id)
 					._collection(types.values()).filter(htype -> (htype instanceof StencylResourceHaxeType)).change().finish();
 				break;
 			case Structure:
-				sheet.change().field(SOURCE_PROXY)
+				sheet.change().field(SOURCE_PROXY_STRUCTURE.id)
 					._collection(types.values()).filter(htype -> (htype instanceof StructureHaxeType)).change().finish();
 				break;
 		}
 		
-		panel.setRowVisibility(sheet, FILTER_PROXY, type != SourceType.Custom);
+		panel.setRowVisibility(sheet, FILTER_PROXY.id, type != SourceType.Custom);
 	}
 	
 	private void updateSource(StructureFieldPanel panel, PropertiesSheetSupport sheet, EditorProperties props)
 	{
 		SourceType type = props.get(SOURCE_TYPE);
 		
-		if(props.get(SOURCE_PROXY) == null)
+		if(props.get(SOURCE_PROXY_LIST) == null)
 			return;
 		
 		switch(type)
 		{
 			case Custom:
-				props.put(SetType.SOURCE, props.get(SOURCE_PROXY));
+				props.put(SetType.SOURCE, props.get(SOURCE_PROXY_LIST));
 				props.put(SetType.GEN_TYPE, Types._String);
 				break;
 			case Resource:
-				StencylResourceHaxeType<?> srht = props.get(SOURCE_PROXY);
+				StencylResourceHaxeType<?> srht = props.get(SOURCE_PROXY_RESOURCE);
 				props.put(SetType.SOURCE, srht.srt.getList());
 				props.put(SetType.GEN_TYPE, srht.dataType);
 				break;
 			case Structure:
-				StructureHaxeType sht = props.get(SOURCE_PROXY);
+				StructureHaxeType sht = props.get(SOURCE_PROXY_STRUCTURE);
 				props.put(SetType.SOURCE, Structures.getList(sht.type.def));
 				props.put(SetType.GEN_TYPE, sht.dataType);
 				break;

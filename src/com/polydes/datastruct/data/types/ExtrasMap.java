@@ -1,35 +1,91 @@
 package com.polydes.datastruct.data.types;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.polydes.common.data.types.DataType;
+import com.polydes.common.data.types.EditorProperties;
 import com.polydes.common.ext.RORealizer;
 import com.polydes.datastruct.DataStructuresExtension;
 
-public class ExtrasMap extends HashMap<String, Object>
+/**
+ * A map used for serialization of {@link EditorProperties}.
+ */
+public class ExtrasMap
 {
-	public <T> T get(String key, DataType<T> type, T defaultValue)
+	/** This map contains only two types of values: String and ExtrasMap */
+	private final HashMap<String, Object> map = new HashMap<>();
+	
+	public <T> T get(ExtrasKey<T> key, DataType<T> type, T defaultValue)
 	{
-		String s = (String) get(key);
+		String s = (String) map.get(key.id);
 		if(s == null)
 			return defaultValue;
 		else
 			return type.decode(s);
 	}
 	
-	public <T> T get(String key, DataType<T> type)
+	public <T> T get(ExtrasKey<T> key, DataType<T> type)
 	{
-		String s = (String) get(key);
+		String s = (String) map.get(key.id);
 		if(s == null)
 			return null;
 		else
 			return type.decode(s);
 	}
 	
-	public String get(String key, String defaultValue)
+	/*-------------------------------------*\
+	 * Map Delegation
+	\*-------------------------------------*/ 
+	
+	public <T> void put(ExtrasKey<T> key, DataType<T> type, T value)
 	{
-		String s = (String) get(key);
-		return (s == null) ? defaultValue : s;
+		if(value != null)
+			map.put(key.id, type.encode(value));
+	}
+
+	public boolean containsKey(ExtrasKey<?> key)
+	{
+		return map.containsKey(key.id);
+	}
+
+	/**
+	 * Directly get the entrySet from the backing map.
+	 * All values are either String or ExtrasMap.
+	 */
+	public Set<Entry<String, Object>> backingEntrySet()
+	{
+		return map.entrySet();
+	}
+
+	/**
+	 * Directly place into the backing map
+	 */
+	public void backingPutAll(HashMap<String, String> stringMap)
+	{
+		map.putAll(stringMap);
+	}
+	
+	/**
+	 * Directly place into the backing map
+	 */
+	public void backingPut(String key, ExtrasMap value)
+	{
+		map.put(key, value);
+	}
+	
+	/**
+	 * Directly place into the backing map
+	 */
+	public void backingPut(String key, String value)
+	{
+		map.put(key, value);
+	}
+
+	public boolean isEmpty()
+	{
+		return map.isEmpty();
 	}
 	
 	/*-------------------------------------*\
@@ -37,36 +93,38 @@ public class ExtrasMap extends HashMap<String, Object>
 	\*-------------------------------------*/ 
 	
 	@SuppressWarnings("unchecked")
-	public <T> T getTyped(String key, DataType<T> type, T defaultValue)
+	public <T> T getTyped(ExtrasKey<T> key, DataType<T> type, T defaultValue)
 	{
-		String s = (String) get(key);
+		String s = (String) map.get(key.id);
 		if(s == null)
 			return defaultValue;
 		else
 			return (T) HaxeTypeConverter.decode(type, s);
 	}
 	
-	public Object putTyped(String key, DataType<?> type, Object value)
+	public <T,U extends T> String putTyped(ExtrasKey<T> key, DataType<T> type, U value)
 	{
-		return put(key, HaxeTypeConverter.encode(type, value));
+		return (String) map.put(key.id, HaxeTypeConverter.encode(type, value));
 	}
 	
 	/*-------------------------------------*\
 	 * Special Cases: Map, Enum, DataType
 	\*-------------------------------------*/ 
 	
-	public ExtrasMap getMap(String key)
+	public ExtrasMap getMap(ExtrasKey<EditorProperties> key)
 	{
-		return (ExtrasMap) get(key);
+		return (ExtrasMap) map.get(key.id);
+	}
+	
+	public void putMap(ExtrasKey<EditorProperties> key, ExtrasMap value)
+	{
+		map.put(key.id, value);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends Enum<T>> T get(String key, Enum<T> enm)
+	public <T extends Enum<T>> T getEnum(ExtrasKey<T> key, Enum<T> enm)
 	{
-		if(key == null || key.isEmpty())
-			return (T) enm;
-		
-		String name = (String) get(key);
+		String name = (String) map.get(key.id);
 		if(name == null)
 			return (T) enm;
 		
@@ -79,13 +137,25 @@ public class ExtrasMap extends HashMap<String, Object>
 			return (T) enm;
 		}
 	}
-	
-	public void requestDataType(String key, HaxeDataType defaultType, RORealizer<HaxeDataType> tr)
+
+	public <T extends Enum<T>> void putEnum(ExtrasKey<T> key, Enum<T> enm)
 	{
-		String s = (String) get(key);
+		if(enm != null)
+			map.put(key.id, enm.name());
+	}
+	
+	public void requestDataType(ExtrasKey<DataType<?>> key, HaxeDataType defaultType, RORealizer<HaxeDataType> tr)
+	{
+		String s = (String) map.get(key.id);
 		if(s == null)
 			tr.realizeRO(defaultType);
 		else
 			DataStructuresExtension.get().getHaxeTypes().requestValue(s, tr);
+	}
+	
+	public void putDataType(ExtrasKey<DataType<?>> key, DataType<?> type)
+	{
+		String haxeTypeID = DataStructuresExtension.get().getHaxeTypes().getHaxeFromDT(type.getId()).getHaxeType();
+		map.put(key.id, haxeTypeID);
 	}
 }

@@ -1,6 +1,7 @@
 package com.polydes.datastruct.data.types.haxe;
 
 import com.polydes.common.data.types.EditorProperties;
+import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.data.types.builtin.UnknownDataType;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
@@ -12,7 +13,7 @@ public class UnknownHaxeType extends HaxeDataType
 		super(new UnknownDataType(name), name, "OBJECT");
 	}
 	
-	public static final String EXTRAS_MAP = "extrasMap";
+	public static final PropertyKey<ExtrasMap> EXTRAS_MAP = new PropertyKey<>("extrasMap");
 	
 	@Override
 	public EditorProperties loadExtras(ExtrasMap extras)

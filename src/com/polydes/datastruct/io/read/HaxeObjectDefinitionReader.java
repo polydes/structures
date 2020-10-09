@@ -29,7 +29,7 @@ public class HaxeObjectDefinitionReader
 				if(editor != null)
 				{
 					editorData = new ExtrasMap();
-					editorData.putAll(XML.readMap(editor));
+					editorData.backingPutAll(XML.readMap(editor));
 				}
 			}
 			
