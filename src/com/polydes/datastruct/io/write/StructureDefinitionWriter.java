@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.polydes.common.ext.ExtendableObjectRegistry;
 import com.polydes.common.nodes.DefaultBranch;
 import com.polydes.common.nodes.DefaultLeaf;
 import com.polydes.datastruct.data.structure.SDE;
@@ -57,7 +58,7 @@ public class StructureDefinitionWriter
 		String namespace = (obj instanceof StructureUnknown) ?
 			((StructureUnknown) obj).namespace : type.owner;
 		
-		Element e = (namespace != null) ?
+		Element e = (namespace != null && !namespace.isEmpty()) ?
 				doc.createElementNS(namespace, getNS(namespace) + ":" + type.tag) :
 				doc.createElement(type.tag);
 		type.write(obj, e);
