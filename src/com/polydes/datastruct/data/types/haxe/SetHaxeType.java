@@ -12,6 +12,7 @@ import com.polydes.common.data.types.EditorProperties;
 import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.data.types.Types;
 import com.polydes.common.data.types.builtin.extra.SetType.Editor;
+import com.polydes.common.ui.propsheet.PropertiesSheetBuilder;
 import com.polydes.common.ui.propsheet.PropertiesSheetSupport;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.Structures;
@@ -60,25 +61,36 @@ public class SetHaxeType extends HaxeDataType
 		switch(props.get(SOURCE_TYPE))
 		{
 			case Custom:
-				props.put(SOURCE, extras.getTyped(KEY_SOURCE, Types._Array, null));
+				DataList list = extras.getTyped(KEY_SOURCE, Types._Array, null);
+				props.put(SOURCE, list);
+				props.put(SOURCE_PROXY_LIST, list);
 				props.put(GEN_TYPE, Types._String);
 				break;
 			case Resource:
 				DataStructuresExtension.get().getHaxeTypes().requestValue(sourceId, htype -> {
-					props.put(SOURCE, ((StencylResourceHaxeType<?>) htype).srt.getList());
+					StencylResourceHaxeType<?> srht = (StencylResourceHaxeType<?>) htype;
+					props.put(SOURCE, srht.srt.getList());
+					props.put(SOURCE_PROXY_RESOURCE, srht);
+					props.put(SOURCE_ID, sourceId);
 					props.put(GEN_TYPE, htype.dataType);
 				});
 				break;
 			case Structure:
 				DataStructuresExtension.get().getHaxeTypes().requestValue(sourceId, htype -> {
-					props.put(SOURCE, Structures.getList(((StructureHaxeType) htype).type.def));
+					StructureHaxeType sht = (StructureHaxeType) htype;
+					props.put(SOURCE, Structures.getList(sht.type.def));
+					props.put(SOURCE_PROXY_STRUCTURE, sht);
+					props.put(SOURCE_ID, sourceId);
 					props.put(GEN_TYPE, htype.dataType);
 				});
 				break;
 		}
 		String filter = extras.get(KEY_SOURCE_FILTER, Types._String, null);
 		if(filter != null)
+		{
 			props.put(SOURCE_FILTER, new StructureConditionPredicate(new StructureCondition(null, filter)));
+			props.put(FILTER_PROXY, filter);
+		}
 		return props;
 	}
 
@@ -113,16 +125,36 @@ public class SetHaxeType extends HaxeDataType
 	{
 		EditorProperties props = panel.getExtras();
 		
+		HaxeTypes types = DataStructuresExtension.get().getHaxeTypes();
+		SourceType sourceType = props.get(SOURCE_TYPE);
+		
 		PropertiesSheetSupport sheet = panel.getEditorSheet();
+		PropertiesSheetBuilder builder = sheet.build();
 		
-		props.remove(SOURCE_PROXY_LIST);
-		props.remove(FILTER_PROXY);
+		builder
+			.field(SOURCE_TYPE.id)._enum(SourceType.class).add();
 		
-		sheet.build()
-			.field(SOURCE_TYPE.id)._enum(SourceType.class).add()
-			.field(SOURCE_PROXY_LIST.id)._array().simpleEditor().genType(Types._String).add()
+		switch(sourceType)
+		{
+			case Custom:
+				builder.field(SOURCE_PROXY_LIST.id)
+					._array().simpleEditor().genType(Types._String).add();
+				break;
+			case Resource:
+				builder.field(SOURCE_PROXY_RESOURCE.id)
+					._collection(types.values()).filter(htype -> (htype instanceof StencylResourceHaxeType)).add();
+				break;
+			case Structure:
+				builder.field(SOURCE_PROXY_STRUCTURE.id)
+					._collection(types.values()).filter(htype -> (htype instanceof StructureHaxeType)).add();
+				break;
+		}
+		
+		builder
 			.field(FILTER_PROXY.id).optional()._string().add()
 			.finish();
+		
+		updateSource(panel, sheet, props);
 		
 		sheet.addPropertyChangeListener(SOURCE_TYPE.id, event -> {
 			updateSourceType(panel, sheet, props);
@@ -156,7 +188,7 @@ public class SetHaxeType extends HaxeDataType
 			sheet.writeField(props, SOURCE_FILTER.id, predicate);
 		});
 		
-		updateSourceType(panel, sheet, props);
+		panel.setRowVisibility(sheet, FILTER_PROXY.id, sourceType != SourceType.Custom);
 	}
 	
 	private static final class StructureConditionPredicate implements Predicate<Object>
@@ -174,7 +206,7 @@ public class SetHaxeType extends HaxeDataType
 			return condition.check(null, t);
 		}
 	}
-
+	
 	private void updateSourceType(StructureFieldPanel panel, PropertiesSheetSupport sheet, EditorProperties props)
 	{
 		SourceType type = props.get(SOURCE_TYPE);
@@ -216,16 +248,19 @@ public class SetHaxeType extends HaxeDataType
 		{
 			case Custom:
 				props.put(SOURCE, props.get(SOURCE_PROXY_LIST));
+				props.remove(SOURCE_ID);
 				sheet.writeField(props, GEN_TYPE.id, Types._String);
 				break;
 			case Resource:
 				StencylResourceHaxeType<?> srht = props.get(SOURCE_PROXY_RESOURCE);
 				props.put(SOURCE, srht.srt.getList());
+				props.put(SOURCE_ID, srht.getKey());
 				sheet.writeField(props, GEN_TYPE.id, srht.dataType);
 				break;
 			case Structure:
 				StructureHaxeType sht = props.get(SOURCE_PROXY_STRUCTURE);
 				props.put(SOURCE, Structures.getList(sht.type.def));
+				props.put(SOURCE_ID, sht.getKey());
 				sheet.writeField(props, GEN_TYPE.id, sht.dataType);
 				break;
 		}
