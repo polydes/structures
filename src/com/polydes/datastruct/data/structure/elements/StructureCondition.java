@@ -125,7 +125,7 @@ public class StructureCondition extends SDE
 				
 				case AND: return RuntimeLanguage.and(eval(n.get(0)), eval(n.get(1)));
 				case OR: return RuntimeLanguage.or(eval(n.get(0)), eval(n.get(1)));
-				case NOT: return RuntimeLanguage.not(eval(n.get(0)));
+				case NOT: return RuntimeLanguage.not(eval((SyntaxNode) n.data));
 				case EQUAL: return RuntimeLanguage.equals(eval(n.get(0)), eval(n.get(1)));
 				case NOTEQUAL: return !RuntimeLanguage.equals(eval(n.get(0)), eval(n.get(1)));
 				case GT: return RuntimeLanguage.gt(eval(n.get(0)), eval(n.get(1)));
@@ -138,7 +138,7 @@ public class StructureCondition extends SDE
 				case MOD: return RuntimeLanguage.mod(eval(n.get(0)), eval(n.get(1)));
 				case DIVIDE: return RuntimeLanguage.divide(eval(n.get(0)), eval(n.get(1)));
 				case MULTIPLY: return RuntimeLanguage.multiply(eval(n.get(0)), eval(n.get(1)));
-				case NEGATE: return RuntimeLanguage.negate(eval(n.get(0)));
+				case NEGATE: return RuntimeLanguage.negate(eval((SyntaxNode) n.data));
 				
 				case FIELD:
 					Object o = eval(n.get(0));
