@@ -32,7 +32,6 @@ import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.data.types.StructureType;
 import com.polydes.datastruct.io.Text;
 import com.polydes.datastruct.ui.objeditors.StructureFieldPanel;
-import com.polydes.datastruct.ui.table.PropertiesSheet;
 
 import stencyl.sw.util.Locations;
 
@@ -152,9 +151,6 @@ public class StructureHaxeType extends HaxeDataType
 	@Override
 	public void applyToFieldPanel(StructureFieldPanel panel)
 	{
-		PropertiesSheet preview = panel.getPreview();
-		DefaultLeaf previewKey = panel.getPreviewKey();
-		
 		EditorProperties props = panel.getExtras();
 		
 		PropertiesSheetSupport sheet = panel.getEditorSheet();
@@ -163,7 +159,7 @@ public class StructureHaxeType extends HaxeDataType
 			.field(RENDER_PREVIEW.id)._boolean().add()
 			.finish();
 		
-		sheet.addPropertyChangeListener(SOURCE_FILTER.id, event -> {
+		sheet.addPropertyChangeListener(FILTER_PROXY.id, event -> {
 			StructureCondition condition = props.get(SOURCE_FILTER);
 			String conditionText = props.get(FILTER_PROXY);
 			
@@ -174,8 +170,9 @@ public class StructureHaxeType extends HaxeDataType
 			else if(condition != null && !conditionText.isEmpty())
 				condition.setText(conditionText);
 			
-			props.put(SOURCE_FILTER, condition);
-			preview.refreshLeaf(previewKey);
+			//remove SOURCE_FILTER first so it forces the PropertyChangeEvent to be fired.
+			props.remove(SOURCE_FILTER);
+			sheet.writeField(props, SOURCE_FILTER.id, condition);
 		});
 	}
 	

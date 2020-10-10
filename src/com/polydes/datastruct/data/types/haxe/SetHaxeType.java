@@ -161,24 +161,25 @@ public class SetHaxeType extends HaxeDataType
 		if(props.get(SOURCE_PROXY_LIST) == null)
 			return;
 		
+		//remove GEN_TYPE first so it forces the PropertyChangeEvent to be fired.
+		props.remove(GEN_TYPE);
+		
 		switch(type)
 		{
 			case Custom:
-				props.put(SetType.SOURCE, props.get(SOURCE_PROXY_LIST));
-				props.put(SetType.GEN_TYPE, Types._String);
+				props.put(SOURCE, props.get(SOURCE_PROXY_LIST));
+				sheet.writeField(props, GEN_TYPE.id, Types._String);
 				break;
 			case Resource:
 				StencylResourceHaxeType<?> srht = props.get(SOURCE_PROXY_RESOURCE);
-				props.put(SetType.SOURCE, srht.srt.getList());
-				props.put(SetType.GEN_TYPE, srht.dataType);
+				props.put(SOURCE, srht.srt.getList());
+				sheet.writeField(props, GEN_TYPE.id, srht.dataType);
 				break;
 			case Structure:
 				StructureHaxeType sht = props.get(SOURCE_PROXY_STRUCTURE);
-				props.put(SetType.SOURCE, Structures.getList(sht.type.def));
-				props.put(SetType.GEN_TYPE, sht.dataType);
+				props.put(SOURCE, Structures.getList(sht.type.def));
+				sheet.writeField(props, GEN_TYPE.id, sht.dataType);
 				break;
 		}
-		
-		panel.getPreview().refreshLeaf(panel.getPreviewKey());
 	}
 }
