@@ -273,7 +273,7 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 	{
 		for(Entry<Folder, File> f : baseFolders.entrySet())
 		{
-			if(f.getValue().equals(f))
+			if(f.getValue().equals(fsfolder))
 			{
 				root.removeItem(f.getKey());
 				baseFolders.remove(f.getKey());
