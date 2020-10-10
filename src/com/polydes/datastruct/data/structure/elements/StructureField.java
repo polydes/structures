@@ -25,8 +25,6 @@ import com.polydes.common.data.types.EditorProperties;
 import com.polydes.common.data.types.UpdateListener;
 import com.polydes.common.data.types.builtin.basic.ArrayType;
 import com.polydes.common.data.types.builtin.basic.ArrayType.StandardArrayEditor;
-import com.polydes.common.data.types.builtin.extra.ColorType;
-import com.polydes.common.data.types.builtin.extra.ColorType.ColorEditor;
 import com.polydes.common.ext.RORealizer;
 import com.polydes.common.io.XML;
 import com.polydes.common.nodes.DefaultBranch;
@@ -46,7 +44,6 @@ import com.polydes.datastruct.data.types.HaxeTypeConverter;
 import com.polydes.datastruct.data.types.HaxeTypes;
 import com.polydes.datastruct.data.types.StructureType;
 import com.polydes.datastruct.ui.objeditors.StructureFieldPanel;
-import com.polydes.datastruct.ui.page.StructureDefinitionsWindow;
 import com.polydes.datastruct.ui.table.Card;
 import com.polydes.datastruct.ui.table.GuiObject;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
@@ -440,9 +437,6 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			else
 				deditor = type.createEditor(f.getEditorProperties(), sheet.style);
 			
-			//special case for Color editors inside preview structures. Need to make sure the popup window works.
-			if(type instanceof ColorType && sheet.model.getID() == -1)
-				((ColorEditor) deditor).setOwner(StructureDefinitionsWindow.get());
 			if(deditor instanceof StandardArrayEditor)
 			{
 				DataType<?> genType = f.getEditorProperties().get(ArrayType.GEN_TYPE);
