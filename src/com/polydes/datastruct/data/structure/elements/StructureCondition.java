@@ -119,7 +119,7 @@ public class StructureCondition extends SDE
 				case REFERENCE:
 					String refName = (String) n.data;
 					Object ref = idMap.get(refName);
-					if(ref == null)
+					if(ref == null && structureRef != null)
 						ref = structureRef.getPropByName(refName);
 					return ref;
 				
