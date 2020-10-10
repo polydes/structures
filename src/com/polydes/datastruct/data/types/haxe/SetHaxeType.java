@@ -11,11 +11,11 @@ import com.polydes.common.data.core.DataList;
 import com.polydes.common.data.types.EditorProperties;
 import com.polydes.common.data.types.PropertyKey;
 import com.polydes.common.data.types.Types;
-import com.polydes.common.data.types.builtin.extra.SetType;
 import com.polydes.common.data.types.builtin.extra.SetType.Editor;
 import com.polydes.common.ui.propsheet.PropertiesSheetSupport;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.Structures;
+import com.polydes.datastruct.data.structure.elements.StructureCondition;
 import com.polydes.datastruct.data.types.ExtrasKey;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
@@ -34,7 +34,7 @@ public class SetHaxeType extends HaxeDataType
 	private static final PropertyKey<DataList>                   SOURCE_PROXY_LIST      = new PropertyKey<>("_" + SOURCE.id);
 	private static final PropertyKey<StencylResourceHaxeType<?>> SOURCE_PROXY_RESOURCE  = new PropertyKey<>("_" + SOURCE.id);
 	private static final PropertyKey<StructureHaxeType>          SOURCE_PROXY_STRUCTURE = new PropertyKey<>("_" + SOURCE.id);
-	private static final PropertyKey<Predicate<?>>               FILTER_PROXY           = new PropertyKey<>("_" + SOURCE_FILTER.id);
+	private static final PropertyKey<String>                     FILTER_PROXY           = new PropertyKey<>("_" + SOURCE_FILTER.id);
 	
 	public enum SourceType
 	{
@@ -48,8 +48,7 @@ public class SetHaxeType extends HaxeDataType
 	private static final ExtrasKey<SourceType>    KEY_SOURCE_TYPE   = new ExtrasKey<>(SOURCE_TYPE, "sourceType");
 	private static final ExtrasKey<String>        KEY_SOURCE_ID     = new ExtrasKey<>(SOURCE_ID, "sourceId");
 	private static final ExtrasKey<DataList>      KEY_SOURCE        = new ExtrasKey<>(SOURCE_PROXY_LIST, "source");
-//	private static final ExtrasKey<Predicate<?>>  KEY_SOURCE_FILTER = new ExtrasKey<>(SOURCE_FILTER, "sourceFilter");
-//	private static final ExtrasKey<DataType<?>>   KEY_GEN_TYPE      = new ExtrasKey<>(GEN_TYPE, "genType");
+	private static final ExtrasKey<String>        KEY_SOURCE_FILTER = new ExtrasKey<>(FILTER_PROXY, "sourceFilter");
 	
 	@Override
 	public EditorProperties loadExtras(ExtrasMap extras)
@@ -77,8 +76,9 @@ public class SetHaxeType extends HaxeDataType
 				});
 				break;
 		}
-		//TODO transform a string into an appropriate predicate
-//		props.put(SetType.SOURCE_FILTER, extras.get("sourceFilter", Types._String, null));
+		String filter = extras.get(KEY_SOURCE_FILTER, Types._String, null);
+		if(filter != null)
+			props.put(SOURCE_FILTER, new StructureConditionPredicate(new StructureCondition(null, filter)));
 		return props;
 	}
 
@@ -94,9 +94,17 @@ public class SetHaxeType extends HaxeDataType
 			emap.putTyped(KEY_SOURCE, Types._Array, (DataList) props.get(SOURCE));
 		else
 			emap.put(KEY_SOURCE_ID, Types._String, props.get(SOURCE_ID)); 
-		//TODO transform a predicate into a string
-//		if(props.containsKey(SetType.SOURCE_FILTER))
-//			emap.put("sourceFilter", props.get(SetType.SOURCE_FILTER));
+		if(props.containsKey(SOURCE_FILTER))
+		{
+			Predicate<?> predicate = props.get(SOURCE_FILTER);
+			if(predicate instanceof StructureConditionPredicate)
+			{
+				StructureCondition condition = ((StructureConditionPredicate) predicate).condition;
+				if(condition != null)
+					emap.put(KEY_SOURCE_FILTER, Types._String, condition.getText());
+			}
+		}
+		
 		return emap;
 	}
 	
@@ -124,7 +132,47 @@ public class SetHaxeType extends HaxeDataType
 			updateSource(panel, sheet, props);
 		});
 		
+		sheet.addPropertyChangeListener(FILTER_PROXY.id, event -> {
+			Predicate<?> predicate = props.get(SOURCE_FILTER);
+			String conditionText = props.get(FILTER_PROXY);
+			StructureCondition condition = null;
+			if(predicate != null && predicate instanceof StructureConditionPredicate)
+				condition = ((StructureConditionPredicate) predicate).condition;
+			
+			if(condition == null && !conditionText.isEmpty())
+				condition = new StructureCondition(null, conditionText);
+			else if(condition != null && conditionText.isEmpty())
+				condition = null;
+			else if(condition != null && !conditionText.isEmpty())
+				condition.setText(conditionText);
+			
+			if(predicate == null && condition != null)
+				predicate = new StructureConditionPredicate(condition);
+			else if(predicate != null && condition == null)
+				condition = null;
+			
+			//remove SOURCE_FILTER first so it forces the PropertyChangeEvent to be fired.
+			props.remove(SOURCE_FILTER);
+			sheet.writeField(props, SOURCE_FILTER.id, predicate);
+		});
+		
 		updateSourceType(panel, sheet, props);
+	}
+	
+	private static final class StructureConditionPredicate implements Predicate<Object>
+	{
+		private StructureCondition condition;
+		
+		public StructureConditionPredicate(StructureCondition condition)
+		{
+			this.condition = condition;
+		}
+		
+		@Override
+		public boolean test(Object t)
+		{
+			return condition.check(null, t);
+		}
 	}
 
 	private void updateSourceType(StructureFieldPanel panel, PropertiesSheetSupport sheet, EditorProperties props)
