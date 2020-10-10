@@ -42,10 +42,20 @@ public class HaxeTypeConverter
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static String encode(DataType type, Object o)
 	{
-		if(coders.containsKey(type.getId()))
-			return coders.get(type.getId()).encode(o);
-		else
-			return type.encode(o);
+		if(o == null)
+			return "";
+		
+		if(type.javaType.isAssignableFrom(o.getClass()))
+		{
+			if(coders.containsKey(type.getId()))
+				return coders.get(type.getId()).encode(o);
+			else
+				return type.encode(o);
+		}
+		
+		System.out.println("Failed to encode " + o);
+		
+		return "";
 	}
 	
 	static interface Coder<T>

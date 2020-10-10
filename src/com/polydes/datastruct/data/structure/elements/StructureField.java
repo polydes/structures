@@ -306,7 +306,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			if(f.isOptional())
 				e.setAttribute("optional", "true");
 			if(f.getDefaultValue() != null)
-				e.setAttribute("default", f.getType().dataType.checkEncode(f.getDefaultValue()));
+				e.setAttribute("default", HaxeTypeConverter.encode(f.getType().dataType, f.getDefaultValue()));
 			
 			HaxeDataType dtype = f.getType();
 			ExtrasMap emap = dtype.saveExtras(f.getEditorProperties());
