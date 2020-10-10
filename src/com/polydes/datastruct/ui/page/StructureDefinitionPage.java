@@ -134,7 +134,10 @@ public class StructureDefinitionPage extends JPanel
 					propsWindow.setVisible(false);
 				}
 				
-				editor.getPreview().getEditor().highlightElement(di);
+				if(editor.def != null)
+				{
+					editor.getPreview().getEditor().highlightElement(di);
+				}
 			}
 			else if(propsWindow.isVisible())
 			{
