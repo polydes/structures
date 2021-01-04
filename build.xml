@@ -10,18 +10,19 @@
 	<property name="main" value="com.polydes.datastruct.DataStructuresExtension" />
 	<property name="type" value="game" />
 	
-	<property name="dependsOn" value="engine-com.polydes.datastruct-2.0.0,stencyl-4.0.0" />
+	<property name="dependsOn" value="engine-com.polydes.datastruct-2.0.0,stencyl-4.0.3" />
 	
 	<property name="name" value="Data Structures Extension" />
 	<property name="description" value="Create and Manage Data Structures." />
 	<property name="author" value="Justin Espedal" />
 	<property name="internalVersion" value="4" />
-	<property name="version" value="2.0.3" />
+	<property name="version" value="2.0.4" />
 	
 	<include file="../Common/build-helper.xml" as="common" />
 	
 	<target name="dist">
 		
+		<var name="clspath" value="${swjar.4.0.3}" />
 		<var name="srcpath" value="${srcpath}:./target/generated-sources" />
 		<var name="usinglibs" value="true" />
 		
