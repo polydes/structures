@@ -2,7 +2,7 @@ package com.polydes.datastruct.ui.table;
 
 import javax.swing.JComponent;
 
-import layout.TableLayout;
+import info.clearthought.layout.TableLayout;
 
 import org.apache.commons.lang3.ArrayUtils;
 

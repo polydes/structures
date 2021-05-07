@@ -18,9 +18,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import com.polydes.datastruct.data.structure.elements.StructureCondition;
 import com.polydes.datastruct.ui.utils.Geometry;
 
-import layout.TableLayout;
-import layout.TableLayoutConstants;
-import layout.TableLayoutConstraints;
+import info.clearthought.layout.TableLayout;
+import info.clearthought.layout.TableLayoutConstants;
+import info.clearthought.layout.TableLayoutConstraints;
 import stencyl.sw.SW;
 
 public class Card extends JPanel implements GuiObject

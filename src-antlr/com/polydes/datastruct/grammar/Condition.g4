@@ -1,5 +1,9 @@
 grammar Condition;
 
+@header {
+    package com.polydes.datastruct.grammar;
+}
+
 expression
     :   primary                                     #ExprPrimary
     |   expression '.' name=Identifier

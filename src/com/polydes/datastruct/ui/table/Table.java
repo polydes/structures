@@ -2,7 +2,7 @@ package com.polydes.datastruct.ui.table;
 
 import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 
-import layout.TableLayout;
+import info.clearthought.layout.TableLayout;
 
 public class Table extends Card
 {

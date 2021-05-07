@@ -6,11 +6,13 @@ import org.apache.log4j.Logger;
 
 import com.polydes.datastruct.data.types.HaxeDataType;
 
-import stencyl.sw.editors.snippet.designer.AttributeType;
+import stencyl.core.lib.Game;
+import stencyl.core.lib.attribute.AttributeType;
+import stencyl.core.lib.attribute.AttributeTypes;
 import stencyl.sw.editors.snippet.designer.Definition;
 import stencyl.sw.editors.snippet.designer.Definition.Category;
-import stencyl.sw.editors.snippet.designer.Definitions;
 import stencyl.sw.editors.snippet.designer.Definitions.DefinitionMap;
+import stencyl.sw.editors.snippet.designer.Definitions.OrderedDefinitionMap;
 import stencyl.sw.editors.snippet.designer.block.AbstractField;
 import stencyl.sw.editors.snippet.designer.block.Block;
 import stencyl.sw.editors.snippet.designer.block.Block.BlockType;
@@ -23,7 +25,7 @@ import stencyl.sw.editors.snippet.designer.codebuilder.DesignModeCodeBuilder;
 import stencyl.sw.editors.snippet.designer.codebuilder.SpecialCodeElement;
 import stencyl.sw.editors.snippet.designer.codebuilder.XMLCodeBuilder;
 import stencyl.sw.editors.snippet.designer.codebuilder.xml.XMLElement;
-import stencyl.sw.editors.snippet.designer.codebuilder.xml.XMLElement.XMLInt;
+import stencyl.sw.editors.snippet.designer.codebuilder.xml.XMLElement.XMLCode;
 import stencyl.sw.editors.snippet.designer.codemap.BasicCodeMap;
 import stencyl.sw.editors.snippet.designer.dropdown.CodeConverter;
 import stencyl.sw.editors.snippet.designer.dropdown.DropdownData;
@@ -33,7 +35,7 @@ public class Blocks
 {
 	private static final Logger log = Logger.getLogger(Blocks.class);
 	
-	public static DefinitionMap tagCache = new DefinitionMap();
+	public static DefinitionMap tagCache = new OrderedDefinitionMap();
 	
 	public static void addDesignModeBlocks()
 	{
@@ -75,9 +77,9 @@ public class Blocks
 					
 					if (child != null)
 					{
-						if(child instanceof XMLInt)
+						if(child instanceof XMLCode)
 						{
-							builder.append(((XMLInt) child).val);
+							builder.append(((XMLCode) child).val);
 						}
 						else
 						{
@@ -98,7 +100,7 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-set-prop1",
-			new AttributeType[] { AttributeType.OBJECT, AttributeType.TEXT, AttributeType.OBJECT },
+			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.TEXT, AttributeTypes.OBJECT },
 			new CodeElement()
 			{
 				@Override
@@ -110,14 +112,14 @@ public class Blocks
 			null,
 			spec,
 			BlockType.ACTION,
-			AttributeType.VOID,
+			AttributeTypes.VOID,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
 		
-		Definitions.get().put(blockDef.tag, blockDef);
+		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 
 //		get [propname] for [object]					object.prop
@@ -128,7 +130,7 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-prop1",
-			new AttributeType[] { AttributeType.OBJECT, AttributeType.TEXT },
+			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.TEXT },
 			new CodeElement()
 			{
 				@Override
@@ -140,14 +142,14 @@ public class Blocks
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeType.OBJECT,
+			AttributeTypes.OBJECT,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
 		
-		Definitions.get().put(blockDef.tag, blockDef);
+		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 		
 //		set [propname] for [objectname] to [value]	DataStructures.get(objectname).propname = value;
@@ -158,7 +160,7 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-set-prop2",
-			new AttributeType[] { AttributeType.TEXT, AttributeType.TEXT, AttributeType.OBJECT },
+			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.TEXT, AttributeTypes.OBJECT },
 			new CodeElement()
 			{
 				@Override
@@ -170,14 +172,14 @@ public class Blocks
 			null,
 			spec,
 			BlockType.ACTION,
-			AttributeType.VOID,
+			AttributeTypes.VOID,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
 		
-		Definitions.get().put(blockDef.tag, blockDef);
+		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 		
 //		get [propname] for [objectname]				DataStructures.get(objectname).propname
@@ -188,7 +190,7 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-prop2",
-			new AttributeType[] { AttributeType.TEXT, AttributeType.TEXT },
+			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.TEXT },
 			new CodeElement()
 			{
 				@Override
@@ -200,14 +202,14 @@ public class Blocks
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeType.OBJECT,
+			AttributeTypes.OBJECT,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
 		
-		Definitions.get().put(blockDef.tag, blockDef);
+		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 		
 //		transformer setter: set insets for window to [(top, bottom, left, right)]
@@ -219,19 +221,19 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-data",
-			new AttributeType[] { AttributeType.TEXT },
+			new AttributeType[] { AttributeTypes.TEXT },
 			new BasicCodeMap("DataStructures.get(~)"),
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeType.OBJECT,
+			AttributeTypes.OBJECT,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
 		
-		Definitions.get().put(blockDef.tag, blockDef);
+		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 	}
 	
@@ -242,7 +244,7 @@ public class Blocks
 		{
 			for(Definition def : blocks)
 			{
-				Definitions.get().put(def.tag, def);
+				Game.getGame().getDefinitions().put(def.tag, def);
 				tagCache.put(def.tag, def);
 			}
 		}
@@ -289,7 +291,7 @@ public class Blocks
 	public static void dispose()
 	{
 		for(String tag : tagCache.keySet())
-			Definitions.get().remove(tag);
+			Game.getGame().getDefinitions().remove(tag);
 		tagCache.clear();
 	}
 
@@ -300,7 +302,7 @@ public class Blocks
 		{
 			for(Definition def : blocks)
 			{
-				Definitions.get().remove(def.tag);
+				Game.getGame().getDefinitions().remove(def.tag);
 				tagCache.remove(def.tag);
 			}
 		}
