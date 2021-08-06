@@ -13,19 +13,10 @@ import stencyl.sw.editors.snippet.designer.Definition;
 import stencyl.sw.editors.snippet.designer.Definition.Category;
 import stencyl.sw.editors.snippet.designer.Definitions.DefinitionMap;
 import stencyl.sw.editors.snippet.designer.Definitions.OrderedDefinitionMap;
-import stencyl.sw.editors.snippet.designer.block.AbstractField;
 import stencyl.sw.editors.snippet.designer.block.Block;
 import stencyl.sw.editors.snippet.designer.block.Block.BlockType;
-import stencyl.sw.editors.snippet.designer.block.BlockField;
-import stencyl.sw.editors.snippet.designer.block.BlockFieldOverride;
 import stencyl.sw.editors.snippet.designer.block.BlockTheme;
 import stencyl.sw.editors.snippet.designer.codebuilder.CodeBuilder;
-import stencyl.sw.editors.snippet.designer.codebuilder.CodeElement;
-import stencyl.sw.editors.snippet.designer.codebuilder.DesignModeCodeBuilder;
-import stencyl.sw.editors.snippet.designer.codebuilder.SpecialCodeElement;
-import stencyl.sw.editors.snippet.designer.codebuilder.XMLCodeBuilder;
-import stencyl.sw.editors.snippet.designer.codebuilder.xml.XMLElement;
-import stencyl.sw.editors.snippet.designer.codebuilder.xml.XMLElement.XMLCode;
 import stencyl.sw.editors.snippet.designer.codemap.BasicCodeMap;
 import stencyl.sw.editors.snippet.designer.dropdown.CodeConverter;
 import stencyl.sw.editors.snippet.designer.dropdown.DropdownData;
@@ -43,72 +34,12 @@ public class Blocks
 		
 		String spec = "set %1 for %0 to %2";
 		
-		final CodeElement arg = SpecialCodeElement.TILDE;
-		final CodeElement codeArg = new CodeElement()
-		{
-			@Override
-			public void toCode(CodeBuilder builder)
-			{
-				if(builder instanceof DesignModeCodeBuilder)
-				{
-					AbstractField child = ((DesignModeCodeBuilder) builder).getCurrentField();
-					
-					if (child instanceof BlockFieldOverride && ((BlockFieldOverride) child).isOverridden())
-					{
-						BlockField c = ((BlockFieldOverride) child).getBlockField();
-						
-						if (c.hasNested())
-						{
-							builder.error();
-						}
-						else
-						{
-							builder.append(c.getFieldValue());
-						}
-					}
-					else
-					{
-						builder.error();
-					}
-				}
-				else if(builder instanceof XMLCodeBuilder)
-				{
-					XMLElement child = ((XMLCodeBuilder) builder).getCurrentField();
-					
-					if (child != null)
-					{
-						if(child instanceof XMLCode)
-						{
-							builder.append(((XMLCode) child).val);
-						}
-						else
-						{
-							builder.error();
-						}
-					}
-					else
-					{
-						builder.error();
-					}
-				}
-				
-				builder.nextField();
-			}
-		};
-		
 		Definition blockDef = new Definition
 		(
 			Category.CUSTOM,
 			"ds-set-prop1",
-			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.TEXT, AttributeTypes.OBJECT },
-			new CodeElement()
-			{
-				@Override
-				public void toCode(CodeBuilder builder)
-				{
-					builder.append(arg, ".", codeArg, " = ", arg, ";");
-				}
-			},
+			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.CODE, AttributeTypes.OBJECT },
+			new BasicCodeMap("~.~ = ~;"),
 			null,
 			spec,
 			BlockType.ACTION,
@@ -130,15 +61,8 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-prop1",
-			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.TEXT },
-			new CodeElement()
-			{
-				@Override
-				public void toCode(CodeBuilder builder)
-				{
-					builder.append(arg, ".", codeArg);
-				}
-			},
+			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.CODE },
+			new BasicCodeMap("~.~"),
 			null,
 			spec,
 			BlockType.NORMAL,
@@ -160,15 +84,8 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-set-prop2",
-			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.TEXT, AttributeTypes.OBJECT },
-			new CodeElement()
-			{
-				@Override
-				public void toCode(CodeBuilder builder)
-				{
-					builder.append("DataStructures.get(", arg, ").", codeArg, " = ", arg, ";");
-				}
-			},
+			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.CODE, AttributeTypes.OBJECT },
+			new BasicCodeMap("DataStructures.get(~).~ = ~;"),
 			null,
 			spec,
 			BlockType.ACTION,
@@ -190,15 +107,8 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-prop2",
-			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.TEXT },
-			new CodeElement()
-			{
-				@Override
-				public void toCode(CodeBuilder builder)
-				{
-					builder.append("DataStructures.get(", arg, ".", codeArg);
-				}
-			},
+			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.CODE },
+			new BasicCodeMap("DataStructures.get(~).~"),
 			null,
 			spec,
 			BlockType.NORMAL,
