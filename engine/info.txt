@@ -1,7 +1,7 @@
 name=Data Structures Extension
 description=Create and Manage Data Structures
 author=Justin Espedal
-website=http://www.polydes.com/
+website=http://www.polydes.com/repo/engine/com.polydes.datastruct
 version=2.0.3
 compatibility=all
 dependencies=toolset-com.polydes.datastruct-2.0.0

@@ -85,7 +85,7 @@ jar {
 			"Extension-Name": "Data Structures Extension",
 			"Extension-Description": "Create and Manage Data Structures.",
 			"Extension-Author": "Justin Espedal",
-			"Extension-Website": "https://github.com/polydes",
+			"Extension-Website": "http://www.polydes.com/repo/toolset/com.polydes.datastruct",
 			"Extension-Repository": "http://www.polydes.com/repo",
 			"Extension-Internal-Version": "4"
 		)
