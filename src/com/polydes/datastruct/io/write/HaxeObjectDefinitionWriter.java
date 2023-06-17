@@ -11,7 +11,7 @@ import com.polydes.datastruct.data.core.HaxeField;
 import com.polydes.datastruct.data.core.HaxeObjectDefinition;
 import com.polydes.datastruct.data.structure.elements.StructureField.FieldType;
 
-import stencyl.sw.util.FileHelper;
+import stencyl.core.io.FileHelper;
 
 public class HaxeObjectDefinitionWriter
 {

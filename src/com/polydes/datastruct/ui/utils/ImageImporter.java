@@ -1,20 +1,19 @@
 package com.polydes.datastruct.ui.utils;
 
-import java.awt.Dimension;
-import java.awt.FileDialog;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JFileChooser;
+import javax.swing.*;
 
 import com.polydes.datastruct.utils.PngFilter;
 
-import misc.comp.ImagePreview;
-import stencyl.sw.SW;
-import stencyl.sw.ext.FileHandler;
-import stencyl.sw.util.Util;
-import stencyl.sw.util.filechooser.ImageFileView;
+import stencyl.app.comp.ImagePreview;
+import stencyl.app.comp.filechooser.ImageFileView;
+import stencyl.core.ext.FileHandler;
+import stencyl.core.util.OS;
+import stencyl.sw.app.main.SW;
 
 public class ImageImporter implements ActionListener
 {
@@ -30,7 +29,7 @@ public class ImageImporter implements ActionListener
 	{
 		File file = null;
 		
-		if(Util.isMacOSX()) 
+		if(OS.isMacOSX()) 
 		{
 			FileDialog fc = new FileDialog(SW.get(), "Import Image");
 			fc.setPreferredSize(new Dimension(800, 600));

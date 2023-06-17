@@ -1,20 +1,17 @@
 package com.polydes.datastruct.ui;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 
-import stencyl.sw.SW;
-import stencyl.sw.lnf.Theme;
-import stencyl.sw.loc.LanguagePack;
-import stencyl.sw.util.Util;
-import stencyl.sw.util.comp.ButtonBarFactory;
-import stencyl.sw.util.comp.GroupButton;
-import stencyl.sw.util.dg.StencylDialog;
+import stencyl.app.comp.ButtonBarFactory;
+import stencyl.app.comp.GroupButton;
+import stencyl.app.comp.dg.StencylDialog;
+import stencyl.app.lnf.Theme;
+import stencyl.core.loc.LanguagePack;
+import stencyl.core.util.OS;
+import stencyl.sw.app.main.SW;
 
 public class MiniDialog extends StencylDialog
 {
@@ -26,7 +23,7 @@ public class MiniDialog extends StencylDialog
 	{
 		super(SW.get(), title, width, height, false, false);
 
-		if(!Util.isMacOSX())
+		if(!OS.isMacOSXForStyling())
 		{
 			setBackground(Theme.APP_COLOR);
 		}

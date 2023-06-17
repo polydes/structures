@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.polydes.common.ext.ExtendableObjectRegistry;
-import com.polydes.common.nodes.NodeCreator.CreatableNodeInfo;
 import com.polydes.datastruct.data.structure.elements.StructureCondition.ConditionType;
 import com.polydes.datastruct.data.structure.elements.StructureField.FieldType;
 import com.polydes.datastruct.data.structure.elements.StructureHeader.HeaderType;
@@ -14,6 +12,9 @@ import com.polydes.datastruct.data.structure.elements.StructureTab.TabType;
 import com.polydes.datastruct.data.structure.elements.StructureTabset.TabsetType;
 import com.polydes.datastruct.data.structure.elements.StructureText.TextType;
 import com.polydes.datastruct.data.structure.elements.StructureUnknown.UnknownType;
+
+import stencyl.app.api.nodes.NodeCreator.CreatableNodeInfo;
+import stencyl.core.ext.registry.ExtendableObjectRegistry;
 
 /** StructureDefinitionElementTypes **/
 public class SDETypes extends ExtendableObjectRegistry<SDEType<?>>

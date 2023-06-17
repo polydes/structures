@@ -1,16 +1,17 @@
 package com.polydes.datastruct.data.types.haxe;
 
-import static com.polydes.datastruct.data.types.ExtrasResourceType.RESOURCE_TYPE;
+import javax.swing.*;
 
-import javax.swing.ImageIcon;
-
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.sys.FileRenderer;
 import com.polydes.datastruct.data.core.ExtrasResource;
 import com.polydes.datastruct.data.types.DSTypes;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.ExtrasResourceType;
 import com.polydes.datastruct.data.types.HaxeDataType;
+
+import stencyl.app.sys.FileRenderer;
+import stencyl.core.api.datatypes.properties.DataTypeProperties;
+
+import static com.polydes.datastruct.data.types.ExtrasResourceType.RESOURCE_TYPE;
 
 public class ExtrasImageHaxeType extends HaxeDataType
 {
@@ -20,9 +21,9 @@ public class ExtrasImageHaxeType extends HaxeDataType
 	}
 	
 	@Override
-	public EditorProperties loadExtras(ExtrasMap extras)
+	public DataTypeProperties loadExtras(ExtrasMap extras)
 	{
-		EditorProperties props = new EditorProperties();
+		DataTypeProperties props = new DataTypeProperties();
 		props.put(RESOURCE_TYPE, ExtrasResourceType.ResourceType.IMAGE);
 		return props;
 	}

@@ -1,8 +1,8 @@
 package com.polydes.datastruct.ui.table;
 
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
-
 import info.clearthought.layout.TableLayout;
+
+import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 
 public class Table extends Card
 {

@@ -3,6 +3,8 @@
  */
 package com.polydes.datastruct;
 
+import com.stencyl.Engine;
+
 class DataStructures
 {
 	private static var init = false;
@@ -30,7 +32,7 @@ class DataStructures
 		init = true;
 		if(!reloadSet)
 		{
-			Universal.addReloadListener(reload);
+			Engine.addReloadListener(reload);
 			reloadSet = true;
 		}
 	}

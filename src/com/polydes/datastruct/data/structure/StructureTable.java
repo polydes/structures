@@ -1,7 +1,5 @@
 package com.polydes.datastruct.data.structure;
 
-import javax.swing.JPanel;
-
 import com.polydes.datastruct.data.structure.elements.StructureTab;
 
 public class StructureTable extends StructureTab
@@ -12,21 +10,5 @@ public class StructureTable extends StructureTab
 	{
 		super("");
 		this.def = def;
-	}
-	
-	@Override
-	public JPanel getEditor()
-	{
-		return BLANK_EDITOR;
-	}
-	
-	@Override
-	public void disposeEditor()
-	{
-	}
-	
-	@Override
-	public void revertChanges()
-	{
 	}
 }

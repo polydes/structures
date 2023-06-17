@@ -4,26 +4,35 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.polydes.common.data.types.DataType;
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.ext.RORealizer;
 import com.polydes.datastruct.DataStructuresExtension;
 
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.DataType;
+import stencyl.core.api.datatypes.properties.DataTypeProperties;
+import stencyl.core.api.datatypes.properties.ExtrasKey;
+import stencyl.core.ext.registry.RORealizer;
+
 /**
- * A map used for serialization of {@link EditorProperties}.
+ * A map used for serialization of {@link DataTypeProperties}.
  */
 public class ExtrasMap
 {
 	/** This map contains only two types of values: String and ExtrasMap */
 	private final HashMap<String, Object> map = new HashMap<>();
-	
+	DataContext context;
+
+	public ExtrasMap(DataContext context)
+	{
+		this.context = context;
+	}
+
 	public <T> T get(ExtrasKey<T> key, DataType<T> type, T defaultValue)
 	{
 		String s = (String) map.get(key.id);
 		if(s == null)
 			return defaultValue;
 		else
-			return type.decode(s);
+			return type.decode(s, context);
 	}
 	
 	public <T> T get(ExtrasKey<T> key, DataType<T> type)
@@ -32,7 +41,7 @@ public class ExtrasMap
 		if(s == null)
 			return null;
 		else
-			return type.decode(s);
+			return type.decode(s, context);
 	}
 	
 	/*-------------------------------------*\
@@ -42,7 +51,7 @@ public class ExtrasMap
 	public <T> void put(ExtrasKey<T> key, DataType<T> type, T value)
 	{
 		if(value != null)
-			map.put(key.id, type.encode(value));
+			map.put(key.id, type.encode(value, context));
 	}
 
 	public boolean containsKey(ExtrasKey<?> key)
@@ -99,24 +108,24 @@ public class ExtrasMap
 		if(s == null)
 			return defaultValue;
 		else
-			return (T) HaxeTypeConverter.decode(type, s);
+			return (T) HaxeTypeConverter.decode(type, s, context);
 	}
 	
 	public <T,U extends T> String putTyped(ExtrasKey<T> key, DataType<T> type, U value)
 	{
-		return (String) map.put(key.id, HaxeTypeConverter.encode(type, value));
+		return (String) map.put(key.id, HaxeTypeConverter.encode(type, value, context));
 	}
 	
 	/*-------------------------------------*\
 	 * Special Cases: Map, Enum, DataType
 	\*-------------------------------------*/ 
 	
-	public ExtrasMap getMap(ExtrasKey<EditorProperties> key)
+	public ExtrasMap getMap(ExtrasKey<DataTypeProperties> key)
 	{
 		return (ExtrasMap) map.get(key.id);
 	}
 	
-	public void putMap(ExtrasKey<EditorProperties> key, ExtrasMap value)
+	public void putMap(ExtrasKey<DataTypeProperties> key, ExtrasMap value)
 	{
 		map.put(key.id, value);
 	}

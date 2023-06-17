@@ -1,22 +1,24 @@
 package com.polydes.datastruct.ui.objeditors;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
-import com.polydes.common.comp.TitledPanel;
-import com.polydes.common.comp.utils.Layout;
-import com.polydes.common.nodes.DefaultBranch;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.nodes.HierarchyModel;
-import com.polydes.common.nodes.Leaf;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
-import com.polydes.common.util.IconUtil;
 import com.polydes.datastruct.data.structure.Structure;
+import com.polydes.datastruct.ui.StructureIconProvider;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
+
+import stencyl.app.api.nodes.NodeUIProperties;
+import stencyl.app.comp.TitledPanel;
+import stencyl.app.comp.propsheet.PropertiesSheetStyle;
+import stencyl.app.comp.util.IconUtil;
+import stencyl.app.comp.util.Layout;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.api.pnodes.HierarchyModel;
+import stencyl.core.api.pnodes.Leaf;
 
 public class StructureEditor extends TitledPanel implements PropertyChangeListener
 {
@@ -28,9 +30,9 @@ public class StructureEditor extends TitledPanel implements PropertyChangeListen
 		this(structure, null);
 	}
 	
-	public StructureEditor(Structure structure, HierarchyModel<DefaultLeaf,DefaultBranch> model)
+	public StructureEditor(Structure structure, HierarchyModel<DefaultLeaf, DefaultBranch> model)
 	{
-		super(structure.dref.getName(), structure.getIcon());
+		super(structure.dref.getName(), StructureIconProvider.getStructureIcon(structure));
 		
 		this.structure = structure;
 		
@@ -67,7 +69,7 @@ public class StructureEditor extends TitledPanel implements PropertyChangeListen
 			case Leaf.NAME:
 				label.setText((String) evt.getNewValue());
 				break;
-			case Leaf.ICON:
+			case NodeUIProperties.ICON:
 				label.setIcon(IconUtil.getIcon((ImageIcon) evt.getNewValue(), TitledPanel.ICON_SIZE));
 				break;
 			default:

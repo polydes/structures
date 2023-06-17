@@ -1,8 +1,6 @@
 package com.polydes.datastruct.ui.objeditors;
 
-import static com.polydes.common.util.Lang.asArray;
-
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -10,29 +8,32 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.HashMap;
 
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
+import javax.swing.*;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.polydes.common.comp.DisabledPanel;
-import com.polydes.common.comp.utils.Layout;
-import com.polydes.common.data.types.DataEditor;
-import com.polydes.common.data.types.builtin.basic.ArrayType.SimpleArrayEditor;
-import com.polydes.common.data.types.builtin.basic.StringType.ExpandingStringEditor;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
-import com.polydes.common.ui.propsheet.PropertiesSheetSupport;
-import com.polydes.common.ui.propsheet.PropertiesSheetSupport.FieldInfo;
-import com.polydes.common.ui.propsheet.PropertiesSheetWrapper;
-import com.polydes.common.util.ColorUtil;
+import com.polydes.datastruct.ui.object.ObjectEditor;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
 import com.polydes.datastruct.ui.table.Row;
 import com.polydes.datastruct.ui.table.RowGroup;
 import com.polydes.datastruct.ui.table.Table;
 
-public class StructureObjectPanel extends Table implements PreviewableEditor
+import stencyl.app.api.datatypes.DataEditor;
+import stencyl.app.api.datatypes.EditorSheet;
+import stencyl.app.comp.DisabledPanel;
+import stencyl.app.comp.datatypes.array.SimpleArrayEditor;
+import stencyl.app.comp.datatypes.string.ExpandingStringEditor;
+import stencyl.app.comp.propsheet.PropertiesSheetStyle;
+import stencyl.app.comp.propsheet.PropertiesSheetSupport;
+import stencyl.app.comp.propsheet.PropertiesSheetSupport.FieldInfo;
+import stencyl.app.comp.propsheet.PropertiesSheetWrapper;
+import stencyl.app.comp.util.Layout;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.util.ColorUtil;
+
+import static stencyl.core.util.Lang.asArray;
+
+public class StructureObjectPanel extends Table implements EditorSheet, ObjectEditor
 {
 	protected PropertiesSheetSupport sheet;
 	
@@ -122,7 +123,7 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 	public PropertiesSheetSupport createSheetExtension(Object model, String id)
 	{
 		DisposableSheetWrapper wrapper = new DisposableSheetWrapper();
-		PropertiesSheetSupport support = new PropertiesSheetSupport(wrapper, style, model);
+		PropertiesSheetSupport support = new PropertiesSheetSupport(wrapper, this, style, model);
 		
 		extensions.put(id, support);
 		wrappers.put(id, wrapper);
@@ -143,19 +144,26 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 			wrapper.decrementGreaterThan(rowID, 1);
 	}
 	
-	@Override
 	public void setPreviewSheet(PropertiesSheet sheet, DefaultLeaf key)
 	{
 		preview = sheet;
 		previewKey = key;
 	}
-	
+
+	@Override
+	public void saveChanges()
+	{
+		
+	}
+
+	@Override
 	public void revertChanges()
 	{
 		for(PropertiesSheetSupport support : extensions.values())
 			support.revertChanges();
 	}
-	
+
+	@Override
 	public void dispose()
 	{
 		sheet = null;
@@ -170,7 +178,14 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 		extensions = null;
 		wrappers = null;
 	}
-	
+
+	@Override
+	public Object getSheetProperty(String property)
+	{
+		if(preview == null) return null;
+		return preview.getSheetProperty(property);
+	}
+
 	// PropertiesSheetWrapper
 	
 	public class DisposableSheetWrapper implements PropertiesSheetWrapper
@@ -264,7 +279,7 @@ public class StructureObjectPanel extends Table implements PreviewableEditor
 			//may need to fix some dirtiness logic here.
 			editorsInitialized = true;
 		}
-		
+
 		@Override
 		public void dispose()
 		{

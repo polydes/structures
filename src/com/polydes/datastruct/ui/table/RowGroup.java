@@ -1,10 +1,10 @@
 package com.polydes.datastruct.ui.table;
 
-import javax.swing.JComponent;
-
-import info.clearthought.layout.TableLayout;
+import javax.swing.*;
 
 import org.apache.commons.lang3.ArrayUtils;
+
+import info.clearthought.layout.TableLayout;
 
 public class RowGroup implements GuiObject
 {

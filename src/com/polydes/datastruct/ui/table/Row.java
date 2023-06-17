@@ -1,6 +1,6 @@
 package com.polydes.datastruct.ui.table;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 
 public class Row
 {

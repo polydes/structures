@@ -1,19 +1,11 @@
 package com.polydes.datastruct.data.folder;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.util.Lang;
 
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.nodes.DefaultViewableBranch;
-import com.polydes.common.res.ResourceLoader;
-import com.polydes.common.res.Resources;
-import com.polydes.common.ui.object.EditableObject;
-import com.polydes.common.util.Lang;
-
-public class Folder extends DefaultViewableBranch
+public class Folder extends DefaultBranch
 {
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
-	
 	public static FolderPolicy DEFAULT_POLICY;
 	static
 	{
@@ -26,39 +18,12 @@ public class Folder extends DefaultViewableBranch
 	}
 	protected FolderPolicy policy;
 	
-	public static final ImageIcon folderIcon = res.loadIcon("page/folder-small.png");
-	
 	public Folder(String name)
 	{
-		this(name, new FolderState());
+		this(name, null);
 	}
 	
-	private static class FolderState extends EditableObject
-	{
-		@Override
-		public JPanel getEditor()
-		{
-			return BLANK_EDITOR;
-		}
-
-		@Override
-		public void disposeEditor()
-		{
-		}
-
-		@Override
-		public void revertChanges()
-		{
-		}
-
-		@Override
-		public boolean fillsViewHorizontally()
-		{
-			return false;
-		}
-	}
-	
-	public Folder(String name, EditableObject object)
+	public Folder(String name, Object object)
 	{
 		super(name, object);
 		policy = null;
@@ -148,11 +113,5 @@ public class Folder extends DefaultViewableBranch
 	public final boolean isItemEditingEnabled()
 	{
 		return Lang.or(policy, DEFAULT_POLICY).itemEditingEnabled;
-	}
-	
-	@Override
-	public ImageIcon getIcon()
-	{
-		return folderIcon;
 	}
 }

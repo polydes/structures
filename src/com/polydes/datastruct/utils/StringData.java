@@ -6,18 +6,19 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
 
-import com.polydes.common.data.types.DataType;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.DataType;
 
 public class StringData
 {
 	private static final Logger log = Logger.getLogger(StringData.class);
 	
-	public static <T> T getStringAs(String s, DataType<T> type, T defaultValue)
+	public static <T> T getStringAs(String s, DataType<T> type, T defaultValue, DataContext ctx)
 	{
 		if(s == null)
 			return defaultValue;
 		else
-			return type.decode(s);
+			return type.decode(s, ctx);
 	}
 	
 	//first item returned is the type of the array.

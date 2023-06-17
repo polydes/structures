@@ -1,12 +1,11 @@
 package com.polydes.datastruct.ui.page;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 
-import com.polydes.common.ui.object.EditableObject;
+import com.polydes.datastruct.ui.objeditors.StructureObjectPanel;
 import com.polydes.datastruct.ui.utils.LightweightWindow;
 
-import stencyl.sw.lnf.Theme;
+import stencyl.app.lnf.Theme;
 
 public class PropertiesWindow extends LightweightWindow
 {
@@ -21,20 +20,20 @@ public class PropertiesWindow extends LightweightWindow
 	 * Construct UI
 	\*-------------------------------------*/
 	
-	private EditableObject toEdit;
+	private StructureObjectPanel toEdit;
 	
 	public JPanel createContents()
 	{
 		if(toEdit != null)
-			return toEdit.getEditor();
+			return toEdit.getView();
 		else
 			return new JPanel();
 	}
 	
-	public void setObject(EditableObject toEdit)
+	public void setObject(StructureObjectPanel toEdit)
 	{
 		if(this.toEdit != null)
-			this.toEdit.disposeEditor();
+			this.toEdit.dispose();
 		
 		this.toEdit = toEdit;
 		setContents(createContents());
@@ -47,7 +46,7 @@ public class PropertiesWindow extends LightweightWindow
 	public void submit()
 	{
 		if(toEdit != null)
-			toEdit.disposeEditor();
+			toEdit.dispose();
 		
 		toEdit = null;
 		
@@ -77,7 +76,7 @@ public class PropertiesWindow extends LightweightWindow
 //		}
 		
 		if(toEdit != null)
-			toEdit.disposeEditor();
+			toEdit.dispose();
 		toEdit = null;
 		super.cancel();
 	}

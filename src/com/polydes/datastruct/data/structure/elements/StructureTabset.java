@@ -1,27 +1,28 @@
 package com.polydes.datastruct.data.structure.elements;
 
-import javax.swing.JPanel;
-
 import org.w3c.dom.Element;
 
-import com.polydes.common.comp.utils.Layout;
-import com.polydes.common.nodes.DefaultBranch;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.res.ResourceLoader;
-import com.polydes.common.res.Resources;
-import com.polydes.common.util.Lang;
 import com.polydes.datastruct.data.structure.SDE;
 import com.polydes.datastruct.data.structure.SDEType;
 import com.polydes.datastruct.data.structure.StructureDefinition;
+import com.polydes.datastruct.ui.objeditors.StructureDefinitionEditor;
 import com.polydes.datastruct.ui.table.Card;
 import com.polydes.datastruct.ui.table.Deck;
 import com.polydes.datastruct.ui.table.GuiObject;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
 import com.polydes.datastruct.ui.table.RowGroup;
 
+import stencyl.app.comp.util.Layout;
+import stencyl.app.ext.res.AppResourceLoader;
+import stencyl.app.ext.res.AppResources;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.util.Lang;
+
 public class StructureTabset extends SDE
 {
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	@Override
 	public String toString()
@@ -30,27 +31,11 @@ public class StructureTabset extends SDE
 	}
 	
 	@Override
-	public JPanel getEditor()
-	{
-		return BLANK_EDITOR;
-	}
-	
-	@Override
-	public void disposeEditor()
-	{
-	}
-	
-	@Override
-	public void revertChanges()
-	{
-	}
-	
-	@Override
 	public String getDisplayLabel()
 	{
 		return "tabset";
 	}
-	
+
 	public static class TabsetType extends SDEType<StructureTabset>
 	{
 		public TabsetType()
@@ -69,12 +54,12 @@ public class StructureTabset extends SDE
 		}
 
 		@Override
-		public void write(StructureTabset object, Element e)
+		public void write(StructureTabset object, Element e, DataContext ctx)
 		{	
 		}
 		
 		@Override
-		public StructureTabset create(StructureDefinition def, String nodeName)
+		public StructureTabset create(StructureDefinition def, StructureDefinitionEditor defEditor, String nodeName)
 		{
 			return new StructureTabset();
 		}

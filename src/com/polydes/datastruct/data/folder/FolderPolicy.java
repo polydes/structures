@@ -1,6 +1,6 @@
 package com.polydes.datastruct.data.folder;
 
-import com.polydes.common.nodes.DefaultLeaf;
+import stencyl.core.api.pnodes.DefaultLeaf;
 
 public class FolderPolicy
 {

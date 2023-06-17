@@ -9,19 +9,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.ImageIcon;
-
 import org.apache.log4j.Logger;
 
-import com.polydes.common.nodes.DefaultEditableLeaf;
-import com.polydes.common.ui.object.EditableObject;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.elements.StructureCondition;
 import com.polydes.datastruct.data.structure.elements.StructureField;
 import com.polydes.datastruct.data.types.HaxeTypeConverter;
-import com.polydes.datastruct.ui.objeditors.StructureEditor;
 
-public class Structure extends EditableObject
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.pnodes.DefaultLeaf;
+
+public class Structure
 {
 	private static final Logger log = Logger.getLogger(Structure.class);
 	
@@ -31,10 +29,9 @@ public class Structure extends EditableObject
 	private StructureDefinition template;
 	private HashMap<StructureField, Object> fieldData;
 	private HashMap<StructureField, Boolean> enabledFields;
-	protected StructureEditor editor;
 	private int id;
 	
-	public DefaultEditableLeaf dref;
+	public DefaultLeaf dref;
 	
 	public Structure(int id, String name, String templateName)
 	{
@@ -52,51 +49,40 @@ public class Structure extends EditableObject
 	{
 		this.id = id;
 		this.template = template;
-		fieldData = new HashMap<StructureField, Object>();
-		enabledFields = new HashMap<StructureField, Boolean>();
-		for(StructureField f : template.getFields())
-		{
-			Object value = f.getType().dataType.decode("");
-			fieldData.put(f, value);
-			enabledFields.put(f, !f.isOptional());
-			pcs.firePropertyChange(f.getVarname(), null, value);
-			log.debug(name + "::" + f.getVarname() + "=" + " -> " + value + " (init by string)");
-		}
+		fieldData = new HashMap<>();
+		enabledFields = new HashMap<>();
 		
 		allStructures.get(template).add(this);
 		
-		dref = new DefaultEditableLeaf(name, this);
-		refreshIconListener();
-	}
-	
-	String prevIconSource;
-	private PropertyChangeListener iconListener;
-	
-	private void refreshIconListener()
-	{
-		if(prevIconSource != null)
-			pcs.removePropertyChangeListener(prevIconSource, iconListener);
-		
-		if(template.iconSource != null)
-		{
-			if(iconListener == null)
-				iconListener = event -> dref.setIcon(getIcon());
-			pcs.addPropertyChangeListener(template.iconSource, iconListener);
-		}
-		
-		dref.setIcon(getIcon());
-		prevIconSource = template.iconSource;
+		dref = new DefaultLeaf(name, this);
 	}
 	
 	public void loadDefaults()
 	{
+		String name = dref.getName();
+		
 		for(StructureField f : template.getFields())
+		{
+			Object setTo = null;
+			
 			if(f.getEditorProperties() != null)
 			{
-				Object defValue = f.getDefaultValue();
-				if(defValue != null)
-				setProperty(f, f.getType().dataType.checkCopy(defValue));
+				if(f.getDefaultValue() instanceof Object defValue)
+					setTo = f.getType().dataType.checkCopy(defValue);
 			}
+			else if(!f.isOptional())
+			{
+				setTo = f.getType().dataType.decode("", template.getCtx());
+			}
+
+			enabledFields.put(f, setTo != null);
+			if(setTo != null)
+			{
+				fieldData.put(f, setTo);
+				pcs.firePropertyChange(f.getVarname(), null, setTo);
+				log.debug(name + "::" + f.getVarname() + "=" + setTo + " (init)");
+			}
+		}
 	}
 	
 	public int getID()
@@ -116,7 +102,8 @@ public class Structure extends EditableObject
 	
 	public void setPropertyFromString(StructureField field, String value)
 	{
-		Object newValue = HaxeTypeConverter.decode(field.getType().dataType, value);
+		DataContext ctx = getTemplate().getCtx();
+		Object newValue = HaxeTypeConverter.decode(field.getType().dataType, value, ctx);
 		Object oldValue = fieldData.get(field);
 		fieldData.put(field, newValue);
 		pcs.firePropertyChange(field.getVarname(), oldValue, newValue);
@@ -191,26 +178,9 @@ public class Structure extends EditableObject
 		return condition.check(this);
 	}
 	
-	@Override
-	public StructureEditor getEditor()
-	{
-		if(editor == null)
-			editor = new StructureEditor(this);
-		
-		return editor;
-	}
-	
 	public String getDefname()
 	{
 		return template.getName();
-	}
-	
-	public ImageIcon getIcon()
-	{
-		if(template.iconSource != null)
-			return template.getField(template.iconSource).getIcon(getPropByName(template.iconSource));
-		else
-			return template.getIcon();
 	}
 	
 	public Structure copy()
@@ -245,7 +215,6 @@ public class Structure extends EditableObject
 	{
 		fieldData.clear();
 		enabledFields.clear();
-		disposeEditor();
 		if(Structures.structures.containsKey(template))
 		{
 			Structures.structures.get(template).remove(this);
@@ -261,20 +230,6 @@ public class Structure extends EditableObject
 	public static void addType(StructureDefinition def)
 	{
 		allStructures.put(def, new ArrayList<Structure>());
-	}
-
-	@Override
-	public void disposeEditor()
-	{
-		if(editor != null)
-			editor.dispose();
-		editor = null;
-	}
-	
-	@Override
-	public void revertChanges()
-	{
-		
 	}
 	
 	@Override
@@ -323,7 +278,7 @@ public class Structure extends EditableObject
 		{
 			for(StructureField f : template.getFields())
 			{
-				Object value = HaxeTypeConverter.decode(f.getType().dataType, "");
+				Object value = HaxeTypeConverter.decode(f.getType().dataType, "", template.getCtx());
 				fieldData.put(f, value);
 				enabledFields.put(f, !f.isOptional());
 				pcs.firePropertyChange(f.getVarname(), null, value);
@@ -336,6 +291,7 @@ public class Structure extends EditableObject
 		
 		if(unknownData != null)
 		{
+			dref.markAsLoading(true);
 			for(Iterator<Entry<String,String>> it = unknownData.entrySet().iterator(); it.hasNext(); )
 			{
 				Entry<String,String> entry = it.next();
@@ -349,15 +305,7 @@ public class Structure extends EditableObject
 			}
 			if(unknownData.isEmpty())
 				unknownData = null;
+			dref.markAsLoading(false);
 		}
-		
-		disposeEditor();
-		refreshIconListener();
-	}
-
-	@Override
-	public boolean fillsViewHorizontally()
-	{
-		return false;
 	}
 }

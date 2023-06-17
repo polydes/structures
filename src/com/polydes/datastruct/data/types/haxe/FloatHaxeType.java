@@ -1,20 +1,21 @@
 package com.polydes.datastruct.data.types.haxe;
 
-import static com.polydes.common.data.types.builtin.basic.FloatType.DECIMAL_PLACES;
-import static com.polydes.common.data.types.builtin.basic.FloatType.EDITOR;
-import static com.polydes.common.data.types.builtin.basic.FloatType.MAX;
-import static com.polydes.common.data.types.builtin.basic.FloatType.MIN;
-import static com.polydes.common.data.types.builtin.basic.FloatType.STEP;
-
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.data.types.Types;
-import com.polydes.common.data.types.builtin.basic.FloatType;
-import com.polydes.common.data.types.builtin.basic.FloatType.Editor;
-import com.polydes.common.ui.propsheet.PropertiesSheetSupport;
-import com.polydes.datastruct.data.types.ExtrasKey;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.ui.objeditors.StructureFieldPanel;
+
+import stencyl.app.comp.datatypes.floatprim.PlainFloatEditor;
+import stencyl.app.comp.datatypes.floatprim.SliderFloatEditor;
+import stencyl.app.comp.datatypes.floatprim.SpinnerFloatEditor;
+import stencyl.app.comp.datatypes.selection.DropdownSelectionEditor;
+import stencyl.app.comp.propsheet.PropertiesSheetSupport;
+import stencyl.core.api.data.DataList;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.properties.DataTypeProperties;
+import stencyl.core.api.datatypes.properties.ExtrasKey;
+import stencyl.core.datatypes.Types;
+
+import static stencyl.core.datatypes.FloatType.*;
 
 public class FloatHaxeType extends HaxeDataType
 {
@@ -24,17 +25,16 @@ public class FloatHaxeType extends HaxeDataType
 	}
 
 	//SERIALIZATION KEYS -- do not change these.
-	private static final ExtrasKey<Editor>  KEY_EDITOR         = new ExtrasKey<>(EDITOR, "editor");
 	private static final ExtrasKey<Float>   KEY_MIN            = new ExtrasKey<>(MIN, "min");
 	private static final ExtrasKey<Float>   KEY_MAX            = new ExtrasKey<>(MAX, "max");
 	private static final ExtrasKey<Float>   KEY_STEP           = new ExtrasKey<>(STEP, "step");
 	private static final ExtrasKey<Integer> KEY_DECIMAL_PLACES = new ExtrasKey<>(DECIMAL_PLACES, "decimalPlaces");
 
 	@Override
-	public EditorProperties loadExtras(ExtrasMap extras)
+	public DataTypeProperties loadExtras(ExtrasMap extras)
 	{
-		EditorProperties props = new EditorProperties();
-		props.put(EDITOR, extras.getEnum(KEY_EDITOR, Editor.Plain));
+		DataTypeProperties props = new DataTypeProperties();
+		props.put(EDITOR, extras.get(KEY_EDITOR, Types._String, PlainFloatEditor.id));
 		props.put(MIN, extras.get(KEY_MIN, Types._Float, null));
 		props.put(MAX, extras.get(KEY_MAX, Types._Float, null));
 		props.put(DECIMAL_PLACES, extras.get(KEY_DECIMAL_PLACES, Types._Int, null));
@@ -43,10 +43,10 @@ public class FloatHaxeType extends HaxeDataType
 	}
 
 	@Override
-	public ExtrasMap saveExtras(EditorProperties props)
+	public ExtrasMap saveExtras(DataTypeProperties props, DataContext ctx)
 	{
-		ExtrasMap emap = new ExtrasMap();
-		emap.putEnum(KEY_EDITOR, props.get(EDITOR));
+		ExtrasMap emap = new ExtrasMap(ctx);
+		emap.put(KEY_EDITOR, Types._String, props.get(EDITOR));
 		if(props.containsKey(MIN))
 			emap.put(KEY_MIN, Types._Float, props.get(MIN));
 		if(props.containsKey(MAX))
@@ -60,30 +60,32 @@ public class FloatHaxeType extends HaxeDataType
 	@Override
 	public void applyToFieldPanel(final StructureFieldPanel panel)
 	{
-		final EditorProperties props = panel.getExtras();
+		final DataTypeProperties props = panel.getExtras();
+
+		DataList editorList = DataList.fromStrings(new String[] {PlainFloatEditor.id, SliderFloatEditor.id, SpinnerFloatEditor.id});
 		
 		PropertiesSheetSupport sheet = panel.getEditorSheet();
 		
 		sheet.build()
 		
-			.field(EDITOR.id)._enum(FloatType.Editor.class).add()
+			.field(EDITOR.id)._editor(DropdownSelectionEditor.BUILDER).source(editorList).add()
 			
-			.field(MIN.id).optional()._float().add()
+			.field(MIN.id).optional()._editor(Types._Float).add()
 			
-			.field(MAX.id).optional()._float().add()
+			.field(MAX.id).optional()._editor(Types._Float).add()
 			
-			.field(DECIMAL_PLACES.id).optional()._int().add()
+			.field(DECIMAL_PLACES.id).optional()._editor(Types._Int).add()
 			
-			.field(STEP.id)._float().add()
+			.field(STEP.id)._editor(Types._Float).add()
 			
 			.finish();
 		
 		sheet.addPropertyChangeListener(EDITOR.id, event -> {
-			panel.setRowVisibility(sheet, STEP.id, props.get(EDITOR) == Editor.Spinner);
-			panel.setRowVisibility(sheet, DECIMAL_PLACES.id, props.get(EDITOR) == Editor.Slider);
+			panel.setRowVisibility(sheet, STEP.id, props.get(EDITOR).equals(SpinnerFloatEditor.id));
+			panel.setRowVisibility(sheet, DECIMAL_PLACES.id, props.get(EDITOR).equals(SliderFloatEditor.id));
 		});
 		
-		panel.setRowVisibility(sheet, STEP.id, props.get(EDITOR) == Editor.Spinner);
-		panel.setRowVisibility(sheet, DECIMAL_PLACES.id, props.get(EDITOR) == Editor.Slider);
+		panel.setRowVisibility(sheet, STEP.id, props.get(EDITOR).equals(SpinnerFloatEditor.id));
+		panel.setRowVisibility(sheet, DECIMAL_PLACES.id, props.get(EDITOR).equals(SliderFloatEditor.id));
 	}
 }

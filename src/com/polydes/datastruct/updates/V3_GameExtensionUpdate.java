@@ -4,19 +4,25 @@ import java.io.File;
 
 import com.polydes.datastruct.DataStructuresExtension;
 
-import stencyl.core.lib.Game;
-import stencyl.sw.util.FileHelper;
-import stencyl.sw.util.Locations;
-import stencyl.sw.util.Worker;
+import stencyl.core.io.FileHelper;
+import stencyl.core.lib.IProject;
+import stencyl.core.util.Worker;
 
 public class V3_GameExtensionUpdate implements Worker
 {
+	private final IProject project;
+
+	public V3_GameExtensionUpdate(IProject project)
+	{
+		this.project = project;
+	}
+
 	@Override
 	public void doWork()
 	{
 		DataStructuresExtension dse = DataStructuresExtension.get();
 		
-		File oldExtrasFolder = new File(Locations.getGameLocation(Game.getGame()) + "extras/[ext] data structures");
+		File oldExtrasFolder = project.getFile("extras", "[ext] data structures");
 		File oldExtrasDefsFolder = new File(oldExtrasFolder, "defs");
 		File oldExtrasDataFolder = new File(oldExtrasFolder, "data");
 		

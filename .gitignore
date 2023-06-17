@@ -1,5 +1,7 @@
 /build/
 /bin/
+/engine/toolset-extension.jar
+/out/
 /.gradle/
 /.settings/
 .classpath

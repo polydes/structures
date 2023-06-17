@@ -1,25 +1,25 @@
 package com.polydes.datastruct.data.types;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.polydes.common.comp.utils.Layout;
-import com.polydes.common.data.types.DataEditor;
-import com.polydes.common.data.types.DataEditorBuilder;
-import com.polydes.common.data.types.DataType;
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.data.types.UpdateListener;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.datastruct.data.core.HaxeObject;
 import com.polydes.datastruct.data.core.HaxeObjectDefinition;
+
+import stencyl.app.api.datatypes.DataEditor;
+import stencyl.app.api.datatypes.EditorProviders;
+import stencyl.app.api.datatypes.EditorSheet;
+import stencyl.app.api.datatypes.UpdateListener;
+import stencyl.app.comp.propsheet.PropertiesSheetStyle;
+import stencyl.app.comp.util.Layout;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.DataType;
+import stencyl.core.api.datatypes.properties.DataTypeProperties;
 
 public class HaxeObjectType extends DataType<HaxeObject>
 {
@@ -37,39 +37,27 @@ public class HaxeObjectType extends DataType<HaxeObject>
 	}
 
 	@Override
-	public DataEditor<HaxeObject> createEditor(EditorProperties props, PropertiesSheetStyle style)
-	{
-		return new HaxeObjectEditor(style);
-	}
-	
-	@Override
-	public DataEditorBuilder createEditorBuilder()
-	{
-		return new DataEditorBuilder(this, new EditorProperties());
-	}
-	
-	@Override
-	public HaxeObject decode(String s)
+	public HaxeObject decode(String s, DataContext ctx)
 	{
 		String[] parts = s.length() <= 2 ?
 				ArrayUtils.EMPTY_STRING_ARRAY :
 				s.substring(1, s.length() - 1).split(",");
 		Object[] values = new Object[def.fields.length];
 		for(int i = 0; i < def.fields.length; ++i)
-			values[i] = def.fields[i].type.dataType.decode(parts.length > i ? parts[i] : def.fields[i].defaultValue);
+			values[i] = def.fields[i].type.dataType.decode(parts.length > i ? parts[i] : def.fields[i].defaultValue, ctx);
 		
 		return new HaxeObject(def, values);
 	}
 
 	@Override
-	public String encode(HaxeObject o)
+	public String encode(HaxeObject o, DataContext ctx)
 	{
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("[");
 		for(int i = 0; i < o.values.length; ++i)
 		{
-			sb.append(def.fields[i].type.dataType.checkEncode(o.values[i]));
+			sb.append(def.fields[i].type.dataType.checkEncode(o.values[i], ctx));
 			if(i + 1 < o.values.length)
 				sb.append(",");
 		}
@@ -81,7 +69,7 @@ public class HaxeObjectType extends DataType<HaxeObject>
 	@Override
 	public String toDisplayString(HaxeObject data)
 	{
-		return encode(data);
+		return encode(data, DataContext.NO_CONTEXT);
 	}
 	
 	@Override
@@ -96,7 +84,7 @@ public class HaxeObjectType extends DataType<HaxeObject>
 		final DataEditor<?>[] editors;
 		final JComponent[] comps;
 		
-		public HaxeObjectEditor(PropertiesSheetStyle style)
+		public HaxeObjectEditor(DataTypeProperties props, EditorSheet sheet, PropertiesSheetStyle style)
 		{
 			editors = new DataEditor[def.fields.length];
 			labels = def.showLabels ?
@@ -107,7 +95,7 @@ public class HaxeObjectType extends DataType<HaxeObject>
 			for(int i = 0; i < def.fields.length; ++i)
 			{
 				HaxeDataType htype = def.fields[i].type;
-				editors[i] = htype.dataType.createEditor(htype.loadExtras(def.fields[i].editorData), style);
+				editors[i] = EditorProviders.createEditor(htype.dataType, htype.loadExtras(def.fields[i].editorData), sheet, style);
 				editors[i].addListener(updater);
 				if(labels != null)
 				{

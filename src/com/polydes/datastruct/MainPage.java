@@ -1,28 +1,25 @@
 package com.polydes.datastruct;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import com.polydes.common.comp.MiniSplitPane;
-import com.polydes.common.ui.darktree.DarkTree;
 import com.polydes.datastruct.ui.UIConsts;
 import com.polydes.datastruct.ui.page.StructureDefinitionPage;
 import com.polydes.datastruct.ui.page.StructureDefinitionsWindow;
 import com.polydes.datastruct.ui.page.StructurePage;
+
+import stencyl.app.comp.MiniSplitPane;
+import stencyl.app.comp.darktree.DarkTree;
 
 public class MainPage extends JPanel
 {
 	private static MainPage _instance;
 	private JPanel pageView;
 	private MiniSplitPane splitPane;
+	
 	
 	private JButton defButton;
 	private final ActionListener openDefinitionsWindowAction = new ActionListener()
@@ -46,6 +43,8 @@ public class MainPage extends JPanel
 	{
 		super(new BorderLayout());
 		
+		//viewProviders.put()
+		
 		add(splitPane = new MiniSplitPane(), BorderLayout.CENTER);
 		
 		splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
@@ -53,7 +52,7 @@ public class MainPage extends JPanel
 		splitPane.setRightComponent(pageView = new JPanel(new BorderLayout()));
 		splitPane.setDividerLocation(DarkTree.DEF_WIDTH);
 		
-		pageView.add(StructurePage.get(), BorderLayout.CENTER);
+		pageView.add(StructurePage.get().getTreePage(), BorderLayout.CENTER);
 	}
 	
 	private JPanel createSidebar()

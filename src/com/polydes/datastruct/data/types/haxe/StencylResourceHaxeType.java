@@ -1,20 +1,22 @@
 package com.polydes.datastruct.data.types.haxe;
 
-import static com.polydes.common.data.types.builtin.StencylResourceType.RENDER_PREVIEW;
+import java.awt.*;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.data.types.Types;
-import com.polydes.common.data.types.builtin.StencylResourceType;
-import com.polydes.common.sw.Resources;
-import com.polydes.datastruct.data.types.ExtrasKey;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.ui.objeditors.StructureFieldPanel;
 
-import stencyl.core.lib.AbstractResource;
-import stencyl.core.lib.Resource;
+import stencyl.app.io.IconLoader;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.properties.DataTypeProperties;
+import stencyl.core.api.datatypes.properties.ExtrasKey;
+import stencyl.core.datatypes.StencylResourceType;
+import stencyl.core.datatypes.Types;
+import stencyl.core.lib.resource.Resource;
+
+import static stencyl.core.datatypes.StencylResourceType.RENDER_PREVIEW;
 
 public class StencylResourceHaxeType<T extends Resource> extends HaxeDataType
 {
@@ -30,18 +32,18 @@ public class StencylResourceHaxeType<T extends Resource> extends HaxeDataType
 	private static final ExtrasKey<Boolean> KEY_RENDER_PREVIEW = new ExtrasKey<>(RENDER_PREVIEW, "renderPreview");
 	
 	@Override
-	public EditorProperties loadExtras(ExtrasMap extras)
+	public DataTypeProperties loadExtras(ExtrasMap extras)
 	{
-		EditorProperties props = new EditorProperties();
+		DataTypeProperties props = new DataTypeProperties();
 		if(extras.containsKey(KEY_RENDER_PREVIEW))
 			props.put(RENDER_PREVIEW, Boolean.TRUE);
 		return props;
 	}
 	
 	@Override
-	public ExtrasMap saveExtras(EditorProperties props)
+	public ExtrasMap saveExtras(DataTypeProperties props, DataContext ctx)
 	{
-		ExtrasMap extras = new ExtrasMap();
+		ExtrasMap extras = new ExtrasMap(ctx);
 		if(props.get(RENDER_PREVIEW) == Boolean.TRUE)
 			extras.put(KEY_RENDER_PREVIEW, Types._Bool, Boolean.TRUE);
 		return extras;
@@ -51,15 +53,19 @@ public class StencylResourceHaxeType<T extends Resource> extends HaxeDataType
 	public void applyToFieldPanel(StructureFieldPanel panel)
 	{
 		panel.getEditorSheet().build()
-			.field(RENDER_PREVIEW.id)._boolean().add()
+			.field(RENDER_PREVIEW.id)._editor(Types._Bool).add()
 			.finish();
 	}
 	
 	@Override
 	public ImageIcon getIcon(Object value)
 	{
-		if(value instanceof AbstractResource)
-			return new ImageIcon(Resources.getImage((AbstractResource) value));
+		if(value instanceof Resource r)
+		{
+			Image img = r.getThumbnail();
+			if(img != null) return new ImageIcon(img);
+			return IconLoader.loadIcon("res/global/warning.png");
+		}
 		return null;
 	}
 	

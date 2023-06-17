@@ -3,26 +3,27 @@ package com.polydes.datastruct.data.structure.elements;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.JPanel;
-
 import org.w3c.dom.Element;
 
-import com.polydes.common.io.XML;
-import com.polydes.common.nodes.DefaultBranch;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.res.ResourceLoader;
-import com.polydes.common.res.Resources;
 import com.polydes.datastruct.data.structure.SDE;
 import com.polydes.datastruct.data.structure.SDEType;
 import com.polydes.datastruct.data.structure.StructureDefinition;
+import com.polydes.datastruct.ui.objeditors.StructureDefinitionEditor;
 import com.polydes.datastruct.ui.table.Card;
 import com.polydes.datastruct.ui.table.GuiObject;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
 import com.polydes.datastruct.ui.table.RowGroup;
 
+import stencyl.app.ext.res.AppResourceLoader;
+import stencyl.app.ext.res.AppResources;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.io.XML;
+
 public class StructureUnknown extends SDE
 {
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	public String namespace;
 	public String tag;
@@ -40,16 +41,7 @@ public class StructureUnknown extends SDE
 	{
 		return namespace + ":" + tag;
 	}
-	
-	@Override
-	public void disposeEditor() {}
-	
-	@Override
-	public JPanel getEditor() {	return BLANK_EDITOR; }
-	
-	@Override
-	public void revertChanges() {}
-	
+
 	public static class UnknownType extends SDEType<StructureUnknown>
 	{
 		public UnknownType(String tag)
@@ -68,13 +60,13 @@ public class StructureUnknown extends SDE
 		}
 
 		@Override
-		public void write(StructureUnknown object, Element e)
+		public void write(StructureUnknown object, Element e, DataContext ctx)
 		{
 			XML.writeMap(e, object.atts);
 		}
 		
 		@Override
-		public StructureUnknown create(StructureDefinition def, String nodeName)
+		public StructureUnknown create(StructureDefinition def, StructureDefinitionEditor defEditor, String nodeName)
 		{
 			return null;
 		}

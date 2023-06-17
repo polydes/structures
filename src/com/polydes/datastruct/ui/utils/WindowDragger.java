@@ -1,12 +1,11 @@
 package com.polydes.datastruct.ui.utils;
 
-import java.awt.Component;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class WindowDragger implements MouseListener, MouseMotionListener
 {

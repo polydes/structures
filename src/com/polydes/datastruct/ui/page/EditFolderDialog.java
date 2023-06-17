@@ -1,30 +1,23 @@
 package com.polydes.datastruct.ui.page;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.polydes.common.comp.UpdatingCombo;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.StructureDefinition;
 import com.polydes.datastruct.data.structure.StructureFolder;
 
-import stencyl.sw.lnf.Theme;
-import stencyl.sw.util.comp.ButtonBarFactory;
-import stencyl.sw.util.comp.GroupButton;
-import stencyl.sw.util.dg.DialogPanel;
-import stencyl.sw.util.dg.StencylDialog;
+import stencyl.app.comp.ButtonBarFactory;
+import stencyl.app.comp.GroupButton;
+import stencyl.app.comp.UpdatingCombo;
+import stencyl.app.comp.dg.DialogPanel;
+import stencyl.app.comp.dg.StencylDialog;
+import stencyl.app.lnf.Theme;
 
 public class EditFolderDialog extends StencylDialog
 {

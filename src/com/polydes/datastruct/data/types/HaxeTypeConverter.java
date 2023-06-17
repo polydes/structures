@@ -4,12 +4,14 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.polydes.common.data.core.DataList;
-import com.polydes.common.data.core.DataSet;
-import com.polydes.common.data.types.DataType;
-import com.polydes.common.data.types.Types;
-import com.polydes.common.data.types.builtin.basic.ArrayType;
 import com.polydes.datastruct.DataStructuresExtension;
+
+import stencyl.core.api.data.DataList;
+import stencyl.core.api.data.DataSet;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.DataType;
+import stencyl.core.datatypes.ArrayType;
+import stencyl.core.datatypes.Types;
 
 /**
  * Kind of a hack class to make it so we can still have Haxe types
@@ -31,16 +33,16 @@ public class HaxeTypeConverter
 		coders.put(Types._Set.getId(), new SetCoder());
 	}
 	
-	public static Object decode(DataType<?> type, String s)
+	public static Object decode(DataType<?> type, String s, DataContext ctx)
 	{
 		if(coders.containsKey(type.getId()))
-			return coders.get(type.getId()).decode(s);
+			return coders.get(type.getId()).decode(s, ctx);
 		else
-			return type.decode(s);
+			return type.decode(s, ctx);
 	}
 	
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static String encode(DataType type, Object o)
+	public static String encode(DataType type, Object o, DataContext ctx)
 	{
 		if(o == null)
 			return "";
@@ -48,9 +50,9 @@ public class HaxeTypeConverter
 		if(type.javaType.isAssignableFrom(o.getClass()))
 		{
 			if(coders.containsKey(type.getId()))
-				return coders.get(type.getId()).encode(o);
+				return coders.get(type.getId()).encode(o, ctx);
 			else
-				return type.encode(o);
+				return type.encode(o, ctx);
 		}
 		
 		System.out.println("Failed to encode " + o);
@@ -60,14 +62,14 @@ public class HaxeTypeConverter
 	
 	static interface Coder<T>
 	{
-		T decode(String s);
-		String encode(T t);
+		T decode(String s, DataContext ctx);
+		String encode(T t, DataContext ctx);
 	}
 	
 	static class ArrayCoder implements Coder<DataList>
 	{
 		@Override
-		public DataList decode(String s)
+		public DataList decode(String s, DataContext ctx)
 		{
 			if(s.isEmpty())
 				return null;
@@ -75,16 +77,16 @@ public class HaxeTypeConverter
 			int i = s.lastIndexOf(":");
 			String typename = s.substring(i + 1);
 			DataType<?> genType = getHT().getItem(typename).dataType;
-			DataList list = new DataList(genType);
+			DataList list = new DataList(genType.getRef());
 			
 			for(String s2 : ArrayType.getEmbeddedArrayStrings(s))
-				list.add(HaxeTypeConverter.decode(genType, s2));
+				list.add(HaxeTypeConverter.decode(genType, s2, ctx));
 			
 			return list;
 		}
 		
 		@Override
-		public String encode(DataList array)
+		public String encode(DataList array, DataContext ctx)
 		{
 			if(array == null)
 				return "";
@@ -92,7 +94,7 @@ public class HaxeTypeConverter
 			String s = "[";
 			
 			for(int i = 0; i < array.size(); ++i)
-				s += HaxeTypeConverter.encode(array.genType, array.get(i)) + (i < array.size() - 1 ? "," : "");
+				s += HaxeTypeConverter.encode(array.genType.getObject(), array.get(i), ctx) + (i < array.size() - 1 ? "," : "");
 			s += "]:" + getHT().getHaxeFromDT(array.genType.getId()).getHaxeType();
 			
 			return s;
@@ -102,7 +104,7 @@ public class HaxeTypeConverter
 	static class SetCoder implements Coder<DataSet>
 	{
 		@Override
-		public DataSet decode(String s)
+		public DataSet decode(String s, DataContext ctx)
 		{
 			int typeMark = s.lastIndexOf(":");
 			if(typeMark == -1)
@@ -115,13 +117,13 @@ public class HaxeTypeConverter
 			DataSet toReturn = new DataSet(dtype);
 			
 			for(String s2 : StringUtils.split(s.substring(1, typeMark - 1), ","))
-				toReturn.add(HaxeTypeConverter.decode(dtype, s2));
+				toReturn.add(HaxeTypeConverter.decode(dtype, s2, ctx));
 			
 			return toReturn;
 		}
 
 		@Override
-		public String encode(DataSet t)
+		public String encode(DataSet t, DataContext ctx)
 		{
 			Object[] a = t.toArray(new Object[0]);
 			String s = "[";
@@ -129,7 +131,7 @@ public class HaxeTypeConverter
 			
 			for(int i = 0; i < a.length; ++i)
 			{
-				s += HaxeTypeConverter.encode(type, a[i]);
+				s += HaxeTypeConverter.encode(type, a[i], ctx);
 				
 				if(i < a.length - 1)
 					s += ",";

@@ -1,15 +1,11 @@
 package com.polydes.datastruct.ui.utils;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 
-import stencyl.sw.lnf.Theme;
+import stencyl.app.lnf.Theme;
 
 public class Geometry
 {

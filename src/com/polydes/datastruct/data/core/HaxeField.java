@@ -2,9 +2,11 @@ package com.polydes.datastruct.data.core;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.polydes.common.ext.RORealizer;
 import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
+
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.ext.registry.RORealizer;
 
 public class HaxeField implements RORealizer<HaxeDataType>
 {
@@ -20,7 +22,7 @@ public class HaxeField implements RORealizer<HaxeDataType>
 		defaultValue = StringUtils.EMPTY;
 		
 		this.editorData = editorData == null ?
-			new ExtrasMap() :
+			new ExtrasMap(DataContext.NO_CONTEXT) :
 			editorData;
 	}
 

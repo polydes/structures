@@ -1,20 +1,15 @@
 package com.polydes.datastruct.ui.page;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
-import com.polydes.common.comp.MiniSplitPane;
-import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.Prefs;
-import com.polydes.datastruct.data.structure.StructureDefinition;
 
-import stencyl.sw.SW;
+import stencyl.app.comp.MiniSplitPane;
+import stencyl.sw.app.main.SW;
 
 public class StructureDefinitionsWindow extends JDialog
 {
@@ -81,10 +76,9 @@ public class StructureDefinitionsWindow extends JDialog
 					
 				}
 				*/
-				
-				for(StructureDefinition def : DataStructuresExtension.get().getStructureDefinitions().values())
-					def.update();
-				StructurePage.get().refreshSelected();
+
+				StructureDefinitionPage.get().updateStructureDefinitionEditors();
+				StructurePage.get().getTreePage().refreshTreeSelection();
 				
 				closeWindow();
 			}
@@ -108,8 +102,7 @@ public class StructureDefinitionsWindow extends JDialog
 		StructureDefinitionPage.get().selectNone();
 		propsWindow.setObject(null);
 		propsWindow.setVisible(false);
-		for(StructureDefinition def : DataStructuresExtension.get().getStructureDefinitions().values())
-			def.disposeEditor();
+		StructureDefinitionPage.get().disposeStructureDefinitionEditors();
 	}
 	
 	public PropertiesWindow getPropsWindow()
@@ -161,8 +154,7 @@ public class StructureDefinitionsWindow extends JDialog
 		{
 			_instance.dispose();
 			_instance = null;
-			for(StructureDefinition def : DataStructuresExtension.get().getStructureDefinitions().values())
-				def.disposeEditor();
+			StructureDefinitionPage.get().disposeStructureDefinitionEditors();
 		}
 	}
 }

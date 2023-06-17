@@ -1,13 +1,13 @@
 package com.polydes.datastruct.utils;
 
-import com.polydes.common.data.core.DataList;
-import com.polydes.common.data.types.DataType;
+import stencyl.core.api.data.DataList;
+import stencyl.core.api.datatypes.DataType;
 
 public class DLang
 {
 	public static final DataList datalist(DataType<?> type, Object... a)
 	{
-		DataList list = new DataList(type);
+		DataList list = new DataList(type.getRef());
 		for(Object o : a)
 			list.add(o);
 		return list;

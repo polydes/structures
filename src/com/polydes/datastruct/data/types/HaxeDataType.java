@@ -3,20 +3,21 @@ package com.polydes.datastruct.data.types;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.polydes.common.data.types.DataType;
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.data.types.Types;
-import com.polydes.common.data.types.builtin.UnknownDataType;
-import com.polydes.common.ext.RegistryObject;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.ui.objeditors.StructureFieldPanel;
 
-import stencyl.sw.editors.snippet.designer.Definition;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.DataType;
+import stencyl.core.api.datatypes.properties.DataTypeProperties;
+import stencyl.core.datatypes.Types;
+import stencyl.core.datatypes.UnknownDataType;
+import stencyl.core.ext.registry.RegistryObject;
+import stencyl.core.lib.code.design.Definition;
 
 public abstract class HaxeDataType implements RegistryObject
 {
@@ -63,14 +64,14 @@ public abstract class HaxeDataType implements RegistryObject
 		return null;
 	}
 	
-	public ExtrasMap saveExtras(EditorProperties extras)
+	public ExtrasMap saveExtras(DataTypeProperties extras, DataContext ctx)
 	{
-		return new ExtrasMap();
+		return new ExtrasMap(ctx);
 	}
 	
-	public EditorProperties loadExtras(ExtrasMap extras)
+	public DataTypeProperties loadExtras(ExtrasMap extras)
 	{
-		return new EditorProperties();
+		return new DataTypeProperties();
 	}
 	
 	/**
@@ -117,8 +118,9 @@ public abstract class HaxeDataType implements RegistryObject
 	@Override
 	public void setKey(String newKey)
 	{
+		Types.get().unloadReference(dataType);
 		this.haxeType = newKey;
-		Types.get().renameItem(dataType, newKey); //TODO don't do this??
+		Types.get().loadReference(dataType);
 	}
 
 	public ImageIcon getIcon(Object value)

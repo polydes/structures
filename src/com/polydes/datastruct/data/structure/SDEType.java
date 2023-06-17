@@ -2,15 +2,18 @@ package com.polydes.datastruct.data.structure;
 
 import java.util.Collection;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 import org.w3c.dom.Element;
 
-import com.polydes.common.ext.RegistryObject;
-import com.polydes.common.nodes.DefaultBranch;
-import com.polydes.common.nodes.DefaultLeaf;
+import com.polydes.datastruct.ui.objeditors.StructureDefinitionEditor;
 import com.polydes.datastruct.ui.table.GuiObject;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
+
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.ext.registry.RegistryObject;
 
 /** StructureDefinitionElementType **/
 public abstract class SDEType<T extends SDE> implements RegistryObject
@@ -22,8 +25,8 @@ public abstract class SDEType<T extends SDE> implements RegistryObject
 	public Collection<Class<? extends SDE>> childTypes;
 	
 	public abstract T read(StructureDefinition model, Element e);
-	public abstract void write(T object, Element e);
-	public abstract T create(StructureDefinition def, String nodeName);
+	public abstract void write(T object, Element e, DataContext ctx);
+	public abstract T create(StructureDefinition def, StructureDefinitionEditor defEditor, String nodeName);
 	
 	public abstract GuiObject psAdd(PropertiesSheet sheet, DefaultBranch parent, DefaultLeaf node, T value, int i);
 	public abstract void psRemove(PropertiesSheet sheet, GuiObject gui, DefaultLeaf node, T value);

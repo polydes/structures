@@ -1,8 +1,6 @@
 package com.polydes.datastruct.ui.utils;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -11,27 +9,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
-import com.polydes.common.res.ResourceLoader;
-import com.polydes.common.res.Resources;
-
-import stencyl.sw.lnf.Theme;
-import stencyl.sw.loc.LanguagePack;
-import stencyl.sw.util.comp.GroupButton;
+import stencyl.app.comp.GroupButton;
+import stencyl.app.ext.res.AppResourceLoader;
+import stencyl.app.ext.res.AppResources;
+import stencyl.app.lnf.Theme;
+import stencyl.core.loc.LanguagePack;
 
 public abstract class LightweightWindow extends SnappingDialog
 {
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	private static final LanguagePack lang = LanguagePack.get();
 	

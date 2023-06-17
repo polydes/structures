@@ -1,16 +1,12 @@
 package com.polydes.datastruct.ui.utils;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class SnappingDialog extends JDialog
 {

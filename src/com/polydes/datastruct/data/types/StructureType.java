@@ -1,28 +1,15 @@
 package com.polydes.datastruct.data.types;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.function.Predicate;
-
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-
 import org.apache.log4j.Logger;
 
-import com.polydes.common.comp.RenderedPanel;
-import com.polydes.common.comp.UpdatingCombo;
-import com.polydes.common.data.types.DataEditor;
-import com.polydes.common.data.types.DataEditorBuilder;
-import com.polydes.common.data.types.DataType;
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.data.types.PropertyKey;
-import com.polydes.common.nodes.Leaf;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
-import com.polydes.common.util.PredicateUtil;
 import com.polydes.datastruct.data.structure.Structure;
 import com.polydes.datastruct.data.structure.StructureDefinition;
 import com.polydes.datastruct.data.structure.Structures;
 import com.polydes.datastruct.data.structure.elements.StructureCondition;
+
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.DataType;
+import stencyl.core.api.datatypes.properties.PropertyKey;
 
 public class StructureType extends DataType<Structure>
 {
@@ -41,19 +28,7 @@ public class StructureType extends DataType<Structure>
 	public static final PropertyKey<Boolean>            RENDER_PREVIEW = new PropertyKey<>("renderPreview");
 	
 	@Override
-	public DataEditor<Structure> createEditor(EditorProperties props, PropertiesSheetStyle style)
-	{
-		return new StructureEditor(props, null);
-	}
-	
-	@Override
-	public DataEditorBuilder createEditorBuilder()
-	{
-		return new StructureEditorBuilder();
-	}
-
-	@Override
-	public Structure decode(String s)
+	public Structure decode(String s, DataContext ctx)
 	{
 		try
 		{
@@ -80,7 +55,7 @@ public class StructureType extends DataType<Structure>
 	}
 
 	@Override
-	public String encode(Structure model)
+	public String encode(Structure model, DataContext ctx)
 	{
 		if(model == null)
 			return "";
@@ -98,159 +73,5 @@ public class StructureType extends DataType<Structure>
 	public Structure copy(Structure t)
 	{
 		return t;
-	}
-	
-	
-	public class StructureEditorBuilder extends DataEditorBuilder
-	{
-		public StructureEditorBuilder()
-		{
-			super(StructureType.this, new EditorProperties());
-		}
-		
-		public StructureEditorBuilder filter(StructureCondition filter)
-		{
-			props.put(SOURCE_FILTER, filter);
-			return this;
-		}
-		
-		public StructureEditorBuilder allowSubtypes()
-		{
-			props.put(ALLOW_SUBTYPES, true);
-			return this;
-		}
-		
-		public StructureEditorBuilder rendered()
-		{
-			props.put(RENDER_PREVIEW, Boolean.TRUE);
-			return this;
-		}
-	}
-	
-	public class StructureEditor extends DataEditor<Structure> implements PropertyChangeListener
-	{
-		private final RenderedPanel panel;
-		private final UpdatingCombo<Structure> editor;
-		private Structure oldStructure;
-		
-		public StructureEditor(EditorProperties props, Structure currentStructure)
-		{
-			StructureCondition condition = props.get(SOURCE_FILTER);
-			Predicate<Structure> predicate = condition == null ? null : new StructurePredicate(condition, currentStructure);
-			
-			boolean allowSubtypes = props.get(ALLOW_SUBTYPES) == Boolean.TRUE;
-			
-			if(allowSubtypes)
-				predicate = PredicateUtil.and(predicate, (s) -> s.getTemplate().is(def));
-			
-			editor = new UpdatingCombo<Structure>(allowSubtypes ? Structures.structuresByID.values() : Structures.getList(def), predicate);
-			editor.setIconProvider(struct -> struct == null ? null : struct.getIcon());
-			editor.addActionListener(event -> valueUpdated(true));
-			oldStructure = null;
-			
-			panel = props.get(RENDER_PREVIEW) == Boolean.TRUE ?
-				new RenderedPanel(90, 60, 0) : null;
-		}
-		
-		public StructureEditor()
-		{
-			editor = new UpdatingCombo<Structure>(Structures.getList(def), null);
-			editor.addActionListener(event -> updated());
-			panel = null;
-		}
-		
-		private void valueUpdated(boolean callUpdated)
-		{
-			Structure t = editor.getSelected();
-			if(t == oldStructure)
-				return;
-			if(panel != null)
-			{
-				if(oldStructure != null)
-					uninstallIconListener(oldStructure);
-				if(t != null)
-					installIconListener(t);
-				else
-					panel.setLabel(null);
-			}
-			oldStructure = t;
-			if(callUpdated)
-				updated();
-		}
-		
-		private void installIconListener(Structure t)
-		{
-			t.dref.addListener(Leaf.ICON, this);
-			setImageIcon(t.dref.getIcon());
-		}
-		
-		private void uninstallIconListener(Structure t)
-		{
-			t.dref.removeListener(Leaf.ICON, this);
-			panel.setLabel(t.getIcon().getImage());
-		}
-		
-		private void setImageIcon(ImageIcon icon)
-		{
-			if(icon == null)
-				panel.setLabel(null);
-			else
-				panel.setLabel(icon.getImage());
-		}
-		
-		@Override
-		public void propertyChange(PropertyChangeEvent evt)
-		{
-			setImageIcon((ImageIcon) evt.getNewValue());
-		}
-		
-		@Override
-		public void set(Structure t)
-		{
-			editor.setSelectedItem(t);
-			valueUpdated(false);
-		}
-		
-		@Override
-		public Structure getValue()
-		{
-			return editor.getSelected();
-		}
-		
-		@Override
-		public JComponent[] getComponents()
-		{
-			if(panel != null)
-				return new JComponent[] {panel, editor};
-			else
-				return new JComponent[] {editor};
-		}
-		
-		@Override
-		public void dispose()
-		{
-			super.dispose();
-			if(panel != null && oldStructure != null)
-				uninstallIconListener(oldStructure);
-			editor.dispose();
-		}
-	}
-	
-	class StructurePredicate implements Predicate<Structure>
-	{
-		private StructureCondition condition;
-		private Structure s;
-		
-		public StructurePredicate(StructureCondition condition, Structure s)
-		{
-			this.condition = condition;
-			this.s = s;
-		}
-		
-		@Override
-		public boolean test(Structure s2)
-		{
-			return condition.check(s, s2);
-		}
 	}
 }

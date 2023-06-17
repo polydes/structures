@@ -1,44 +1,36 @@
 package com.polydes.datastruct.ui.page;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.polydes.common.comp.UpdatingCombo;
-import com.polydes.common.comp.utils.Layout;
-import com.polydes.common.res.ResourceLoader;
-import com.polydes.common.res.Resources;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.StructureDefinition;
 import com.polydes.datastruct.ui.UIConsts;
 import com.polydes.datastruct.ui.utils.ImageImporter;
 
-import stencyl.sw.ext.FileHandler;
-import stencyl.sw.lnf.Theme;
-import stencyl.sw.util.VerificationHelper;
-import stencyl.sw.util.comp.ButtonBarFactory;
-import stencyl.sw.util.comp.GroupButton;
-import stencyl.sw.util.comp.text.AutoVerifyField;
-import stencyl.sw.util.comp.text.FieldVerifier;
-import stencyl.sw.util.dg.DialogPanel;
-import stencyl.sw.util.dg.StencylDialog;
+import stencyl.app.comp.ButtonBarFactory;
+import stencyl.app.comp.GroupButton;
+import stencyl.app.comp.UpdatingCombo;
+import stencyl.app.comp.dg.DialogPanel;
+import stencyl.app.comp.dg.StencylDialog;
+import stencyl.app.comp.text.AutoVerifyField;
+import stencyl.app.comp.text.FieldVerifier;
+import stencyl.app.comp.util.Layout;
+import stencyl.app.lnf.Theme;
+import stencyl.core.api.VerificationHelper;
+import stencyl.core.ext.FileHandler;
+import stencyl.core.ext.res.ResourceLoader;
+import stencyl.core.ext.res.Resources;
+import stencyl.core.lib.IProject;
 
 public class CreateStructureDefinitionDialog extends StencylDialog
 {
@@ -65,12 +57,14 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 	
 	BufferedImage iconImg;
 	
+	private IProject project;
 	public StructureDefinition newDef;
 	public StructureDefinition editDef;
 	
-	public CreateStructureDefinitionDialog()
+	public CreateStructureDefinitionDialog(IProject project)
 	{
 		super(StructureDefinitionsWindow.get(), "Create New Structure", 450, 390, true, true, true);
+		this.project = project;
 	}
 	
 	@Override
@@ -274,18 +268,17 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 				editDef.setImage(iconImg);
 			editDef.parent = parentTypeChooser.getSelected();
 			
-			JLabel previewLabel = editDef.getEditor().getPreview().getEditor().label;
-			previewLabel.setText(editDef.getName());
-			previewLabel.setIcon(editDef.getIcon());
+			//TODO [2023-07-18]: update name and icon of the preview structure
 			editDef.setDirty(true);
 		}
 		else
 		{
 			String nodeName = nameField.getText();
 			String className = packageField.getText() + "." + classField.getText();
-			newDef = new StructureDefinition(nodeName, className);
+			newDef = new StructureDefinition(project, nodeName, className);
 			newDef.setImage(iconImg);
 			newDef.parent = parentTypeChooser.getSelected();
+			newDef.setDirty(true);
 		}
 	}
 	
@@ -311,6 +304,8 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 		okButton = null;
 		newDef = null;
 		editDef = null;
+		
+		project = null;
 		
 		super.dispose();
 	}

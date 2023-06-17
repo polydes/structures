@@ -1,10 +1,6 @@
 package com.polydes.datastruct.ui.utils;
 
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Insets;
+import java.awt.*;
 
 public class AdaptingCardLayout extends CardLayout
 {

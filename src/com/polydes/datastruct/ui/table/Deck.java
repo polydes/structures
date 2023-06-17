@@ -1,20 +1,16 @@
 package com.polydes.datastruct.ui.table;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
+import java.awt.*;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.polydes.common.comp.utils.Layout;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.datastruct.ui.utils.AdaptingCardLayout;
+
+import stencyl.app.comp.propsheet.PropertiesSheetStyle;
+import stencyl.app.comp.util.Layout;
 
 public class Deck extends JPanel implements GuiObject
 {

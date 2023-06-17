@@ -1,15 +1,10 @@
 package com.polydes.datastruct.ui.table;
 
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
@@ -21,7 +16,9 @@ import com.polydes.datastruct.ui.utils.Geometry;
 import info.clearthought.layout.TableLayout;
 import info.clearthought.layout.TableLayoutConstants;
 import info.clearthought.layout.TableLayoutConstraints;
-import stencyl.sw.SW;
+
+import stencyl.app.lnf.Fonts;
+import stencyl.core.SWC;
 
 public class Card extends JPanel implements GuiObject
 {
@@ -238,7 +235,7 @@ public class Card extends JPanel implements GuiObject
 			text,
 			TitledBorder.CENTER,
 			TitledBorder.TOP,
-			SW.get().getFonts().getNormalFont(),
+			SWC.get(Fonts.class).getNormalFont(),
 			table.style.labelColor
 		);
 	}
@@ -301,7 +298,7 @@ public class Card extends JPanel implements GuiObject
 		if(!visible)// && !condition.hideWhenFalse)
 		{
 			String draw = "Hidden";
-			Font font = SW.get().getFonts().getNormalFont().deriveFont(Font.BOLD|Font.ITALIC);
+			Font font = SWC.get(Fonts.class).getNormalFont().deriveFont(Font.BOLD|Font.ITALIC);
 			
 			Point drawAt = Geometry.getCenteredStringTopLeft(draw, g, font, this);
 			

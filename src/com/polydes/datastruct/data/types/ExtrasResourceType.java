@@ -1,152 +1,63 @@
 package com.polydes.datastruct.data.types;
 
-import static com.polydes.common.util.Lang.or;
-
-import java.io.File;
-
-import javax.swing.JComponent;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.polydes.common.data.types.DataEditor;
-import com.polydes.common.data.types.DataEditorBuilder;
-import com.polydes.common.data.types.DataType;
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.data.types.PropertyKey;
-import com.polydes.common.data.types.Types;
-import com.polydes.common.data.types.builtin.FileType;
-import com.polydes.common.data.types.builtin.FileType.DualFileFilter;
-import com.polydes.common.data.types.builtin.FileType.FileEditor;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.datastruct.data.core.ExtrasResource;
 
-import stencyl.core.lib.Game;
-import stencyl.sw.util.Locations;
+import stencyl.app.comp.Prompt;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.datatypes.DataType;
+import stencyl.core.api.datatypes.properties.PropertyKey;
+import stencyl.core.io.FileFilter;
 
 public class ExtrasResourceType extends DataType<ExtrasResource>
 {
 	public ExtrasResourceType()
 	{
-		super(ExtrasResource.class);
+		super(ExtrasResource.class, "extra");
 	}
 
 	public static final PropertyKey<ResourceType> RESOURCE_TYPE = new PropertyKey<>("resourceType");
-	
-	@Override
-	public DataEditor<ExtrasResource> createEditor(EditorProperties props, PropertiesSheetStyle style)
-	{
-		return new ExtrasResourceEditor(props, style);
-	}
-	
-	@Override
-	public DataEditorBuilder createEditorBuilder()
-	{
-		return new ExtrasResourceEditorBuilder();
-	}
 
 	@Override
-	public ExtrasResource decode(String s)
+	public ExtrasResource decode(String s, DataContext ctx)
 	{
 		ExtrasResource r = new ExtrasResource();
-		r.file = new File(Locations.getGamePath(Game.getGame(), "extras"), s);
+		r.file = ctx.getProject().getFile("extras", s);
 		return r;
 	}
 
 	@Override
-	public String encode(ExtrasResource i)
+	public String encode(ExtrasResource i, DataContext ctx)
 	{
 		if(i == null)
 			return "";
 		
-		return StringUtils.difference(Locations.getGamePath(Game.getGame(), "extras"), i.file.getAbsolutePath());
+		String root = ctx.getProject().getLocation("extras");
+		String full = i.file.getAbsolutePath();
+		
+		return full.substring(root.length() + 1);
 	}
-	
+
 	@Override
 	public ExtrasResource copy(ExtrasResource t)
 	{
 		return t;
 	}
-	
+
 	public enum ResourceType
 	{
 		ANY(null),
-		IMAGE(FileType.ExtensionFilter.PNG_FILTER);
-		
-		DualFileFilter filter;
-		
-		private ResourceType(DualFileFilter filter)
+		IMAGE(Prompt.ExtensionFilter.PNG_FILTER);
+
+		FileFilter filter;
+
+		private ResourceType(FileFilter filter)
 		{
 			this.filter = filter;
 		}
-		
-		public DualFileFilter getFilter()
+
+		public FileFilter getFilter()
 		{
 			return filter;
-		}
-	}
-	
-	public class ExtrasResourceEditorBuilder extends DataEditorBuilder
-	{
-		public ExtrasResourceEditorBuilder()
-		{
-			super(ExtrasResourceType.this, new EditorProperties());
-		}
-		
-		public ExtrasResourceEditorBuilder type(ResourceType type)
-		{
-			props.put(RESOURCE_TYPE, type);
-			return this;
-		}
-	}
-	
-	public static class ExtrasResourceEditor extends DataEditor<ExtrasResource>
-	{
-		final FileEditor fileEditor;
-		
-		public ExtrasResourceEditor(EditorProperties props, PropertiesSheetStyle style)
-		{
-			ResourceType type = or(props.get(RESOURCE_TYPE), ResourceType.ANY);
-			
-			fileEditor = (FileEditor) Types._File.new FileEditorBuilder()
-					.rootDirectory(Locations.getGamePath(Game.getGame(), "extras")).filter(type.getFilter()).rendered()
-					.build(style);
-			
-			fileEditor.addListener(() -> updated());
-		}
-		
-		@Override
-		public ExtrasResource getValue()
-		{
-			File f = fileEditor.getValue();
-			if(f == null)
-				return null;
-			if(!f.exists())
-				return null;
-			ExtrasResource r = new ExtrasResource();
-			r.file = f;
-			return r;
-		}
-
-		@Override
-		public void set(ExtrasResource t)
-		{
-			if(t == null)
-				fileEditor.setValue(null);
-			else
-				fileEditor.setValue(t.file);
-		}
-
-		@Override
-		public JComponent[] getComponents()
-		{
-			return fileEditor.getComponents();
-		}
-		
-		@Override
-		public void dispose()
-		{
-			super.dispose();
-			fileEditor.dispose();
 		}
 	}
 }

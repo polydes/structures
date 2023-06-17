@@ -8,13 +8,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.polydes.common.io.XML;
-import com.polydes.common.util.Lang;
 import com.polydes.datastruct.DataStructuresExtension;
 
-import stencyl.sw.util.FileHelper;
-import stencyl.sw.util.VerificationHelper;
-import stencyl.sw.util.Worker;
+import stencyl.core.api.VerificationHelper;
+import stencyl.core.io.FileHelper;
+import stencyl.core.io.XML;
+import stencyl.core.io.XmlHelper;
+import stencyl.core.util.Lang;
+import stencyl.core.util.Worker;
 
 public class V4_FullTypeNamesUpdate implements Worker
 {
@@ -72,7 +73,7 @@ public class V4_FullTypeNamesUpdate implements Worker
 					if(e.hasAttribute("condition"))
 						continue;
 					
-					Element conditionElement = XML.child(e, 0);
+					Element conditionElement = XmlHelper.child(e, 0);
 					String conditionString = subFromXML(conditionElement);
 					
 					e.removeChild(conditionElement);
@@ -103,21 +104,21 @@ public class V4_FullTypeNamesUpdate implements Worker
 		}
 		else if(e.getTagName().equals("not"))
 		{
-			if(XML.child(e, 0).getTagName().equals("is"))
+			if(XmlHelper.child(e, 0).getTagName().equals("is"))
 			{
-				Element sub = XML.child(e, 0);
+				Element sub = XmlHelper.child(e, 0);
 				return XML.read(sub, "field") + " != " + codeRepresentation(XML.read(sub, "value"));
 			}
 			else
-				return "!(" + subFromXML(XML.child(e, 0)) + ")";
+				return "!(" + subFromXML(XmlHelper.child(e, 0)) + ")";
 		}
 		else if(e.getTagName().equals("and"))
 		{
-			return subFromXML(XML.child(e, 0)) + " && " + subFromXML(XML.child(e, 1));
+			return subFromXML(XmlHelper.child(e, 0)) + " && " + subFromXML(XmlHelper.child(e, 1));
 		}
 		else if(e.getTagName().equals("or"))
 		{
-			return subFromXML(XML.child(e, 0)) + " || " + subFromXML(XML.child(e, 1));
+			return subFromXML(XmlHelper.child(e, 0)) + " || " + subFromXML(XmlHelper.child(e, 1));
 		}
 		else
 			return "";

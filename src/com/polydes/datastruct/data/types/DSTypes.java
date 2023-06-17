@@ -1,21 +1,22 @@
 package com.polydes.datastruct.data.types;
 
-import com.polydes.common.data.types.Types;
+import stencyl.core.datatypes.Types;
 
 public class DSTypes
 {
 	public static DynamicType _Dynamic = new DynamicType();
 	public static ExtrasResourceType _ExtrasResource = new ExtrasResourceType();
+	public static HaxeDataTypeType _HaxeDataType = new HaxeDataTypeType();
 	
 	public static void register()
 	{
-		Types.get().registerItem(_Dynamic);
-		Types.get().registerItem(_ExtrasResource);
+		Types.get().loadReference(_Dynamic);
+		Types.get().loadReference(_ExtrasResource);
 	}
 	
 	public static void unregister()
 	{
-		Types.get().unregisterItem(_Dynamic);
-		Types.get().unregisterItem(_ExtrasResource);
+		Types.get().unloadReference(_Dynamic);
+		Types.get().unloadReference(_ExtrasResource);
 	}
 }

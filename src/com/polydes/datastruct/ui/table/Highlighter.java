@@ -1,14 +1,8 @@
 package com.polydes.datastruct.ui.table;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Stroke;
+import java.awt.*;
 
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import org.apache.commons.lang3.ArrayUtils;
 

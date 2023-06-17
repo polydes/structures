@@ -4,17 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JPanel;
-
 import org.w3c.dom.Element;
 
-import com.polydes.common.io.XML;
-import com.polydes.common.nodes.DefaultBranch;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.res.ResourceLoader;
-import com.polydes.common.res.Resources;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
-import com.polydes.common.util.Lang;
 import com.polydes.datastruct.data.structure.SDE;
 import com.polydes.datastruct.data.structure.SDEType;
 import com.polydes.datastruct.data.structure.Structure;
@@ -23,15 +14,23 @@ import com.polydes.datastruct.grammar.ExpressionParser;
 import com.polydes.datastruct.grammar.RuntimeLanguage;
 import com.polydes.datastruct.grammar.SyntaxException;
 import com.polydes.datastruct.grammar.SyntaxNode;
-import com.polydes.datastruct.ui.objeditors.StructureConditionPanel;
+import com.polydes.datastruct.ui.objeditors.StructureDefinitionEditor;
 import com.polydes.datastruct.ui.table.Card;
 import com.polydes.datastruct.ui.table.GuiObject;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
 import com.polydes.datastruct.ui.table.RowGroup;
 
+import stencyl.app.ext.res.AppResourceLoader;
+import stencyl.app.ext.res.AppResources;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.io.XML;
+import stencyl.core.util.Lang;
+
 public class StructureCondition extends SDE
 {
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	public StructureDefinition def;
 	public SyntaxNode root;
@@ -199,33 +198,6 @@ public class StructureCondition extends SDE
 		return sc;
 	}
 	
-	private StructureConditionPanel editor;
-	
-	@Override
-	public void disposeEditor()
-	{
-		if(editor != null)
-			editor.dispose();
-		
-		editor = null;
-	}
-	
-	@Override
-	public JPanel getEditor()
-	{
-		if(editor == null)
-			editor = new StructureConditionPanel(this, PropertiesSheetStyle.LIGHT);
-		
-		return editor;
-	}
-	
-	@Override
-	public void revertChanges()
-	{
-		if(editor != null)
-			editor.revertChanges();
-	}
-	
 	@Override
 	public String toString()
 	{
@@ -237,7 +209,7 @@ public class StructureCondition extends SDE
 	{
 		return toString();
 	}
-	
+
 	public static class ConditionType extends SDEType<StructureCondition>
 	{
 		public ConditionType()
@@ -262,13 +234,13 @@ public class StructureCondition extends SDE
 		}
 		
 		@Override
-		public void write(StructureCondition object, Element e)
+		public void write(StructureCondition object, Element e, DataContext ctx)
 		{
 			XML.write(e, "condition", object.getText());
 		}
 
 		@Override
-		public StructureCondition create(StructureDefinition def, String nodeName)
+		public StructureCondition create(StructureDefinition def, StructureDefinitionEditor defEditor, String nodeName)
 		{
 			return new StructureCondition(def, "");
 		}
@@ -337,8 +309,13 @@ public class StructureCondition extends SDE
 					super.check();
 					
 					if(visible && !super.visible)
+					{
 						for(StructureField f : sheet.allDescendentsOfType(StructureField.class, null, n))
-							model.clearProperty(f);
+						{
+							if(model.isPropertyEnabled(f))
+								model.clearProperty(f);
+						}
+					}
 				}
 			};
 		}

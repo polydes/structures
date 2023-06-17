@@ -3,17 +3,18 @@ package com.polydes.datastruct.updates;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.polydes.common.util.Lang;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.io.Text;
 
-import stencyl.sw.util.FileHelper;
+import stencyl.core.io.FileHelper;
+import stencyl.core.util.Lang;
 
 public class TypenameUpdater
 {
@@ -21,7 +22,7 @@ public class TypenameUpdater
 	
 	HashMap<String, String> typeBackMap = new HashMap<>();
 	
-	public void addTypes(HashMap<String, String> types)
+	public void addTypes(Map<String, String> types)
 	{
 		typeBackMap.putAll(types);
 	}

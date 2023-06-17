@@ -6,21 +6,21 @@ import org.apache.log4j.Logger;
 
 import com.polydes.datastruct.data.types.HaxeDataType;
 
-import stencyl.core.lib.Game;
-import stencyl.core.lib.attribute.AttributeType;
-import stencyl.core.lib.attribute.AttributeTypes;
-import stencyl.sw.editors.snippet.designer.Definition;
-import stencyl.sw.editors.snippet.designer.Definition.Category;
-import stencyl.sw.editors.snippet.designer.Definitions.DefinitionMap;
-import stencyl.sw.editors.snippet.designer.Definitions.OrderedDefinitionMap;
-import stencyl.sw.editors.snippet.designer.block.Block;
-import stencyl.sw.editors.snippet.designer.block.Block.BlockType;
-import stencyl.sw.editors.snippet.designer.block.BlockTheme;
-import stencyl.sw.editors.snippet.designer.codebuilder.CodeBuilder;
-import stencyl.sw.editors.snippet.designer.codemap.BasicCodeMap;
-import stencyl.sw.editors.snippet.designer.dropdown.CodeConverter;
-import stencyl.sw.editors.snippet.designer.dropdown.DropdownData;
-import stencyl.sw.editors.snippet.designer.dropdown.DropdownData.DropdownConverter;
+import stencyl.core.lib.code.attribute.AttributeType;
+import stencyl.core.lib.code.design.Definition;
+import stencyl.core.lib.code.design.Definition.Category;
+import stencyl.core.lib.code.design.block.BlockType;
+import stencyl.core.lib.code.gen.CodeBuilder;
+import stencyl.core.lib.code.gen.codemap.BasicCodeMap;
+import stencyl.sw.app.editors.snippet.designer.block.Block;
+import stencyl.sw.app.editors.snippet.designer.block.BlockTheme;
+import stencyl.sw.app.editors.snippet.designer.dropdown.CodeConverter;
+import stencyl.sw.app.editors.snippet.designer.dropdown.DropdownData;
+import stencyl.sw.app.editors.snippet.designer.dropdown.DropdownData.DropdownConverter;
+import stencyl.sw.app.ext.SWExtensionInstance;
+import stencyl.sw.core.lib.attribute.HaxeAttributeTypes;
+import stencyl.sw.core.lib.snippet.designer.Definitions.DefinitionMap;
+import stencyl.sw.core.lib.snippet.designer.Definitions.OrderedDefinitionMap;
 
 public class Blocks
 {
@@ -30,6 +30,8 @@ public class Blocks
 	
 	public static void addDesignModeBlocks()
 	{
+		DefinitionMap dseBlocks = ((SWExtensionInstance) DataStructuresExtension.get().owner()).getBlocks();
+		
 //		set [propname] for [object] to [value]		object.prop = value;
 		
 		String spec = "set %1 for %0 to %2";
@@ -38,19 +40,19 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-set-prop1",
-			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.CODE, AttributeTypes.OBJECT },
+			new AttributeType[] { HaxeAttributeTypes.OBJECT, HaxeAttributeTypes.CODE, HaxeAttributeTypes.OBJECT },
 			new BasicCodeMap("~.~ = ~;"),
 			null,
 			spec,
 			BlockType.ACTION,
-			AttributeTypes.VOID,
+			HaxeAttributeTypes.VOID,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
-		
-		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
+
+		dseBlocks.put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 
 //		get [propname] for [object]					object.prop
@@ -61,19 +63,19 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-prop1",
-			new AttributeType[] { AttributeTypes.OBJECT, AttributeTypes.CODE },
+			new AttributeType[] { HaxeAttributeTypes.OBJECT, HaxeAttributeTypes.CODE },
 			new BasicCodeMap("~.~"),
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeTypes.OBJECT,
+			HaxeAttributeTypes.OBJECT,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
-		
-		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
+
+		dseBlocks.put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 		
 //		set [propname] for [objectname] to [value]	DataStructures.get(objectname).propname = value;
@@ -84,19 +86,19 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-set-prop2",
-			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.CODE, AttributeTypes.OBJECT },
+			new AttributeType[] { HaxeAttributeTypes.TEXT, HaxeAttributeTypes.CODE, HaxeAttributeTypes.OBJECT },
 			new BasicCodeMap("DataStructures.get(~).~ = ~;"),
 			null,
 			spec,
 			BlockType.ACTION,
-			AttributeTypes.VOID,
+			HaxeAttributeTypes.VOID,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
-		
-		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
+
+		dseBlocks.put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 		
 //		get [propname] for [objectname]				DataStructures.get(objectname).propname
@@ -107,19 +109,19 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-prop2",
-			new AttributeType[] { AttributeTypes.TEXT, AttributeTypes.CODE },
+			new AttributeType[] { HaxeAttributeTypes.TEXT, HaxeAttributeTypes.CODE },
 			new BasicCodeMap("DataStructures.get(~).~"),
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeTypes.OBJECT,
+			HaxeAttributeTypes.OBJECT,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
-		
-		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
+
+		dseBlocks.put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 		
 //		transformer setter: set insets for window to [(top, bottom, left, right)]
@@ -131,30 +133,32 @@ public class Blocks
 		(
 			Category.CUSTOM,
 			"ds-get-data",
-			new AttributeType[] { AttributeTypes.TEXT },
+			new AttributeType[] { HaxeAttributeTypes.TEXT },
 			new BasicCodeMap("DataStructures.get(~)"),
 			null,
 			spec,
 			BlockType.NORMAL,
-			AttributeTypes.OBJECT,
+			HaxeAttributeTypes.OBJECT,
 			null
 		);
 		
 		blockDef.guiTemplate = spec;
 		blockDef.customBlockTheme = BlockTheme.THEMES.get("blue");
-		
-		Game.getGame().getDefinitions().put(blockDef.tag, blockDef);
+
+		dseBlocks.put(blockDef.tag, blockDef);
 		tagCache.put(blockDef.tag, blockDef);
 	}
 	
 	public static void addDesignModeBlocks(HaxeDataType type)
 	{
+		DefinitionMap dseBlocks = ((SWExtensionInstance) DataStructuresExtension.get().owner()).getBlocks();
+		
 		ArrayList<Definition> blocks = type.getBlocks();
 		if(blocks != null)
 		{
 			for(Definition def : blocks)
 			{
-				Game.getGame().getDefinitions().put(def.tag, def);
+				dseBlocks.put(def.tag, def);
 				tagCache.put(def.tag, def);
 			}
 		}
@@ -200,19 +204,22 @@ public class Blocks
 	
 	public static void dispose()
 	{
+		DefinitionMap dseBlocks = ((SWExtensionInstance) DataStructuresExtension.get().owner()).getBlocks();
 		for(String tag : tagCache.keySet())
-			Game.getGame().getDefinitions().remove(tag);
+			dseBlocks.remove(tag);
 		tagCache.clear();
 	}
 
 	public static void removeDesignModeBlocks(HaxeDataType type)
 	{
+		DefinitionMap dseBlocks = ((SWExtensionInstance) DataStructuresExtension.get().owner()).getBlocks();
+		
 		ArrayList<Definition> blocks = type.getBlocks();
 		if(blocks != null)
 		{
 			for(Definition def : blocks)
 			{
-				Game.getGame().getDefinitions().remove(def.tag);
+				dseBlocks.remove(def.tag);
 				tagCache.remove(def.tag);
 			}
 		}

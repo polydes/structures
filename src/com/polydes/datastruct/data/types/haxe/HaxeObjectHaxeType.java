@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.polydes.common.util.Lang;
 import com.polydes.datastruct.data.types.HaxeDataType;
 import com.polydes.datastruct.data.types.HaxeObjectType;
+
+import stencyl.core.util.Lang;
 
 public class HaxeObjectHaxeType extends HaxeDataType
 {

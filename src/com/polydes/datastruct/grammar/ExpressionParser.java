@@ -10,9 +10,6 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import com.polydes.datastruct.grammar.ConditionBaseListener;
-import com.polydes.datastruct.grammar.ConditionLexer;
-import com.polydes.datastruct.grammar.ConditionParser;
 import com.polydes.datastruct.grammar.ConditionParser.ExprAddContext;
 import com.polydes.datastruct.grammar.ConditionParser.ExprAndContext;
 import com.polydes.datastruct.grammar.ConditionParser.ExprDivideContext;

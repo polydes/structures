@@ -1,29 +1,28 @@
 package com.polydes.datastruct.data.structure.elements;
 
-import javax.swing.JPanel;
-
 import org.w3c.dom.Element;
 
-import com.polydes.common.io.XML;
-import com.polydes.common.nodes.DefaultBranch;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.res.ResourceLoader;
-import com.polydes.common.res.Resources;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
-import com.polydes.common.util.Lang;
 import com.polydes.datastruct.data.structure.SDE;
 import com.polydes.datastruct.data.structure.SDEType;
 import com.polydes.datastruct.data.structure.StructureDefinition;
-import com.polydes.datastruct.ui.objeditors.StructureTabPanel;
+import com.polydes.datastruct.ui.objeditors.StructureDefinitionEditor;
 import com.polydes.datastruct.ui.table.Card;
 import com.polydes.datastruct.ui.table.Deck;
 import com.polydes.datastruct.ui.table.GuiObject;
 import com.polydes.datastruct.ui.table.PropertiesSheet;
 import com.polydes.datastruct.ui.table.RowGroup;
 
+import stencyl.app.ext.res.AppResourceLoader;
+import stencyl.app.ext.res.AppResources;
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.io.XML;
+import stencyl.core.util.Lang;
+
 public class StructureTab extends SDE
 {
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	private String label;
 	
@@ -48,37 +47,12 @@ public class StructureTab extends SDE
 		return label;
 	}
 	
-	private StructureTabPanel editor;
-	
-	@Override
-	public JPanel getEditor()
-	{
-		if(editor == null)
-			editor = new StructureTabPanel(this, PropertiesSheetStyle.LIGHT);
-		
-		return editor;
-	}
-	
-	@Override
-	public void disposeEditor()
-	{
-		editor.dispose();
-		editor = null;
-	}
-	
-	@Override
-	public void revertChanges()
-	{
-		if(editor != null)
-			editor.revertChanges();
-	}
-
 	@Override
 	public String getDisplayLabel()
 	{
 		return label;
 	}
-	
+
 	public static class TabType extends SDEType<StructureTab>
 	{
 		public TabType()
@@ -103,13 +77,13 @@ public class StructureTab extends SDE
 		}
 
 		@Override
-		public void write(StructureTab object, Element e)
+		public void write(StructureTab object, Element e, DataContext ctx)
 		{
 			XML.write(e, "label", object.getLabel());
 		}
 
 		@Override
-		public StructureTab create(StructureDefinition def, String nodeName)
+		public StructureTab create(StructureDefinition def, StructureDefinitionEditor defEditor, String nodeName)
 		{
 			return new StructureTab(nodeName);
 		}

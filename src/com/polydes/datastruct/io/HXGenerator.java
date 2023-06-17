@@ -10,7 +10,7 @@ import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.StructureDefinition;
 import com.polydes.datastruct.data.types.HaxeDataType;
 
-import stencyl.sw.util.Locations;
+import stencyl.core.api.fs.Locations;
 
 public class HXGenerator
 {

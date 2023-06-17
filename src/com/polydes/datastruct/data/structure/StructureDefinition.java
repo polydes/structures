@@ -1,39 +1,33 @@
 package com.polydes.datastruct.data.structure;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import javax.swing.ImageIcon;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.polydes.common.data.types.EditorProperties;
-import com.polydes.common.ext.RegistryObject;
-import com.polydes.common.nodes.DefaultEditableLeaf;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.ui.object.EditableObject;
 import com.polydes.datastruct.DataStructuresExtension;
-import com.polydes.datastruct.data.core.Pair;
 import com.polydes.datastruct.data.folder.Folder;
 import com.polydes.datastruct.data.folder.FolderPolicy;
 import com.polydes.datastruct.data.structure.elements.StructureField;
 import com.polydes.datastruct.data.structure.elements.StructureTab;
 import com.polydes.datastruct.data.structure.elements.StructureTabset;
-import com.polydes.datastruct.data.types.ExtrasMap;
 import com.polydes.datastruct.data.types.HaxeDataType;
-import com.polydes.datastruct.ui.objeditors.StructureDefinitionEditor;
-import com.polydes.datastruct.ui.page.StructurePage;
 
-public class StructureDefinition extends EditableObject implements RegistryObject
+import stencyl.core.api.datatypes.DataContext;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.ext.registry.RegistryObject;
+import stencyl.core.lib.IProject;
+
+public class StructureDefinition implements RegistryObject
 {
 	public static FolderPolicy STRUCTURE_DEFINITION_POLICY = new StructureDefinitionEditingPolicy();
 	
 	private BufferedImage iconImg;
-	private ImageIcon icon;
 	
+	private IProject project;
+	private DataContext ctx;
 	private String name;
 	private String classname; // registry key
 	
@@ -42,12 +36,14 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	private final LinkedHashMap<String, StructureField> fields;
 	public DefaultLeaf dref;
 	public Folder guiRoot; //this is passed in from elsewhere.
-	private StructureDefinitionEditor editor;
+	
 	
 	public StructureDefinition parent = null;
 	
-	public StructureDefinition(String name, String classname)
+	public StructureDefinition(IProject project, String name, String classname)
 	{
+		this.project = project;
+		ctx = DataContext.fromMap(Map.of("Project", project));
 		this.name = name;
 		this.classname = classname;
 		fields = new LinkedHashMap<String, StructureField>();
@@ -55,8 +51,7 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 		
 		Structure.addType(this);
 		
-		dref = new DefaultEditableLeaf(name, this);
-		dref.setIcon(icon);
+		dref = new DefaultLeaf(name, this);
 		
 		guiRoot = new Folder("root", new StructureTable(this));
 		guiRoot.setPolicy(STRUCTURE_DEFINITION_POLICY);
@@ -70,17 +65,25 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	
 	public void dispose()
 	{
-		disposeEditor();
 		Structure.removeType(this);
 		dref = null;
 		guiRoot = null;
+		project = null;
 	}
 	
 	public void setImage(BufferedImage image)
 	{
 		this.iconImg = image;
-		icon = new ImageIcon(image);
-		dref.setIcon(icon);
+	}
+	
+	public IProject getProject()
+	{
+		return project;
+	}
+	
+	public DataContext getCtx()
+	{
+		return ctx;
 	}
 	
 	public void setName(String name)
@@ -134,11 +137,6 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 		return iconImg;
 	}
 	
-	public ImageIcon getIcon()
-	{
-		return icon;
-	}
-	
 	public StructureField getField(String name)
 	{
 		return fields.get(name);
@@ -155,18 +153,6 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 		return name;
 	}
 	
-	@Override
-	public StructureDefinitionEditor getEditor()
-	{
-		if(editor == null)
-		{
-			editor = new StructureDefinitionEditor(this);
-			savedDefinitionDirtyState = dref.isDirty();
-		}
-		
-		return editor;
-	}
-	
 	public void addField(StructureField f)
 	{
 		fields.put(f.getVarname(), f);
@@ -175,6 +161,12 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	public void removeField(StructureField f)
 	{
 		fields.remove(f.getVarname());
+	}
+
+	public void setFieldName(StructureField f, String name)
+	{
+		fields.remove(f.getVarname());
+		fields.put(name, f);
 	}
 	
 	public void setDirty(boolean value)
@@ -187,183 +179,6 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 		return guiRoot.isDirty();
 	}
 
-	//=== For runtime updating
-	
-	private ArrayList<StructureField> addedFields;
-	private ArrayList<StructureField> removedFields;
-	private HashMap<StructureField, TypeUpdate> typeUpdates;
-	private HashMap<StructureField, Pair<String>> nameUpdates;
-	
-	private class TypeUpdate
-	{
-		//l is original type/optionalArgs
-		//r is new type/optionalArgs
-		
-		Pair<HaxeDataType> type;
-		Pair<EditorProperties> optArgs;
-		
-		public TypeUpdate(Pair<HaxeDataType> type, Pair<EditorProperties> optArgs)
-		{
-			this.type = type;
-			this.optArgs = optArgs;
-		}
-	}
-	
-	public void addField(StructureField f, Structure s)
-	{
-		if(addedFields == null)
-			addedFields = new ArrayList<StructureField>();
-		addedFields.add(f);
-		
-		fields.put(f.getVarname(), f);
-		s.clearProperty(f);
-	}
-	
-	public void removeField(StructureField f, Structure s)
-	{
-		if(removedFields == null)
-			removedFields = new ArrayList<StructureField>();
-		removedFields.add(f);
-		
-		s.clearProperty(f);
-		fields.remove(f.getVarname());
-	}
-	
-	public void setFieldTypeForPreview(StructureField f, HaxeDataType type)
-	{
-		if(typeUpdates == null)
-			typeUpdates = new HashMap<StructureField, TypeUpdate>();
-		
-		if(!typeUpdates.containsKey(f))
-			typeUpdates.put(f,
-				new TypeUpdate(
-					new Pair<HaxeDataType>(
-						f.getType(),
-						null
-					),
-					new Pair<EditorProperties>(
-						f.getEditorProperties(),
-						null
-					)
-				)
-			);
-		
-		TypeUpdate update = typeUpdates.get(f);
-		update.type.r = type;
-		update.optArgs.r = type.loadExtras(new ExtrasMap());
-		
-		editor.preview.clearProperty(f);
-		f.setEditorProperties(update.optArgs.r);
-	}
-	
-	public void update()
-	{
-		updateTypes();
-		refreshFields(true);
-		refreshEditors();
-	}
-	
-	@Override
-	public void revertChanges()
-	{
-		revertTypes();
-		revertNames();
-		refreshFields(false);
-		
-		if(!savedDefinitionDirtyState)
-			dref.setDirty(false);
-	}
-	
-	public void updateTypes()
-	{
-		if(typeUpdates != null)
-		{
-			for(StructureField field : typeUpdates.keySet())
-			{
-				Pair<HaxeDataType> types = typeUpdates.get(field).type;
-				if(types.l == types.r)
-					continue;
-				setFieldType(field, types.r);
-			}
-			typeUpdates.clear();
-			typeUpdates = null;
-		}
-	}
-	
-	public void revertTypes()
-	{
-		if(typeUpdates != null)
-		{
-			for(StructureField field : typeUpdates.keySet())
-			{
-				field.setEditorProperties(typeUpdates.get(field).optArgs.l);
-				field.setType(typeUpdates.get(field).type.l);
-			}
-			typeUpdates.clear();
-			typeUpdates = null;
-		}
-	}
-	
-	public void setFieldType(StructureField f, HaxeDataType type)
-	{
-		for(Structure s : Structure.getAllOfType(this))
-			s.clearProperty(f);
-		if(f.getType() != type)
-		{
-			f.setType(type);
-			f.setEditorProperties(type.loadExtras(new ExtrasMap()));
-		}
-	}
-	
-	public void refreshFields(boolean commit)
-	{
-		if(commit)
-		{
-			//if(removeField != null) ... was in here before. Why?
-			//This does nothing now.
-		}
-		else //revert
-		{
-			if(addedFields != null)
-			{
-				for(StructureField f : addedFields)
-					removeField(f);
-				addedFields.clear();
-				addedFields = null;
-			}
-			if(removedFields != null)
-			{
-				for(StructureField f : removedFields)
-					addField(f);
-				removedFields.clear();
-				removedFields = null;
-			}
-		}
-	}
-	
-	private void revertNames()
-	{
-		if(nameUpdates != null)
-		{
-			for(StructureField f : nameUpdates.keySet())
-				setFieldName(f, nameUpdates.get(f).l);
-			nameUpdates.clear();
-			nameUpdates = null;
-		}
-	}
-	
-	public void refreshEditors()
-	{
-		for(Structure s : Structure.getAllOfType(this))
-			s.disposeEditor();
-	}
-	
-	public void setFieldName(StructureField f, String name)
-	{
-		fields.remove(f.getVarname());
-		fields.put(name, f);
-	}
-	
 	/*-------------------------------------*\
 	 * Inheritence
 	\*-------------------------------------*/ 
@@ -372,18 +187,8 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	{
 		return this == def || (parent != null && parent.is(def));
 	}
-	
+
 	//===
-	
-	private boolean savedDefinitionDirtyState;
-	
-	@Override
-	public void disposeEditor()
-	{
-		if(editor != null)
-			editor.dispose();
-		editor = null;
-	}
 	
 	static class StructureDefinitionEditingPolicy extends FolderPolicy
 	{
@@ -408,18 +213,6 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 			return super.canAcceptItem(folder, item);
 		}
 	}
-
-	public void remove()
-	{
-		for(Structure s : Structures.structures.get(this))
-			StructurePage.get().getFolderModel().removeItem(s.dref, s.dref.getParent());
-		
-		DataStructuresExtension.get().getStructureDefinitions().unregisterItem(this);
-		DataStructuresExtension.get().getHaxeTypes().unregisterItem(classname);
-		Structures.structures.remove(this);
-		
-		dispose();
-	}
 	
 	/*-------------------------------------*\
 	 * Unknown Definitions
@@ -436,13 +229,15 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	{
 		this.name = name;
 		this.classname = classname;
+		dref.markAsLoading(true);
 		dref.setName(name);
+		dref.markAsLoading(false);
 		unknown = false;
 	}
 	
-	public static StructureDefinition newUnknown(String name)
+	public static StructureDefinition newUnknown(IProject project, String name)
 	{
-		StructureDefinition def = new StructureDefinition(name, name);
+		StructureDefinition def = new StructureDefinition(project, name, name);
 		def.unknown = true;
 		return def;
 	}
@@ -467,11 +262,5 @@ public class StructureDefinition extends EditableObject implements RegistryObjec
 	public void setKey(String newKey)
 	{
 		this.classname = newKey;
-	}
-
-	@Override
-	public boolean fillsViewHorizontally()
-	{
-		return false;
 	}
 }

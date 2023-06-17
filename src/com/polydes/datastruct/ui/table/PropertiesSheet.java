@@ -1,35 +1,35 @@
 package com.polydes.datastruct.ui.table;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import com.polydes.common.data.types.DataEditor;
-import com.polydes.common.nodes.DefaultBranch;
-import com.polydes.common.nodes.DefaultLeaf;
-import com.polydes.common.nodes.HierarchyModel;
-import com.polydes.common.nodes.HierarchyRepresentation;
-import com.polydes.common.ui.propsheet.PropertiesSheetStyle;
 import com.polydes.datastruct.data.structure.SDE;
 import com.polydes.datastruct.data.structure.SDEType;
 import com.polydes.datastruct.data.structure.SDETypes;
 import com.polydes.datastruct.data.structure.Structure;
 import com.polydes.datastruct.data.structure.elements.StructureField;
 
-public class PropertiesSheet extends JPanel implements HierarchyRepresentation<DefaultLeaf,DefaultBranch>
+import stencyl.app.api.datatypes.DataEditor;
+import stencyl.app.api.datatypes.EditorSheet;
+import stencyl.app.comp.propsheet.PropertiesSheetStyle;
+import stencyl.core.api.pnodes.DefaultBranch;
+import stencyl.core.api.pnodes.DefaultLeaf;
+import stencyl.core.api.pnodes.HierarchyModel;
+import stencyl.core.api.pnodes.HierarchyRepresentation;
+
+public class PropertiesSheet extends JPanel implements HierarchyRepresentation<DefaultLeaf, DefaultBranch>, EditorSheet
 {
+	public static final String STRUCTURE_PROPERTY = "Structure";
+	
 	public Card getFirstCardParent(DefaultLeaf n)
 	{
 		while(true)
@@ -75,6 +75,8 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 	public ArrayList<Card> conditionalCards = new ArrayList<Card>();
 	public JScrollPane scroller;
 	
+	private Map<String, Object> sheetProperties = new HashMap<>();
+	
 	/**
 	 * folderModel is null if this isn't the preview of a structure definition editor
 	 */
@@ -110,6 +112,9 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 		guiMap = new HashMap<DefaultLeaf, GuiObject>();
 		fieldEditorMap = new HashMap<StructureField, DataEditor<?>>();
 		add(root);
+		
+		sheetProperties.put(PROJECT_PROPERTY, model.getTemplate().getProject());
+		sheetProperties.put(STRUCTURE_PROPERTY, model);
 		
 		DefaultBranch rootFolder = model.getTemplate().guiRoot;
 		guiMap.put(rootFolder, root);
@@ -159,11 +164,18 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 		for(DataEditor<?> editor : fieldEditorMap.values())
 			editor.dispose();
 		fieldEditorMap.clear();
+		sheetProperties.clear();
 		
 		removeAll();
 		highlighter = null;
 		style = null;
 		tweener = null;
+	}
+
+	@Override
+	public Object getSheetProperty(String property)
+	{
+		return sheetProperties.get(property);
 	}
 	
 	/*================================================*\
@@ -241,7 +253,7 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 			
 			Rectangle r = new Rectangle(highlighter.r);
 			r.grow(20, 20);
-			scrollRectToVisible(r);
+			SwingUtilities.invokeLater(() -> scrollRectToVisible(r));
 			tweener.cancel();
 		}
 	}
