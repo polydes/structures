@@ -1,3 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <blocks>
+
+	<block
+		tag="ds-set-prop1"
+		spec="set %1 for %0 to %2"
+		code="#{0}.#{1} = #{2};"
+		type="action"
+		color="blue"
+		returns="void">
+		<fields>
+			<anything order="0" />
+			<code order="1" />
+			<anything order="2" />
+		</fields>
+	</block>
+
+	<block
+		tag="ds-get-prop1"
+		spec="get %1 from %0"
+		code="#{0}.#{1}"
+		type="normal"
+		color="blue"
+		returns="anything">
+		<fields>
+			<anything order="0" />
+			<code order="1" />
+		</fields>
+	</block>
+
+	<block
+		tag="ds-set-prop2"
+		spec="set %1 for %0 to %2"
+		code="DataStructures.get(#{0}).#{1} = #{2};"
+		type="action"
+		color="blue"
+		returns="void">
+		<fields>
+			<text order="0" />
+			<code order="1" />
+			<anything order="2" />
+		</fields>
+	</block>
+
+	<block
+		tag="ds-get-prop2"
+		spec="get %1 from %0"
+		code="DataStructures.get(#{0}).#{1}"
+		type="normal"
+		color="blue"
+		returns="anything">
+		<fields>
+			<text order="0" />
+			<code order="1" />
+		</fields>
+	</block>
+
+	<!-- transformer setter: set insets for window to [(top, bottom, left, right)] -->
+	<!-- transformer getter: top of [get insets for window] -->
+
+	<block
+		tag="ds-get-data"
+		spec="get data with name: %0"
+		code="DataStructures.get(#{0})"
+		type="normal"
+		color="blue"
+		returns="anything">
+		<fields>
+			<text order="0" />
+		</fields>
+	</block>
+
 </blocks>

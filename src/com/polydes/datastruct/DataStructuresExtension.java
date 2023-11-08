@@ -115,8 +115,6 @@ public class DataStructuresExtension extends GameExtension
 //			Images.get().load(new File(Locations.getGameLocation(getGame()), "extras"));
 			Structures.get().load(new File(getExtrasFolder(), "data"));
 
-			Blocks.addDesignModeBlocks();
-
 			initialized = true;
 		}
 		catch(Exception ex)
@@ -147,7 +145,6 @@ public class DataStructuresExtension extends GameExtension
 		haxeTypes.dispose();
 //		Images.dispose();
 		Structures.dispose();
-		Blocks.dispose();
 		sdeTypes.dispose();
 		DSEditorProviders.unregisterBuiltinEditors();
 		DSTypes.unregister();
