@@ -36,7 +36,7 @@ processResources {
     from('res') {
     	into 'res/com/polydes/datastruct'
     }
-    from('icon.png') {
+    from(rootProject.file('icon.png')) {
         into 'com/polydes/datastruct/res'
     }
 }
@@ -106,17 +106,4 @@ jar {
 			"Extension-Internal-Version": "4"
 		)
 	}
-}
-
-tasks.register('buildForEngine', Copy) {
-    from(tasks.named("jar")) {
-        rename { fileName -> "toolset-extension.jar" }
-    }
-    into "engine"
-}
-
-tasks.register('installToWorkspace', Sync) {
-    dependsOn(":buildForEngine")
-    from('engine')
-    into stencylWorkspace+"/engine-extensions/com.polydes.datastruct"
 }
