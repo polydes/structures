@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.swing.*;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
@@ -28,6 +30,7 @@ import com.polydes.datastruct.updates.V4_FullTypeNamesUpdate;
 import stencyl.app.comp.darktree.DarkTree;
 import stencyl.app.comp.dg.MessageDialog;
 import stencyl.app.ext.PageAddon;
+import stencyl.app.ext.PageAddon.EngineExtensionPageAddon;
 import stencyl.core.api.fs.Locations;
 import stencyl.core.ext.GameExtension;
 import stencyl.core.ext.engine.ExtensionInstanceManager.FormatUpdateSubmitter;
@@ -88,7 +91,16 @@ public class DataStructuresExtension extends GameExtension
 
 		instance = this;
 
-		owner().setAddon(GameLibrary.DASHBOARD_SIDEBAR_PAGE_ADDONS, (PageAddon) MainPage::get);
+		PageAddon structuresSidebarPage = new EngineExtensionPageAddon(owner())
+		{
+			@Override
+			public JPanel getPage()
+			{
+				return MainPage.get();
+			}
+		};
+
+		owner().getAddons().setAddon(GameLibrary.DASHBOARD_SIDEBAR_PAGE_ADDONS, structuresSidebarPage);
 
 		initialized = false;
 
