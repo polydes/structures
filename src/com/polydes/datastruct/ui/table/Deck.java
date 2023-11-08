@@ -73,7 +73,7 @@ public class Deck extends JPanel implements GuiObject
 	
 	private void refreshButtons()
 	{
-		ArrayList<JButton> jbuttons = new ArrayList<JButton>();
+		ArrayList<JButton> jbuttons = new ArrayList<>();
 		for(Card card : cards)
 			jbuttons.add(card.button);
 		Layout.horizontalBoxExisting(buttons, jbuttons.toArray(new JButton[0]));

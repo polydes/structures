@@ -22,21 +22,9 @@ public class MainPage extends JPanel
 	
 	
 	private JButton defButton;
-	private final ActionListener openDefinitionsWindowAction = new ActionListener()
-	{
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			StructureDefinitionsWindow.get();
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					StructureDefinitionsWindow.get().setVisible(true);
-				}
-			});
-		}
+	private final ActionListener openDefinitionsWindowAction = e -> {
+		StructureDefinitionsWindow.get();
+		SwingUtilities.invokeLater(() -> StructureDefinitionsWindow.get().setVisible(true));
 	};
 	
 	private MainPage()

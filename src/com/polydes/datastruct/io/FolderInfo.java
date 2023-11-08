@@ -32,10 +32,10 @@ public class FolderInfo extends HashMap<String, String>
 	
 	public ArrayList<String> getFileOrder()
 	{
-		ArrayList<String> fileOrder = new ArrayList<String>();
+		ArrayList<String> fileOrder = new ArrayList<>();
 		
 		if(containsKey(FILE_ORDER_KEY))
-			fileOrder = new ArrayList<String>(Arrays.asList(StringUtils.split(get(FILE_ORDER_KEY), ",")));
+			fileOrder = new ArrayList<>(Arrays.asList(StringUtils.split(get(FILE_ORDER_KEY), ",")));
 		
 		for(String fname : folder.list())
 			if(!fileOrder.contains(fname) && !fname.equals(FOLDER_INFO_FILENAME))
@@ -50,20 +50,20 @@ public class FolderInfo extends HashMap<String, String>
 	
 	public FolderInfo()
 	{
-		fileOrder = new ArrayList<String>();
+		fileOrder = new ArrayList<>();
 	}
 	
 	public void addFilenameToOrder(String filename)
 	{
 		if(fileOrder == null)
-			fileOrder = new ArrayList<String>();
+			fileOrder = new ArrayList<>();
 		
 		fileOrder.add(filename);
 	}
 	
 	public void writeToFolder(File folder)
 	{
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String> lines = new ArrayList<>();
 		
 		for(String key : keySet())
 			lines.add(key + "=" + get(key));

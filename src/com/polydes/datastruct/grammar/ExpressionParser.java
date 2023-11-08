@@ -107,7 +107,7 @@ public class ExpressionParser
 	
 	class SimpleTreeBuilder extends ConditionBaseListener
 	{
-		Stack<SyntaxNode> stack = new Stack<SyntaxNode>();
+		Stack<SyntaxNode> stack = new Stack<>();
 		
 		/**
 		 * returns null if the input wasn't a valid Java expression

@@ -104,7 +104,7 @@ public class HaxeObjectType extends DataType<HaxeObject>
 				}
 			}
 			
-			List<JComponent> jcomps = new ArrayList<JComponent>();
+			List<JComponent> jcomps = new ArrayList<>();
 			for(int i = 0; i < def.fields.length; ++i)
 			{
 				JComponent c = new JPanel(new BorderLayout());

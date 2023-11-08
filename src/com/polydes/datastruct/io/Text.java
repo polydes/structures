@@ -22,8 +22,8 @@ public class Text
 {
 	private static final Logger log = Logger.getLogger(Text.class);
 	
-	private static HashMap<File, FileOutputStream> outstreams = new HashMap<File, FileOutputStream>();
-	private static HashMap<File, OutputStreamWriter> writers = new HashMap<File, OutputStreamWriter>();
+	private static HashMap<File, FileOutputStream> outstreams = new HashMap<>();
+	private static HashMap<File, OutputStreamWriter> writers = new HashMap<>();
 	
 	public static List<String> readLines(File file)
 	{
@@ -34,7 +34,7 @@ public class Text
 		catch (IOException e)
 		{
 			log.error(e.getMessage(), e);
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 	}
 	
@@ -47,7 +47,7 @@ public class Text
 		catch (IOException e)
 		{
 			log.error(e.getMessage(), e);
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class Text
 	
 	public static HashMap<String, String> readKeyValues(File file)
 	{
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<>();
 		
 		for(String s : readLines(file))
 		{
@@ -95,7 +95,7 @@ public class Text
 	
 	public static void writeKeyValues(File file, Map<String, String> map)
 	{
-		List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<>();
 		
 		for(Entry<String, String> entry : map.entrySet())
 			lines.add(entry.getKey() + "=" + entry.getValue());

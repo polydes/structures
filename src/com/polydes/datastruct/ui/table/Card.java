@@ -79,14 +79,7 @@ public class Card extends JPanel implements GuiObject
 			button.removeActionListener(buttonListener);
 		if(deck != null)
 		{
-			button.addActionListener(buttonListener = new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
-				{
-					deck.show(name);
-				}
-			});
+			button.addActionListener(buttonListener = e -> deck.show(name));
 		}
 	}
 	

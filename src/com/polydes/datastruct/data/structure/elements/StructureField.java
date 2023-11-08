@@ -405,14 +405,9 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			}
 			
 			deditor.setValue(sheet.model.getProperty(f));
-			deditor.addListener(new UpdateListener()
-			{
-				@Override
-				public void updated()
-				{
-					sheet.model.setProperty(f, deditor.getValue());
-					sheet.refreshVisibleComponents();
-				}
+			deditor.addListener(() -> {
+				sheet.model.setProperty(f, deditor.getValue());
+				sheet.refreshVisibleComponents();
 			});
 			
 			sheet.fieldEditorMap.put(f, deditor);
@@ -436,18 +431,13 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			enabler.setSelected(model.isPropertyEnabled(f));
 			enabler.setBackground(null);
 			
-			enabler.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
+			enabler.addActionListener(e -> {
+				if(model.isPropertyEnabled(f) != enabler.isSelected())
 				{
-					if(model.isPropertyEnabled(f) != enabler.isSelected())
-					{
-						dpanel.setEnabled(enabler.isSelected());
-						model.setPropertyEnabled(f, enabler.isSelected());
-						if(!enabler.isSelected())
-							model.clearProperty(f);
-					}
+					dpanel.setEnabled(enabler.isSelected());
+					model.setPropertyEnabled(f, enabler.isSelected());
+					if(!enabler.isSelected())
+						model.clearProperty(f);
 				}
 			});
 			

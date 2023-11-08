@@ -107,14 +107,9 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
 
             valueEditor = EditorProviders.createEditor(newType.dataType, noProps, sheet, PropertiesSheetStyle.DARK);
             valueEditor.setValue(data.value);
-            valueEditor.addListener(new UpdateListener()
-            {
-                @Override
-                public void updated()
-                {
-                    data.value = valueEditor.getValue();
-                    DynamicEditorDE.this.updated();
-                }
+            valueEditor.addListener(() -> {
+                data.value = valueEditor.getValue();
+                DynamicEditorDE.this.updated();
             });
 
             editor = Layout.horizontalBox(style.fieldDimension, valueEditor.getComponents());

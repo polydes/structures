@@ -31,10 +31,9 @@ public class ExtrasImageHaxeType extends HaxeDataType
 	@Override
 	public ImageIcon getIcon(Object value)
 	{
-		if(value instanceof ExtrasResource)
+		if(value instanceof ExtrasResource r)
 		{
-			ExtrasResource r = (ExtrasResource) value;
-			if(r.file != null && r.file.exists())
+            if(r.file != null && r.file.exists())
 				return FileRenderer.generateThumb(r.file);
 		}
 		return null;

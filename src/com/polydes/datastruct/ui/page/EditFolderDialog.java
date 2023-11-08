@@ -46,19 +46,12 @@ public class EditFolderDialog extends StencylDialog
 		dp.startBlock();
 		dp.addHeader("Edit Folder");
 		dp.addGenericRow("Structure Exclusive", structureExclusiveField = new JCheckBox());
-		dp.addGenericRow("Structure", typeChooser = new UpdatingCombo<StructureDefinition>(DataStructuresExtension.get().getStructureDefinitions().values(), null));
+		dp.addGenericRow("Structure", typeChooser = new UpdatingCombo<>(DataStructuresExtension.get().getStructureDefinitions().values(), null));
 		dp.finishBlock();
 		
 		structureExclusiveField.setBackground(null);
 		
-		structureExclusiveField.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				typeChooser.setEnabled(structureExclusiveField.isSelected());
-			}
-		});
+		structureExclusiveField.addChangeListener(e -> typeChooser.setEnabled(structureExclusiveField.isSelected()));
 		
 		panel.add(dp, BorderLayout.CENTER);
 
@@ -82,14 +75,7 @@ public class EditFolderDialog extends StencylDialog
 			typeChooser.setEnabled(false);
 		}
 		
-		typeChooser.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				childType = typeChooser.getSelected();
-			}
-		});
+		typeChooser.addActionListener(e -> childType = typeChooser.getSelected());
 		
 		setVisible(true);
 	}

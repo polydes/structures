@@ -71,7 +71,7 @@ public class StructureHaxeType extends HaxeDataType
 		s = StringUtils.replace(s, "[VARIABLES]", variables, 1);
 		s = StringUtils.replace(s, "[CUSTOM]", type.def.customCode + runCustomCodeInjector(type.def), 1);
 		
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String> lines = new ArrayList<>();
 		for(String s2 : s.split("\n"))
 			lines.add(s2);
 		

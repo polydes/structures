@@ -25,7 +25,7 @@ public class HaxeDataTypeExtension
 	
 	public static ArrayList<HaxeDataType> readTypesFolder(File f, DataContext ctx)
 	{
-		ArrayList<HaxeDataType> types = new ArrayList<HaxeDataType>();
+		ArrayList<HaxeDataType> types = new ArrayList<>();
 		
 		for(File file : FileHelper.listFiles(f))
 			if(file.getName().endsWith(".xml"))

@@ -16,7 +16,7 @@ public class HXGenerator
 {
 	public static List<String> generateFileList(File dir)
 	{
-		List<String> toWrite = new ArrayList<String>();
+		List<String> toWrite = new ArrayList<>();
 		
 		for(File f : dir.listFiles())
 			addFile("", f, toWrite);
@@ -70,7 +70,7 @@ public class HXGenerator
 		
 		s = StringUtils.replace(s, "[READERS]", readers, 1);
 		
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String> lines = new ArrayList<>();
 		for(String s2 : s.split("\n"))
 			lines.add(s2);
 		

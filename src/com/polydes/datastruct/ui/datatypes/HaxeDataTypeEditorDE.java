@@ -21,7 +21,7 @@ public class HaxeDataTypeEditorDE extends DataEditor<HaxeDataType>
 
     public HaxeDataTypeEditorDE(DataTypeProperties props, EditorSheet sheet, PropertiesSheetStyle style)
     {
-        typeChooser = new UpdatingCombo<HaxeDataType>(DataStructuresExtension.get().getHaxeTypes().values(), null);
+        typeChooser = new UpdatingCombo<>(DataStructuresExtension.get().getHaxeTypes().values(), null);
         typeChooser.setComparator(Comparator.comparing(HaxeDataType::getHaxeType));
         typeChooser.addActionListener(event -> updated());
     }

@@ -102,14 +102,7 @@ public abstract class LightweightWindow extends SnappingDialog
 			}
 		});
 		
-		closeButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				cancel();
-			}
-		});
+		closeButton.addActionListener(e -> cancel());
 		
 		JPanel titleBar = new JPanel();
 		titleBar.setLayout(new BoxLayout(titleBar, BoxLayout.X_AXIS));

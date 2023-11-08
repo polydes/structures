@@ -80,46 +80,31 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 		classOk= true;
 		packageOk = true;
 		
-		nameVerifier = new FieldVerifier()
-		{
-			@Override
-			public boolean verifyText(JTextField field, String text)
-			{
-				nameOk = isValidName(text);
-				verify();
-				
-				return nameOk;
-			}
+		nameVerifier = (field, text) -> {
+			nameOk = isValidName(text);
+			verify();
+			
+			return nameOk;
 		};
 		
-		classVerifier = new FieldVerifier()
-		{
-			@Override
-			public boolean verifyText(JTextField field, String text)
-			{
-				classOk = VerificationHelper.isValidClassName(text);
-				verify();
-				
-				return classOk;
-			}
+		classVerifier = (field, text) -> {
+			classOk = VerificationHelper.isValidClassName(text);
+			verify();
+			
+			return classOk;
 		};
 		
-		packageVerifier = new FieldVerifier()
-		{
-			@Override
-			public boolean verifyText(JTextField field, String text)
-			{
-				packageOk = VerificationHelper.isValidPackageName(text);
-				verify();
-				
-				return packageOk;
-			}
+		packageVerifier = (field, text) -> {
+			packageOk = VerificationHelper.isValidPackageName(text);
+			verify();
+			
+			return packageOk;
 		};
 		
 		nameField = new AutoVerifyField(nameVerifier, "");
 		classField = new AutoVerifyField(classVerifier, "");
 		packageField = new AutoVerifyField(packageVerifier, "");
-		parentTypeChooser = new UpdatingCombo<StructureDefinition>(DataStructuresExtension.get().getStructureDefinitions().values(), null);
+		parentTypeChooser = new UpdatingCombo<>(DataStructuresExtension.get().getStructureDefinitions().values(), null);
 		parentTypeChooser.setBackground(null);
 		parentTypeClearButton = new JButton("Clear");
 		parentTypeClearButton.addActionListener(e -> parentTypeChooser.setSelectedItem(null));
@@ -156,20 +141,15 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 		
 		GroupButton button = new GroupButton(4);
 		button.setText("Choose an Image");
-		button.addActionListener(new ImageImporter(new FileHandler()
-		{
-			@Override
-			public void handleFile(File f)
+		button.addActionListener(new ImageImporter(f -> {
+			try
 			{
-				try
-				{
-					iconImg = ImageIO.read(f);
-					iconLabel.repaint();
-				}
-				catch (IOException e1)
-				{
-					log.error(e1.getMessage(), e1);
-				}
+				iconImg = ImageIO.read(f);
+				iconLabel.repaint();
+			}
+			catch (IOException e1)
+			{
+				log.error(e1.getMessage(), e1);
 			}
 		}));
 		

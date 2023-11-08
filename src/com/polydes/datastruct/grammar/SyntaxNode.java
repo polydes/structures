@@ -18,7 +18,7 @@ public class SyntaxNode extends Node
 		this.type = type;
 		this.data = data;
 		if(data == null)
-			children = new ArrayList<Node>();
+			children = new ArrayList<>();
 	}
 	
 	public SyntaxNode(LangElement type, SyntaxNode... children)

@@ -53,7 +53,7 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 	public <T> ArrayList<T> allDescendentsOfType(Class<T> cls, ArrayList<T> list, DefaultBranch n)
 	{
 		if(list == null)
-			list = new ArrayList<T>();
+			list = new ArrayList<>();
 		for(DefaultLeaf n2 : n.getItems())
 		{
 			if(n2 instanceof DefaultBranch)
@@ -72,7 +72,7 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 	
 	public HashMap<DefaultLeaf, GuiObject> guiMap;
 	public HashMap<StructureField, DataEditor<?>> fieldEditorMap;
-	public ArrayList<Card> conditionalCards = new ArrayList<Card>();
+	public ArrayList<Card> conditionalCards = new ArrayList<>();
 	public JScrollPane scroller;
 	
 	private Map<String, Object> sheetProperties = new HashMap<>();
@@ -109,8 +109,8 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 		});
 		
 		this.model = model;
-		guiMap = new HashMap<DefaultLeaf, GuiObject>();
-		fieldEditorMap = new HashMap<StructureField, DataEditor<?>>();
+		guiMap = new HashMap<>();
+		fieldEditorMap = new HashMap<>();
 		add(root);
 		
 		sheetProperties.put(PROJECT_PROPERTY, model.getTemplate().getProject());
@@ -212,10 +212,9 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 		{
 			highlighter.addTargets(((Deck) go).buttons);
 		}
-		else if(go instanceof Card)
+		else if(go instanceof Card card)
 		{
-			Card card = (Card) go;
-			if(card == root)
+            if(card == root)
 				return;
 			
 			if(card.isTab)

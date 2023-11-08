@@ -12,12 +12,12 @@ public class DelayedInitialize
 {
 	private static final Logger log = Logger.getLogger(DelayedInitialize.class);
 	
-	private static HashMap<String, ArrayList<DelayedSet>> initList = new HashMap<String, ArrayList<DelayedSet>>();
+	private static HashMap<String, ArrayList<DelayedSet>> initList = new HashMap<>();
 	
 	public static void addMethod(Object o, String name, Object[] args, String prop)
 	{
 		if(!initList.containsKey(prop))
-			initList.put(prop, new ArrayList<DelayedSet>());
+			initList.put(prop, new ArrayList<>());
 		
 		initList.get(prop).add(new DelayedMethodSet(o, name, args));
 	}
@@ -25,7 +25,7 @@ public class DelayedInitialize
 	public static void addObject(Object o, String name, String prop)
 	{
 		if(!initList.containsKey(prop))
-			initList.put(prop, new ArrayList<DelayedSet>());
+			initList.put(prop, new ArrayList<>());
 		
 		initList.get(prop).add(new DelayedSet(o, name));
 	}

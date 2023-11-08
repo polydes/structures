@@ -55,7 +55,7 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 	{
 		this.project = project;
 		root = new Folder("Structure Definitions");
-		baseFolders = new HashMap<Folder, File>();
+		baseFolders = new HashMap<>();
 
 		FolderPolicy policy = new FolderPolicy()
 		{
@@ -168,7 +168,7 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 		if(Structures.structures.containsKey(def))
 			return;
 
-		Structures.structures.put(def, new ArrayList<Structure>());
+		Structures.structures.put(def, new ArrayList<>());
 
 		StructureType structureType = new StructureType(def);
 		StructureHaxeType newHaxeType = new StructureHaxeType(structureType);

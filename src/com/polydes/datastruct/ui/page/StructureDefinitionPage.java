@@ -213,7 +213,7 @@ public class StructureDefinitionPage extends JPanel
 		definitionsfm.setUniqueLeafNames(true);
 		definitionTree.getSelectionState().addSelectionListener(definitionStateListener);
 
-		definitionsFmUi.setNodeCreator(new DefaultNodeCreator<DefaultLeaf,DefaultBranch>()
+		definitionsFmUi.setNodeCreator(new DefaultNodeCreator<>()
 		{
 			@Override
 			public ArrayList<CreatableNodeInfo> getCreatableNodeList(DefaultBranch creationBranch)
@@ -225,7 +225,7 @@ public class StructureDefinitionPage extends JPanel
 			public DefaultLeaf createNode(CreatableNodeInfo item, String nodeName, DefaultBranch newNodeFolder, int insertPosition)
 			{
 				DefaultLeaf newLeaf;
-				if(item.name.equals("Folder"))
+				if (item.name.equals("Folder"))
 					newLeaf = new Folder(nodeName);
 				else
 				{
@@ -234,7 +234,7 @@ public class StructureDefinitionPage extends JPanel
 					StructureDefinition toCreate = dg.newDef;
 					dg.dispose();
 
-					if(toCreate != null)
+					if (toCreate != null)
 					{
 						DataStructuresExtension.get().getStructureDefinitions().registerItem(toCreate);
 						newLeaf = toCreate.dref;
@@ -244,8 +244,8 @@ public class StructureDefinitionPage extends JPanel
 						newLeaf = null;
 					}
 				}
-				
-				if(newLeaf != null)
+
+				if (newLeaf != null)
 					newLeaf.setDirty(true);
 				return newLeaf;
 			}
@@ -259,10 +259,10 @@ public class StructureDefinitionPage extends JPanel
 			@Override
 			public void editNode(DefaultLeaf toEdit)
 			{
-				if(toEdit instanceof DefaultBranch)
+				if (toEdit instanceof DefaultBranch)
 					return;
 
-				if(!(toEdit.getUserData() instanceof StructureDefinition))
+				if (!(toEdit.getUserData() instanceof StructureDefinition))
 					return;
 
 				CreateStructureDefinitionDialog dg = new CreateStructureDefinitionDialog(DataStructuresExtension.get().getProject());
@@ -274,9 +274,8 @@ public class StructureDefinitionPage extends JPanel
 			@Override
 			public boolean attemptRemove(List<DefaultLeaf> toRemove)
 			{
-				if(toRemove.size() > 0 && toRemove.get(0).getUserData() instanceof StructureDefinition)
+				if (toRemove.size() > 0 && toRemove.get(0).getUserData() instanceof StructureDefinition def)
 				{
-					StructureDefinition def = (StructureDefinition) toRemove.get(0).getUserData();
 					Choice result =
 						Prompt.showYesCancelPrompt(
 							"Remove Structure Definition",
@@ -292,10 +291,10 @@ public class StructureDefinitionPage extends JPanel
 			@Override
 			public void nodeRemoved(DefaultLeaf toRemove)
 			{
-				if(toRemove.getUserData() instanceof StructureDefinition def)
+				if (toRemove.getUserData() instanceof StructureDefinition def)
 				{
 					StructureDefinitionEditor editor = editors.remove(def);
-					if(editor != null)
+					if (editor != null)
 						editor.dispose();
 					DataStructuresExtension.get().getStructureDefinitions().unregisterItem(def);
 				}
@@ -332,7 +331,7 @@ public class StructureDefinitionPage extends JPanel
 		definitionTree.getSelectionState().set(def.dref);
 	}
 
-	private static final ArrayList<CreatableNodeInfo> createNodeList = new ArrayList<CreatableNodeInfo>();
+	private static final ArrayList<CreatableNodeInfo> createNodeList = new ArrayList<>();
 
 	static
 	{

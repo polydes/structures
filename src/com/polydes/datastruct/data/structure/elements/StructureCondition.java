@@ -74,7 +74,7 @@ public class StructureCondition extends SDE
 	}
 	
 	//State variables.
-	private static HashMap<String, Object> idMap = new HashMap<String, Object>(2);
+	private static HashMap<String, Object> idMap = new HashMap<>(2);
 	private static Structure structureRef;
 	
 	public static void dispose()
@@ -157,7 +157,7 @@ public class StructureCondition extends SDE
 					//Can look at Haxe's Runtime callField() to see what happens there
 					Object callOn = eval(n.get(0));
 					String methodName = (String) n.get(1).data;
-					List<Object> args = new ArrayList<Object>();
+					List<Object> args = new ArrayList<>();
 					for(int i = 2; i < n.getNumChildren(); ++ i)
 						args.add(eval(n.get(i)));
 					

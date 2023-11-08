@@ -24,13 +24,13 @@ public class StringData
 	//first item returned is the type of the array.
 	public static ArrayList<String> getEmbeddedArrayStrings(String s)
 	{
-		ArrayList<String> a = new ArrayList<String>();
+		ArrayList<String> a = new ArrayList<>();
 		
 		int i = s.lastIndexOf(":");
 		
 		char ch;
 		int k = 0;
-		ArrayList<Integer> commas = new ArrayList<Integer>();
+		ArrayList<Integer> commas = new ArrayList<>();
 		for(int j = 1; j < i; ++j)
 		{
 			ch = s.charAt(j);
@@ -151,7 +151,7 @@ public class StringData
 	@SuppressWarnings("unchecked")
 	public static <T> ArrayList<T> rArrayList(String s, Class<T> gen)
 	{
-		ArrayList<T> toReturn = new ArrayList<T>();
+		ArrayList<T> toReturn = new ArrayList<>();
 		
 		String[] elements = s.split(",");
 		for(String s2 : elements)

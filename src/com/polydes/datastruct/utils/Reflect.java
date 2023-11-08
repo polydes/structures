@@ -21,7 +21,7 @@ public class Reflect
 	
 	public static HashMap<String, Field> getDeclaredFieldMap(Object o)
 	{
-		HashMap<String, Field> toReturn = new HashMap<String, Field>();
+		HashMap<String, Field> toReturn = new HashMap<>();
 		Class<?> cls = (o instanceof Class) ? ((Class<?>) o) : o.getClass();
 
 		Field[] fields = cls.getDeclaredFields();
@@ -129,7 +129,7 @@ public class Reflect
 
 	public static Object[] getValues(Object o, String[] fieldNames)
 	{
-		HashMap<String, Method> nameMethodMap = new HashMap<String, Method>();
+		HashMap<String, Method> nameMethodMap = new HashMap<>();
 
 		BeanInfo info = null;
 		try

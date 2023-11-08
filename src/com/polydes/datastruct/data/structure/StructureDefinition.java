@@ -46,7 +46,7 @@ public class StructureDefinition implements RegistryObject
 		ctx = DataContext.fromMap(Map.of("Project", project));
 		this.name = name;
 		this.classname = classname;
-		fields = new LinkedHashMap<String, StructureField>();
+		fields = new LinkedHashMap<>();
 		customCode = "";
 		
 		Structure.addType(this);

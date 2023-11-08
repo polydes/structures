@@ -185,7 +185,7 @@ public class StructureDefinitionEditor extends JPanel
 				return leaf;
 			}
 			
-			NodeAction<DefaultLeaf> setAsIcon = new NodeAction<DefaultLeaf>("Set as Icon", null, leaf -> {
+			NodeAction<DefaultLeaf> setAsIcon = new NodeAction<>("Set as Icon", null, leaf -> {
 				StructureField field = (StructureField) leaf.getUserData();
 				def.iconSource = field.getVarname();
 			});
@@ -197,10 +197,9 @@ public class StructureDefinitionEditor extends JPanel
 				if(targets.length == 1)
 				{
 					Object data = targets[0].getUserData();
-					if(data instanceof StructureField)
+					if(data instanceof StructureField field)
 					{
-						StructureField field = (StructureField) data;
-						if(field.getType().isIconProvider())
+                        if(field.getType().isIconProvider())
 							actions.add(setAsIcon);
 					}
 				}
@@ -309,7 +308,7 @@ public class StructureDefinitionEditor extends JPanel
 	public void addField(StructureField f, Structure s)
 	{
 		if(addedFields == null)
-			addedFields = new ArrayList<StructureField>();
+			addedFields = new ArrayList<>();
 		addedFields.add(f);
 
 		def.addField(f);
@@ -319,7 +318,7 @@ public class StructureDefinitionEditor extends JPanel
 	public void removeField(StructureField f, Structure s)
 	{
 		if(removedFields == null)
-			removedFields = new ArrayList<StructureField>();
+			removedFields = new ArrayList<>();
 		removedFields.add(f);
 
 		s.clearProperty(f);
@@ -329,7 +328,7 @@ public class StructureDefinitionEditor extends JPanel
 	public void setFieldTypeForPreview(StructureField f, HaxeDataType type)
 	{
 		if(typeUpdates == null)
-			typeUpdates = new HashMap<StructureField, TypeUpdate>();
+			typeUpdates = new HashMap<>();
 
 		if(!typeUpdates.containsKey(f))
 			typeUpdates.put(f,

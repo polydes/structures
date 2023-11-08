@@ -47,7 +47,7 @@ public class StructureEditorDE extends DataEditor<Structure> implements Property
             predicate = predicate == null ? onlySubtypes : onlySubtypes.and(predicate);
         }
 
-        editor = new UpdatingCombo<Structure>(allowSubtypes ? Structures.structuresByID.values() : Structures.getList(def), predicate);
+        editor = new UpdatingCombo<>(allowSubtypes ? Structures.structuresByID.values() : Structures.getList(def), predicate);
         editor.setIconProvider(StructureIconProvider::getStructureIcon);
         editor.addActionListener(event -> valueUpdated(true));
         oldStructure = null;
@@ -59,7 +59,7 @@ public class StructureEditorDE extends DataEditor<Structure> implements Property
     public StructureEditorDE(StructureType type)
     {
         this.def = type.def;
-        editor = new UpdatingCombo<Structure>(Structures.getList(def), null);
+        editor = new UpdatingCombo<>(Structures.getList(def), null);
         editor.addActionListener(event -> updated());
         panel = null;
     }

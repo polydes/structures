@@ -53,7 +53,7 @@ public class Structures
 
 	public void load(File folder)
 	{
-		fmaps = new HashMap<String, HashMap<String,String>>();
+		fmaps = new HashMap<>();
 
 		FolderInfo info = new FolderInfo(folder);
 		ArrayList<String> order = info.getFileOrder();
@@ -187,7 +187,7 @@ public class Structures
 		else
 		{
 			Structure s = (Structure) item.getUserData();
-			ArrayList<String> toWrite = new ArrayList<String>();
+			ArrayList<String> toWrite = new ArrayList<>();
 			toWrite.add("struct_id=" + s.getID());
 			toWrite.add("struct_type=" + s.getTemplate().getFullClassname());
 
@@ -208,8 +208,8 @@ public class Structures
 		}
 	}
 
-	public static HashMap<StructureDefinition, ArrayList<Structure>> structures = new HashMap<StructureDefinition, ArrayList<Structure>>();
-	public static HashMap<Integer, Structure> structuresByID = new HashMap<Integer, Structure>();
+	public static HashMap<StructureDefinition, ArrayList<Structure>> structures = new HashMap<>();
+	public static HashMap<Integer, Structure> structuresByID = new HashMap<>();
 
 	public static Collection<Structure> getList(StructureDefinition type)
 	{
