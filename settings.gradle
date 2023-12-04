@@ -1,4 +1,3 @@
 rootProject.name = 'datastruct'
 
 include('toolset')
-project(':toolset').name = 'datastruct'
