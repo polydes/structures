@@ -342,7 +342,7 @@ public class StructureDefinitionEditor extends JPanel
 
 		TypeUpdate update = typeUpdates.get(f);
 		typeUpdates.put(f,
-			new TypeUpdate(
+			update = new TypeUpdate(
 				update.originalType,
 				update.originalOptArgs,
 				type,
