@@ -168,7 +168,7 @@ public class StructureDefinitionPage extends JPanel
 		public void componentHidden(ComponentEvent e)
 		{
 			StructureDefinitionsWindow.get().getPropsWindow().removeComponentListener(this);
-			if(editor != null)
+			if(editor != null && editor.tree != null)
 				editor.tree.getSelectionState().clear();
 		}
 	};
