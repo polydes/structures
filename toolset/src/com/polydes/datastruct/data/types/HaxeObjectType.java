@@ -15,6 +15,7 @@ import stencyl.app.api.datatypes.DataEditor;
 import stencyl.app.api.datatypes.EditorProviders;
 import stencyl.app.api.datatypes.EditorSheet;
 import stencyl.app.api.datatypes.UpdateListener;
+import stencyl.app.comp.UI;
 import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.app.comp.util.Layout;
 import stencyl.core.api.datatypes.DataContext;
@@ -84,7 +85,7 @@ public class HaxeObjectType extends DataType<HaxeObject>
 		final DataEditor<?>[] editors;
 		final JComponent[] comps;
 		
-		public HaxeObjectEditor(DataTypeProperties props, EditorSheet sheet, PropertiesSheetStyle style)
+		public HaxeObjectEditor(DataTypeProperties props, EditorSheet sheet)
 		{
 			editors = new DataEditor[def.fields.length];
 			labels = def.showLabels ?
@@ -95,12 +96,14 @@ public class HaxeObjectType extends DataType<HaxeObject>
 			for(int i = 0; i < def.fields.length; ++i)
 			{
 				HaxeDataType htype = def.fields[i].type;
-				editors[i] = EditorProviders.createEditor(htype.dataType, htype.loadExtras(def.fields[i].editorData), sheet, style);
+				editors[i] = EditorProviders.createStyledEditor(htype.dataType, htype.loadExtras(def.fields[i].editorData), sheet, sheet.getSheetStyle());
 				editors[i].addListener(updater);
 				if(labels != null)
 				{
-					labels[i] = style.createLabel(def.fields[i].name);
+					UI.beginForcedStyle(sheet.getSheetStyle().uiStyle);
+					labels[i] = new JLabel(def.fields[i].name);
 					labels[i].setHorizontalAlignment(SwingConstants.CENTER);
+					UI.endForcedStyle();
 				}
 			}
 			

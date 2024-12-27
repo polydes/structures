@@ -14,10 +14,7 @@ import stencyl.app.api.datatypes.DataEditor;
 import stencyl.app.api.datatypes.DataEditorBuilder;
 import stencyl.app.api.datatypes.EditorProviders;
 import stencyl.app.api.datatypes.EditorSheet;
-import stencyl.app.api.datatypes.UpdateListener;
-import stencyl.app.comp.dg.DialogPanel;
 import stencyl.app.comp.propsheet.PropertiesSheetStyle;
-import stencyl.app.comp.util.Layout;
 import stencyl.core.api.datatypes.DataContext;
 import stencyl.core.api.datatypes.properties.DataTypeProperties;
 import stencyl.core.api.datatypes.properties.PropertyKey;
@@ -39,17 +36,17 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
     private final JComponent[] comps;
 
     private DataEditor valueEditor;
-    private PropertiesSheetStyle style;
 
     private Dynamic data;
     private EditorSheet sheet;
+    private DataContext dataContext;
 
-    public DynamicEditorDE(DataTypeProperties props, EditorSheet sheet, PropertiesSheetStyle style)
+    public DynamicEditorDE(DataTypeProperties props, EditorSheet sheet)
     {
         this.sheet = sheet;
-        this.style = style;
+        dataContext = sheet.getDataContext();
 
-        typeChooser = new HaxeDataTypeEditorDE(null, sheet, style);
+        typeChooser = new HaxeDataTypeEditorDE(null, sheet);
         valueEditorWrapper = new JPanel();
         valueEditorWrapper.setBackground(null);
 
@@ -96,7 +93,7 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
         {
             data.type = newType;
             if(!newType.dataType.javaType.isInstance(data.value))
-                data.value = newType.dataType.decode("", DataContext.NO_CONTEXT);
+                data.value = newType.dataType.decode("", dataContext);
 
             valueEditorWrapper.removeAll();
 
@@ -105,14 +102,14 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
 
             JComponent editor = null;
 
-            valueEditor = EditorProviders.createEditor(newType.dataType, noProps, sheet, PropertiesSheetStyle.DARK);
+            valueEditor = EditorProviders.createStyledEditor(newType.dataType, noProps, sheet, sheet.getSheetStyle());
             valueEditor.setValue(data.value);
             valueEditor.addListener(() -> {
                 data.value = valueEditor.getValue();
                 DynamicEditorDE.this.updated();
             });
 
-            editor = Layout.horizontalBox(style.fieldDimension, valueEditor.getComponents());
+            editor = new PropertiesSheetStyle.FieldPanel(valueEditor.getComponents());
 
             valueEditorWrapper.add(editor, BorderLayout.CENTER);
             valueEditorWrapper.revalidate();
@@ -123,16 +120,6 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
     public JComponent[] getComponents()
     {
         return comps;
-    }
-
-    public DialogPanel createMiniPage()
-    {
-        DialogPanel page = new DialogPanel(style.pageBg.darker());
-        page.addGenericRow("Type", Layout.horizontalBox(typeChooser.getComponents()));
-        page.addGenericRow("Value", valueEditorWrapper);
-        page.finishBlock();
-
-        return page;
     }
 
     @Override
@@ -146,7 +133,6 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
 
         data = null;
         valueEditor = null;
-        style = null;
     }
 
     public static class Builder extends DataEditorBuilder

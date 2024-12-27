@@ -19,7 +19,6 @@ import stencyl.app.api.datatypes.EditorSheet;
 import stencyl.app.api.nodes.NodeUIProperties;
 import stencyl.app.comp.RenderedPanel;
 import stencyl.app.comp.UpdatingCombo;
-import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.core.api.datatypes.properties.DataTypeProperties;
 
 import static com.polydes.datastruct.ui.table.PropertiesSheet.STRUCTURE_PROPERTY;
@@ -32,7 +31,7 @@ public class StructureEditorDE extends DataEditor<Structure> implements Property
     private final UpdatingCombo<Structure> editor;
     private Structure oldStructure;
 
-    public StructureEditorDE(StructureType type, DataTypeProperties props, EditorSheet sheet, PropertiesSheetStyle style)
+    public StructureEditorDE(StructureType type, DataTypeProperties props, EditorSheet sheet)
     {
         this.def = type.def;
         Structure currentStructure = (Structure) sheet.getSheetProperty(STRUCTURE_PROPERTY);

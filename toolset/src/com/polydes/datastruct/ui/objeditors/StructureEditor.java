@@ -40,7 +40,8 @@ public class StructureEditor extends TitledPanel implements PropertyChangeListen
 		structure.dref.addListener(this);
 		
 		add(Layout.aligned(properties, SwingConstants.LEFT, SwingConstants.TOP), BorderLayout.CENTER);
-		
+		setBackground(PropertiesSheetStyle.DARK.pageBg);
+
 		revalidate();
 	}
 	

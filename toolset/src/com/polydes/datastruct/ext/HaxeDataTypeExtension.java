@@ -40,7 +40,7 @@ public class HaxeDataTypeExtension
 		//TODO [2023-06-18] these aren't unregistered anywhere
 		Types.get().loadReference(newDT);
 		EditorProviders.editors.put(newDT, Map.of(
-			UNSET_EDITOR, (EditorInitializer) (props, sheet, style) -> newDT.new HaxeObjectEditor(props, sheet, style) 
+			UNSET_EDITOR, (EditorInitializer) (props, sheet) -> newDT.new HaxeObjectEditor(props, sheet)
 		));
 		return new HaxeObjectHaxeType(newDT);
 	}

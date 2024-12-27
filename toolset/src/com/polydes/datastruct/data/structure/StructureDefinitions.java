@@ -178,7 +178,7 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 
 		Map<DataType<?>, Map<String, EditorInitializer<?>>> editors = EditorProviders.editors;
 		editors.put(structureType, Map.of(
-			UNSET_EDITOR, (EditorInitializer) (props, sheet, style) -> new StructureEditorDE(structureType, props, sheet, style)
+			UNSET_EDITOR, (EditorInitializer) (props, sheet) -> new StructureEditorDE(structureType, props, sheet)
 		));
 	}
 

@@ -115,6 +115,7 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 		
 		sheetProperties.put(PROJECT_PROPERTY, model.getTemplate().getProject());
 		sheetProperties.put(STRUCTURE_PROPERTY, model);
+		sheetProperties.put(DATA_CONTEXT_PROPERTY, model.getTemplate().getCtx());
 		
 		DefaultBranch rootFolder = model.getTemplate().guiRoot;
 		guiMap.put(rootFolder, root);
@@ -177,7 +178,13 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 	{
 		return sheetProperties.get(property);
 	}
-	
+
+	@Override
+	public PropertiesSheetStyle getSheetStyle()
+	{
+		return style;
+	}
+
 	/*================================================*\
 	 | Highlighting
 	\*================================================*/

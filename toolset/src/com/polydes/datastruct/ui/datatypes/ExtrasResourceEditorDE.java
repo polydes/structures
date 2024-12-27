@@ -21,14 +21,14 @@ public class ExtrasResourceEditorDE extends DataEditor<ExtrasResource>
 {
     final FileEditor fileEditor;
 
-    public ExtrasResourceEditorDE(DataTypeProperties props, EditorSheet sheet, PropertiesSheetStyle style)
+    public ExtrasResourceEditorDE(DataTypeProperties props, EditorSheet sheet)
     {
         ResourceType type = Lang.or(props.get(ExtrasResourceType.RESOURCE_TYPE), ResourceType.ANY);
 
         fileEditor =
             (FileEditor) DataEditorBuilder.create(FileEditor.Builder.class, Types._File, new DataTypeProperties())
                 .rootDirectory(sheet.getProject().getLocation("extras")).filter(type.getFilter()).rendered()
-                .build(sheet, style);
+                .build(sheet, sheet.getSheetStyle());
 
         fileEditor.addListener(() -> updated());
     }

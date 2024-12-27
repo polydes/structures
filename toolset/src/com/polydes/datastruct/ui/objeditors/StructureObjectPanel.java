@@ -186,6 +186,12 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 		return preview.getSheetProperty(property);
 	}
 
+	@Override
+	public PropertiesSheetStyle getSheetStyle()
+	{
+		return style;
+	}
+
 	// PropertiesSheetWrapper
 	
 	public class DisposableSheetWrapper implements PropertiesSheetWrapper

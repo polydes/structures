@@ -33,6 +33,7 @@ import stencyl.app.api.datatypes.DataEditor;
 import stencyl.app.api.datatypes.EditorProviders;
 import stencyl.app.api.datatypes.UpdateListener;
 import stencyl.app.comp.DisabledPanel;
+import stencyl.app.comp.UI;
 import stencyl.app.comp.datatypes.array.StandardArrayEditor;
 import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.app.comp.util.Layout;
@@ -375,12 +376,14 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			String name = f.getLabel().isEmpty() ? f.getVarname() : f.getLabel();
 			
 			group.rows = new Row[0];
+			UI.beginForcedStyle(sheet.style.uiStyle);
 			group.add(sheet.style.createLabel(name), createEditor(sheet, f));
 			if(!f.getHint().isEmpty())
 			{
 				group.add(sheet.style.hintgap);
 				group.add(null, sheet.style.createDescriptionRow(f.getHint()));
 			}
+			UI.endForcedStyle();
 			group.add(sheet.style.rowgap);
 		}
 		
@@ -394,7 +397,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			if(sheet.fieldEditorMap.containsKey(f))
 				sheet.fieldEditorMap.get(f).dispose();
 			
-			final DataEditor deditor = EditorProviders.createEditor(type, f.getEditorProperties(), sheet, sheet.style);
+			final DataEditor deditor = EditorProviders.createStyledEditor(type, f.getEditorProperties(), sheet, sheet.style);
 			
 			if(deditor instanceof StandardArrayEditor)
 			{
@@ -412,7 +415,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			
 			sheet.fieldEditorMap.put(f, deditor);
 			
-			editPanel = Layout.horizontalBox(sheet.style.fieldDimension, deditor.getComponents());
+			editPanel = new PropertiesSheetStyle.FieldPanel(deditor.getComponents());
 			
 			if(f.isOptional())
 			{
