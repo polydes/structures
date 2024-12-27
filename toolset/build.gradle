@@ -28,9 +28,12 @@ sourceSets {
 	    }
         java {
             srcDir 'src'
+            srcDir "${project.buildDir}/generated-src/antlr/main"
         }
     }
 }
+
+compileJava.dependsOn generateGrammarSource
 
 processResources {
     from('res') {
