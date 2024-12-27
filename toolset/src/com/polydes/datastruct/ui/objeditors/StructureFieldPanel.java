@@ -32,6 +32,8 @@ public class StructureFieldPanel extends StructureObjectPanel
 				"A letter or underscore, followed by any<br/>" +
 				"number of letters, numbers, or underscores.";
 
+		preview = defEditor.getPreviewEditor().properties;
+
 		sheet.build()
 
 			.field("label")._editor(Types._String).add()
