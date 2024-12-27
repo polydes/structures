@@ -53,7 +53,6 @@ public class MainPage extends JPanel
 		
 		defButton = new JButton("Open Structure Editor");
 		defButton.addActionListener(openDefinitionsWindowAction);
-		defButton.setBackground(null);
 		
 		bWrapper.add(defButton);
 		bWrapper.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

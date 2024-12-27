@@ -105,11 +105,9 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 		classField = new AutoVerifyField(classVerifier, "");
 		packageField = new AutoVerifyField(packageVerifier, "");
 		parentTypeChooser = new UpdatingCombo<>(DataStructuresExtension.get().getStructureDefinitions().values(), null);
-		parentTypeChooser.setBackground(null);
 		parentTypeClearButton = new JButton("Clear");
 		parentTypeClearButton.addActionListener(e -> parentTypeChooser.setSelectedItem(null));
-		parentTypeClearButton.setBackground(null);
-		
+
 		dp.startBlock();
 		dp.addHeader("New Structure");
 		dp.addGenericRow("Name", nameField);
