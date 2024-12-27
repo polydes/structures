@@ -166,6 +166,9 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 	@Override
 	public void dispose()
 	{
+		if(isDisposed())
+			return;
+
 		sheet = null;
 		preview = null;
 		previewKey = null;
@@ -177,6 +180,11 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 		
 		extensions = null;
 		wrappers = null;
+	}
+
+	public boolean isDisposed()
+	{
+		return sheet == null;
 	}
 
 	@Override

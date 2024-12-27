@@ -117,15 +117,16 @@ public class StructureDefinitionPage extends JPanel
 			Object selected = (di == null) ? null : di.getUserData();
 			if(selected instanceof SDE sde)
 			{
-				if(!sdeEditors.containsKey(sde))
+				StructureObjectPanel sdeEditor = sdeEditors.get(sde);
+				if(sdeEditor == null || sdeEditor.isDisposed())
 				{
-					StructureObjectPanel panel = SdePanelProviders.getPanel(sde, editor);
-					if(panel != null)
+					sdeEditors.remove(sde);
+					sdeEditor = SdePanelProviders.getPanel(sde, editor);
+					if(sdeEditor != null)
 					{
-						sdeEditors.put(sde, panel);
+						sdeEditors.put(sde, sdeEditor);
 					}
 				}
-				StructureObjectPanel sdeEditor = sdeEditors.get(sde);
 
 				if(sdeEditor != null)
 				{
