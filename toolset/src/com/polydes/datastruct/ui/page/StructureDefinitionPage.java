@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
@@ -88,7 +89,7 @@ public class StructureDefinitionPage extends JPanel
 
 			page.add(editor, BorderLayout.CENTER);
 
-			if(oldEditor != null)
+			if(oldEditor != null && oldEditor.tree != null)
 				oldEditor.tree.getSelectionState().removeSelectionListener(editorStateListener);
 			editor.tree.getSelectionState().addSelectionListener(editorStateListener);
 
@@ -180,6 +181,14 @@ public class StructureDefinitionPage extends JPanel
 			_instance = new StructureDefinitionPage();
 
 		return _instance;
+	}
+
+	public static void ifInstantiated(Consumer<StructureDefinitionPage> fn)
+	{
+		if(_instance != null)
+		{
+			fn.accept(_instance);
+		}
 	}
 
 	public StructureDefinitionPage()

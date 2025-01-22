@@ -154,7 +154,7 @@ public class StructureDefinitionsWindow extends JDialog
 		{
 			_instance.dispose();
 			_instance = null;
-			StructureDefinitionPage.get().disposeStructureDefinitionEditors();
+			StructureDefinitionPage.ifInstantiated(StructureDefinitionPage::disposeStructureDefinitionEditors);
 		}
 	}
 }
