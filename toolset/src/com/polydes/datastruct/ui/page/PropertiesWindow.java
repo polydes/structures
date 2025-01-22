@@ -12,7 +12,7 @@ public class PropertiesWindow extends LightweightWindow
 	public PropertiesWindow(JDialog owner)
 	{
 		super(owner);
-		setBackground(Theme.LIGHT_BUTTON_BAR_START);
+		getContentPane().setBackground(Theme.BG_COLOR);
 		setContents(createContents());
 	}
 	

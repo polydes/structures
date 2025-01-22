@@ -70,18 +70,19 @@ dependencies {
     antlr group: 'org.antlr', name: 'antlr4', version: antlrVersion
     
     //Stencyl and its dependencies
-    implementation enforcedPlatform('com.stencyl:stencyl-platform:4.1.0-SNAPSHOT')
+    implementation enforcedPlatform('com.stencyl:stencyl-platform:4.1.4-SNAPSHOT')
     if(localDev) {
         compileOnly project(":")
         compileOnly project(":stencyl-v5-core")
         compileOnly project(":stencyl-v5-toolset")
     } else {
-        compileOnly group: 'com.stencyl', name: 'stencyl', version: '4.1.0-SNAPSHOT'
+        compileOnly group: 'com.stencyl', name: 'stencyl', version: '4.1.4-SNAPSHOT'
     }
     compileOnly group: 'com.stencyl',        name: 'jide-oss'
     compileOnly group: 'org.apache.commons', name: 'commons-lang3'
 	compileOnly group: 'ch.qos.reload4j',    name: 'reload4j'
     compileOnly group: 'commons-io',         name: 'commons-io'
+    compileOnly group: 'com.formdev',        name: 'flatlaf'
     
     implementation (group: 'org.antlr',   name: 'antlr4-runtime', version: antlrVersion) {
         exclude group: 'org.abego.treelayout', module: 'org.abego.treelayout.core'

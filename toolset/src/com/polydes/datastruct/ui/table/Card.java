@@ -18,6 +18,7 @@ import info.clearthought.layout.TableLayoutConstants;
 import info.clearthought.layout.TableLayoutConstraints;
 
 import stencyl.app.lnf.Fonts;
+import stencyl.app.lnf.Theme;
 import stencyl.core.SWC;
 
 public class Card extends JPanel implements GuiObject
@@ -228,7 +229,7 @@ public class Card extends JPanel implements GuiObject
 			TitledBorder.CENTER,
 			TitledBorder.TOP,
 			SWC.get(Fonts.class).getNormalFont(),
-			table.style.labelColor
+			Theme.TEXT_COLOR
 		);
 	}
 	
@@ -295,7 +296,7 @@ public class Card extends JPanel implements GuiObject
 			Point drawAt = Geometry.getCenteredStringTopLeft(draw, g, font, this);
 			
 			g.setFont(font);
-			g.setColor(table.style.softLabelColor);
+			g.setColor(Theme.TEXT_COLOR_FADED);
 			g.drawString(draw, drawAt.x, drawAt.y + 5);
 		}
 	}

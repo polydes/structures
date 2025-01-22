@@ -15,6 +15,7 @@ import stencyl.app.comp.TitledPanel;
 import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.app.comp.util.IconUtil;
 import stencyl.app.comp.util.Layout;
+import stencyl.app.lnf.Theme;
 import stencyl.core.api.pnodes.DefaultBranch;
 import stencyl.core.api.pnodes.DefaultLeaf;
 import stencyl.core.api.pnodes.HierarchyModel;
@@ -36,11 +37,11 @@ public class StructureEditor extends TitledPanel implements PropertyChangeListen
 		
 		this.structure = structure;
 		
-		properties = new PropertiesSheet(structure, model, PropertiesSheetStyle.DARK);
+		properties = new PropertiesSheet(structure, model);
 		structure.dref.addListener(this);
 		
 		add(Layout.aligned(properties, SwingConstants.LEFT, SwingConstants.TOP), BorderLayout.CENTER);
-		setBackground(PropertiesSheetStyle.DARK.pageBg);
+		setBackground(Theme.BG_COLOR);
 
 		revalidate();
 	}

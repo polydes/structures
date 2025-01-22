@@ -100,10 +100,8 @@ public class HaxeObjectType extends DataType<HaxeObject>
 				editors[i].addListener(updater);
 				if(labels != null)
 				{
-					UI.beginForcedStyle(sheet.getSheetStyle().uiStyle);
-					labels[i] = new JLabel(def.fields[i].name);
+					labels[i] = UI.createLabel(def.fields[i].name);
 					labels[i].setHorizontalAlignment(SwingConstants.CENTER);
-					UI.endForcedStyle();
 				}
 			}
 			

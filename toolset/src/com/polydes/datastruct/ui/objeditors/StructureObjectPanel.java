@@ -48,7 +48,7 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 		super(style);
 		sheet = createSheetExtension(model, "base");
 		
-		setBorder(BorderFactory.createEmptyBorder(style.rowgap, style.rowgap, 0, style.rowgap));
+		setBorder(BorderFactory.createEmptyBorder(style.layout().rowgap(), style.layout().rowgap(), 0, style.layout().rowgap()));
 	}
 	
 	private void addGenericRowAtInternal(int row, String label, JComponent... comps)
@@ -56,7 +56,7 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 		RowGroup group = new RowGroup(null);
 		group.rows = new Row[0];
 		group.add(style.createLabel(label), Layout.horizontalBox(comps));
-		group.add(style.rowgap);
+		group.add(style.layout().rowgap());
 		addGroup(row, group);
 	}
 	
@@ -65,7 +65,7 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 		RowGroup group = new RowGroup(null);
 		group.rows = new Row[0];
 		group.add(style.createLabel(label), Layout.horizontalBox(comps));
-		group.add(style.rowgap);
+		group.add(style.layout().rowgap());
 		addGroup(rows.length, group);
 		return rows.length - 1;
 	}
@@ -242,9 +242,7 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 			
 			if(field.isOptional())
 			{
-				Color bg = ColorUtil.deriveTransparent(style.pageBg, 130);
-				DisabledPanel dpanel = new DisabledPanel(Layout.horizontalBox(comps), bg);
-				dpanel.setBackground(style.pageBg);
+				DisabledPanel dpanel = new DisabledPanel(Layout.horizontalBox(comps));
 				//TODO: editor.getValue() will NOT be an accurate value at this time.
 				JCheckBox enabler = createEnabler(editor, dpanel, editor.getValue() != null);
 				

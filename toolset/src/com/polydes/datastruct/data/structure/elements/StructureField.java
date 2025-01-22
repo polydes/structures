@@ -376,15 +376,14 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			String name = f.getLabel().isEmpty() ? f.getVarname() : f.getLabel();
 			
 			group.rows = new Row[0];
-			UI.beginForcedStyle(sheet.style.uiStyle);
 			group.add(sheet.style.createLabel(name), createEditor(sheet, f));
 			if(!f.getHint().isEmpty())
 			{
-				group.add(sheet.style.hintgap);
+				group.add(sheet.style.layout().hintgap());
 				group.add(null, sheet.style.createDescriptionRow(f.getHint()));
 			}
 			UI.endForcedStyle();
-			group.add(sheet.style.rowgap);
+			group.add(sheet.style.layout().rowgap());
 		}
 		
 		@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -419,9 +418,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 			
 			if(f.isOptional())
 			{
-				Color bg = ColorUtil.deriveTransparent(sheet.style.pageBg, 210);
-				DisabledPanel dpanel = new DisabledPanel(editPanel, bg);
-				dpanel.setBackground(sheet.style.pageBg);
+				DisabledPanel dpanel = new DisabledPanel(editPanel);
 				return constrict(sheet.style, createEnabler(sheet.model, dpanel, f), dpanel);
 			}
 			else
@@ -451,7 +448,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 		
 		private JPanel constrict(PropertiesSheetStyle style, JComponent... comps)
 		{
-			return Layout.horizontalBox(style.fieldDimension, comps);
+			return Layout.horizontalBox(style.layout().fieldDimension(), comps);
 		}
 	}
 }

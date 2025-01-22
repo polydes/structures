@@ -5,12 +5,15 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.polydes.datastruct.ui.utils.AdaptingCardLayout;
 
-import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.app.comp.util.Layout;
+import stencyl.app.lnf.Lnf;
+import stencyl.app.lnf.Theme;
+import stencyl.app.lnf.ThemeColor;
 
 public class Deck extends JPanel implements GuiObject
 {
@@ -44,7 +47,17 @@ public class Deck extends JPanel implements GuiObject
 		
 		if(card != null)
 		{
-			setBackground(getDepth() % 2 == 0 ? PropertiesSheetStyle.DARK.pageBg : PropertiesSheetStyle.DARK.pageBg.darker());
+			if(Lnf.USE_FLATLAF)
+			{
+				String style = "$" + ((ThemeColor) Theme.BG_COLOR).name;
+				if(getDepth() % 2 != 0)
+					style = "shade(" + style + ",20%)";
+				putClientProperty(FlatClientProperties.STYLE, "background: " + style);
+			}
+			else
+			{
+				setBackground(getDepth() % 2 == 0 ? Theme.BG_COLOR : Theme.BG_COLOR_DARKER);
+			}
 			wrapper.setBackground(getBackground());
 		}
 	}

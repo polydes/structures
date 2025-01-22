@@ -34,16 +34,18 @@ public class SdePanelProviders
         if(provider == null) return null;
         return provider.getPanel(sde, structDefEditor);
     }
+
+    private static final PropertiesSheetStyle FloatingCompactStyle = new PropertiesSheetStyle(PropertiesSheetStyle.FLOATING, PropertiesSheetStyle.compact);
     
     static
     {
         //SDEs
-       register(StructureCondition.class, (sc, defEditor) -> new StructureConditionPanel(sc, PropertiesSheetStyle.LIGHT));
-       register(StructureField.class, (sf, defEditor) -> new StructureFieldPanel(sf, defEditor, PropertiesSheetStyle.LIGHT));
-       register(StructureHeader.class, (sh, defEditor) -> new StructureHeaderPanel(sh, PropertiesSheetStyle.LIGHT));
-       register(StructureTab.class, (st, defEditor) -> new StructureTabPanel(st, PropertiesSheetStyle.LIGHT));
+       register(StructureCondition.class, (sc, defEditor) -> new StructureConditionPanel(sc, FloatingCompactStyle));
+       register(StructureField.class, (sf, defEditor) -> new StructureFieldPanel(sf, defEditor, FloatingCompactStyle));
+       register(StructureHeader.class, (sh, defEditor) -> new StructureHeaderPanel(sh, FloatingCompactStyle));
+       register(StructureTab.class, (st, defEditor) -> new StructureTabPanel(st, FloatingCompactStyle));
        register(StructureTabset.class, null);
-       register(StructureText.class, (st, defEditor) -> new StructureTextPanel(st, PropertiesSheetStyle.LIGHT));
+       register(StructureText.class, (st, defEditor) -> new StructureTextPanel(st, FloatingCompactStyle));
        register(StructureUnknown.class, null);
     }
 }

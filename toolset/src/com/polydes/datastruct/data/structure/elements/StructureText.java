@@ -103,7 +103,7 @@ public class StructureText extends SDE
 			
 			RowGroup group = new RowGroup(value);
 			group.add(sheet.style.createLabel(value.getLabel()), sheet.style.createDescriptionRow(value.getText()));
-			group.add(sheet.style.rowgap);
+			group.add(sheet.style.layout().rowgap());
 			
 			parentCard.addGroup(i, group);
 			

@@ -72,11 +72,11 @@ public class StructureTabset extends SDE
 			RowGroup group = new RowGroup(value);
 			Deck newDeck = new Deck();
 			
-			group.add(sheet.style.rowgap);
+			group.add(sheet.style.layout().rowgap());
 			group.add(newDeck.buttons = Layout.horizontalBox());
-			group.add(sheet.style.tabsetgap);
+			group.add(sheet.style.layout().tabsetgap());
 			group.add(newDeck.wrapper);
-			group.add(sheet.style.rowgap);
+			group.add(sheet.style.layout().rowgap());
 			
 			parentCard.addGroup(i, group);
 			newDeck.setCard(parentCard);

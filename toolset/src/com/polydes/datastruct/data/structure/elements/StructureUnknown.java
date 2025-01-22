@@ -81,7 +81,7 @@ public class StructureUnknown extends SDE
 			
 			RowGroup group = new RowGroup(value);
 			group.add(sheet.style.createLabel(value.getDisplayLabel()), sheet.style.createDescriptionRow("This element couldn't be loaded."));
-			group.add(sheet.style.rowgap);
+			group.add(sheet.style.layout().rowgap());
 			
 			parentCard.addGroup(i, group);
 			

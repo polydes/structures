@@ -23,13 +23,4 @@ public class Geometry
 		
 		return new Point(x, y);
 	}
-	
-	public static void drawCenteredString(Component c, Graphics g, String draw, Font font)
-	{
-		Point drawAt = Geometry.getCenteredStringTopLeft(draw, g, font, c);
-		
-		g.setFont(font);
-		g.setColor(Theme.TEXT_COLOR);
-		g.drawString(draw, drawAt.x, drawAt.y);
-	}
 }

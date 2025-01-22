@@ -87,9 +87,9 @@ public class StructureHeader extends SDE
 			Card parentCard = sheet.getFirstCardParent(parent);
 			
 			RowGroup group = new RowGroup(value);
-			group.add(sheet.style.rowgap);
+			group.add(sheet.style.layout().rowgap());
 			group.add(null, sheet.style.createRoundedLabel("<html><b>" + value.getLabel() + "</b></html>"));
-			group.add(sheet.style.rowgap);
+			group.add(sheet.style.layout().rowgap());
 			
 			parentCard.addGroup(i, group);
 			

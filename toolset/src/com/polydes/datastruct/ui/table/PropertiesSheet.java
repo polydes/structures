@@ -21,6 +21,7 @@ import com.polydes.datastruct.data.structure.elements.StructureField;
 import stencyl.app.api.datatypes.DataEditor;
 import stencyl.app.api.datatypes.EditorSheet;
 import stencyl.app.comp.propsheet.PropertiesSheetStyle;
+import stencyl.app.lnf.Theme;
 import stencyl.core.api.pnodes.DefaultBranch;
 import stencyl.core.api.pnodes.DefaultLeaf;
 import stencyl.core.api.pnodes.HierarchyModel;
@@ -82,7 +83,7 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 	 */
 	public PropertiesSheet(Structure model, HierarchyModel<DefaultLeaf,DefaultBranch> folderModel)
 	{
-		this(model, folderModel, PropertiesSheetStyle.DARK);
+		this(model, folderModel, PropertiesSheetStyle.DEFAULT);
 	}
 	
 	public boolean isChangingLayout;
@@ -95,9 +96,9 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 		root = new Table(style);
 		this.style = style;
 		
-		setBorder(style.border);
+		setBorder(style.layout().border());
 		setFocusable(true);
-		setBackground(style.pageBg);
+		setBackground(Theme.BG_COLOR);
 		
 		addMouseListener(new MouseAdapter()
 		{

@@ -16,7 +16,7 @@ public class Table extends Card
 		this.style = style;
 		
 		tableSize = new double[][]
-			{{TableLayout.PREFERRED, 10, style.fieldDimension.width, TableLayout.FILL},
+			{{TableLayout.PREFERRED, 10, style.layout().fieldDimension().width, TableLayout.FILL},
 			{}};
 		setLayout(layout = new TableLayout(getRoot().tableSize));
 	}

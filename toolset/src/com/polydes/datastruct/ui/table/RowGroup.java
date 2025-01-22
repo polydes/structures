@@ -25,7 +25,7 @@ public class RowGroup implements GuiObject
 	public void addSubcard(Card card, Card parent)
 	{
 		add(card);
-		add(parent.getRoot().style.rowgap);
+		add(parent.getRoot().style.layout().rowgap());
 		card.setCard(parent);
 		subcarded = true;
 	}
