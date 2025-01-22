@@ -283,6 +283,16 @@ public class Card extends JPanel implements GuiObject
 		else
 			return card.getDepth() + 1;
 	}
+
+	public int getDeckDepth()
+	{
+		if(isTab)
+			return deck.getDeckDepth();
+		else if(this instanceof Table)
+			return 0;
+		else
+			return card.getDeckDepth();
+	}
 	
 	@Override
 	protected void paintComponent(Graphics g)

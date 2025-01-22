@@ -40,6 +40,11 @@ public class Deck extends JPanel implements GuiObject
 	{
 		return card.getDepth() + 1;
 	}
+
+	public int getDeckDepth()
+	{
+		return card.getDeckDepth() + 1;
+	}
 	
 	public void setCard(Card card)
 	{
@@ -50,13 +55,13 @@ public class Deck extends JPanel implements GuiObject
 			if(Lnf.USE_FLATLAF)
 			{
 				String style = "$" + ((ThemeColor) Theme.BG_COLOR).name;
-				if(getDepth() % 2 != 0)
+				if(getDeckDepth() % 2 != 0)
 					style = "shade(" + style + ",20%)";
 				putClientProperty(FlatClientProperties.STYLE, "background: " + style);
 			}
 			else
 			{
-				setBackground(getDepth() % 2 == 0 ? Theme.BG_COLOR : Theme.BG_COLOR_DARKER);
+				setBackground(getDeckDepth() % 2 == 0 ? Theme.BG_COLOR : Theme.BG_COLOR_DARKER);
 			}
 			wrapper.setBackground(getBackground());
 		}
