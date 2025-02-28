@@ -27,7 +27,7 @@ public class StructureDefinition implements RegistryObject
 	private BufferedImage iconImg;
 	
 	private IProject project;
-	private DataContext ctx;
+	private final DataContext ctx;
 	private String name;
 	private String classname; // registry key
 	

@@ -118,7 +118,7 @@ public class StringData
 	
 	public static int[] getInts(String fromString)
 	{
-		if(fromString.length() == 0)
+		if(fromString.isEmpty())
 			return null;
 		
 		String[] splitString = fromString.split(",");
@@ -172,12 +172,12 @@ public class StringData
 	
 	public static <T> String wrArrayList(ArrayList<T> a, Class<T> gen)
 	{
-		String toReturn = "";
+		StringBuilder toReturn = new StringBuilder();
 		for(int i = 0; i < a.size(); ++i)
 		{
 			try
 			{
-				toReturn += MethodUtils.invokeStaticMethod(StringData.class, "wr" + gen.getSimpleName(), a.get(i)) + (i < a.size() - 1 ? "," : "");
+				toReturn.append(MethodUtils.invokeStaticMethod(StringData.class, "wr" + gen.getSimpleName(), a.get(i))).append(i < a.size() - 1 ? "," : "");
 			}
 			catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
 			{
@@ -185,6 +185,6 @@ public class StringData
 			}
 		}
 				
-		return toReturn;
+		return toReturn.toString();
 	}
 }

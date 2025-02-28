@@ -1,7 +1,6 @@
 package com.polydes.datastruct.ui.table;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
@@ -131,7 +130,7 @@ public class Card extends JPanel implements GuiObject
 			++insertAt;
 		}
 		
-		rows = ArrayUtils.add(rows, i, group);
+		rows = ArrayUtils.insert(i, rows, group);
 	}
 	
 	public int indexOf(RowGroup group)

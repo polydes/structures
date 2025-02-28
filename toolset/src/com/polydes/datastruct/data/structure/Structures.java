@@ -1,13 +1,12 @@
 package com.polydes.datastruct.data.structure;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import org.apache.commons.io.FileUtils;
 
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.elements.StructureField;
@@ -18,6 +17,10 @@ import com.polydes.datastruct.io.Text;
 import stencyl.core.api.pnodes.DefaultBranch;
 import stencyl.core.api.pnodes.DefaultLeaf;
 import stencyl.core.api.pnodes.HierarchyModel;
+import stencyl.core.io.FileHelper;
+
+import static stencyl.core.util.PathHelper.abs;
+import static stencyl.core.util.PathHelper.filenameOf;
 
 public class Structures
 {
@@ -51,7 +54,7 @@ public class Structures
 
 	private HashMap<String, HashMap<String, String>> fmaps;
 
-	public void load(File folder)
+	public void load(Path folder)
 	{
 		fmaps = new HashMap<>();
 
@@ -59,13 +62,13 @@ public class Structures
 		ArrayList<String> order = info.getFileOrder();
 		for(String fname : order)
 		{
-			File file = new File(folder, fname);
+			Path file = folder.resolve(fname);
 			lightload(file);
 		}
 		root.markAsLoading(true);
 		for(String fname : order)
 		{
-			File file = new File(folder, fname);
+			Path file = folder.resolve(fname);
 			deepload(root, file);
 		}
 		root.markAsLoading(false);
@@ -76,23 +79,23 @@ public class Structures
 		fmaps = null;
 	}
 
-	public void lightload(File file)
+	public void lightload(Path file)
 	{
-		if(!file.exists())
+		if(!Files.exists(file))
 			return;
 
-		if(file.isDirectory())
+		if(Files.isDirectory(file))
 		{
-			for(String fname : file.list())
-				if(!fname.equals(FolderInfo.FOLDER_INFO_FILENAME))
-					lightload(new File(file, fname));
+			for(Path f : FileHelper.listFilesSimple(file))
+				if(!filenameOf(f).equals(FolderInfo.FOLDER_INFO_FILENAME))
+					lightload(f);
 		}
 		else
 		{
 			HashMap<String, String> map = Text.readKeyValues(file);
-			fmaps.put(file.getAbsolutePath(), map);
+			fmaps.put(abs(file), map);
 
-			String name = file.getName();
+			String name = filenameOf(file);
 			int id = Integer.parseInt(map.get("struct_id"));
 			String type = map.remove("struct_type");
 			nextID = Math.max(nextID, id + 1);
@@ -103,27 +106,27 @@ public class Structures
 		}
 	}
 
-	public void deepload(StructureFolder folder, File file)
+	public void deepload(StructureFolder folder, Path file)
 	{
-		if(!file.exists())
+		if(!Files.exists(file))
 			return;
 
-		if(file.isDirectory())
+		if(Files.isDirectory(file))
 		{
-			StructureFolder newFolder = new StructureFolder(file.getName());
+			StructureFolder newFolder = new StructureFolder(filenameOf(file));
 			newFolder.markAsLoading(true);
 			FolderInfo info = new FolderInfo(file);
 			ArrayList<String> order = info.getFileOrder();
 			if(info.containsKey("childType"))
 				newFolder.childType = DataStructuresExtension.get().getStructureDefinitions().getItem(info.get("childType"));
 			for(String fname : order)
-				deepload(newFolder, new File(file, fname));
+				deepload(newFolder, file.resolve(fname));
 			newFolder.markAsLoading(false);
 			folder.addItem(newFolder);
 		}
 		else
 		{
-			HashMap<String, String> map = fmaps.get(file.getAbsolutePath());
+			HashMap<String, String> map = fmaps.get(file.toAbsolutePath().toString());
 			Structure model = structuresByID.get(Integer.parseInt(map.remove("struct_id")));
 
 			boolean unknown = model.getTemplate().isUnknown();
@@ -144,7 +147,7 @@ public class Structures
 		}
 	}
 
-	public void saveChanges(File file) throws IOException
+	public void saveChanges(Path file) throws IOException
 	{
 		if(root.isDirty())
 		{
@@ -162,13 +165,12 @@ public class Structures
 		root.setDirty(false);
 	}
 
-	public void save(DefaultLeaf item, File file) throws IOException
+	public void save(DefaultLeaf item, Path file) throws IOException
 	{
 		if(item instanceof DefaultBranch)
 		{
-			File saveDir = new File(file, item.getName());
-			if(!saveDir.exists())
-				saveDir.mkdirs();
+			Path saveDir = file.resolve(item.getName());
+			Files.createDirectories(saveDir);
 
 			FolderInfo info = new FolderInfo();
 
@@ -204,7 +206,7 @@ public class Structures
 				for(Entry<String, String> entry : s.getUnknownData().entrySet())
 					toWrite.add(entry.getKey() + "=" + entry.getValue());
 
-			FileUtils.writeLines(new File(file, item.getName()), toWrite, "\n");
+			Files.write(file.resolve(item.getName()), toWrite);
 		}
 	}
 

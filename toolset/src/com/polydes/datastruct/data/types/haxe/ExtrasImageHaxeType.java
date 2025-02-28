@@ -11,6 +11,8 @@ import com.polydes.datastruct.data.types.HaxeDataType;
 import stencyl.app.sys.FileRenderer;
 import stencyl.core.api.datatypes.properties.DataTypeProperties;
 
+import java.nio.file.Files;
+
 import static com.polydes.datastruct.data.types.ExtrasResourceType.RESOURCE_TYPE;
 
 public class ExtrasImageHaxeType extends HaxeDataType
@@ -33,7 +35,7 @@ public class ExtrasImageHaxeType extends HaxeDataType
 	{
 		if(value instanceof ExtrasResource r)
 		{
-            if(r.file != null && r.file.exists())
+            if(r.file != null && Files.exists(r.file))
 				return FileRenderer.generateThumb(r.file);
 		}
 		return null;

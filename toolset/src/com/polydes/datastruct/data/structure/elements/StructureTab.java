@@ -20,9 +20,12 @@ import stencyl.core.api.pnodes.DefaultLeaf;
 import stencyl.core.io.XML;
 import stencyl.core.util.Lang;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StructureTab extends SDE
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	private String label;
 	
@@ -61,13 +64,13 @@ public class StructureTab extends SDE
 			tag = "tab";
 			isBranchNode = true;
 			icon = res.loadThumbnail("tab.png", 16);
-			childTypes = Lang.arraylist(
+			childTypes = new ArrayList<>(List.of(
 				StructureCondition.class,
 				StructureField.class,
 				StructureHeader.class,
 				StructureTabset.class,
 				StructureText.class
-			);
+			));
 		}
 		
 		@Override

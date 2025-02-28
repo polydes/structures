@@ -1,8 +1,8 @@
 package com.polydes.datastruct.data.types.haxe;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.*;
@@ -53,32 +53,28 @@ public class StructureHaxeType extends HaxeDataType
 	public List<String> generateHaxeClass()
 	{
 		Path engineRoot = DataStructuresExtension.get().getInfo().getEngineRootPath();
-		File file = engineRoot.resolve("templates/Structure.hx").toFile();
+		Path file = engineRoot.resolve("templates/Structure.hx");
 		String s = Text.readString(file);
 		
-		String fieldmap = "";
-		String variables = "";
-		String typeinfo = "";
-		typeinfo += "\t\tm.set(\"name\", \"String\");\n";
+		StringBuilder fieldmap = new StringBuilder();
+		StringBuilder variables = new StringBuilder();
+		StringBuilder typeinfo = new StringBuilder();
+		typeinfo.append("\t\tm.set(\"name\", \"String\");\n");
 		for(StructureField f : type.def.getFields())
 		{
-			fieldmap += String.format("\t\tm.set(\"%s\", \"%s\");\n", f.getLabel(), f.getVarname());
-			variables += String.format("\tpublic var %s:%s;\n", f.getVarname(), getType(f));
-			typeinfo += String.format("\t\tm.set(\"%s\", \"%s\");\n", f.getVarname(), f.getType().getHaxeType());
+			fieldmap.append(String.format("\t\tm.set(\"%s\", \"%s\");\n", f.getLabel(), f.getVarname()));
+			variables.append(String.format("\tpublic var %s:%s;\n", f.getVarname(), getType(f)));
+			typeinfo.append(String.format("\t\tm.set(\"%s\", \"%s\");\n", f.getVarname(), f.getType().getHaxeType()));
 		}
 		
 		s = StringUtils.replace(s, "[PACKAGE]", getPackage());
 		s = StringUtils.replace(s, "[CLASSNAME]", getSimpleClassname());
-		s = StringUtils.replace(s, "[FIELDMAP]", fieldmap, 1);
-		s = StringUtils.replace(s, "[TYPEINFO]", typeinfo, 1);
-		s = StringUtils.replace(s, "[VARIABLES]", variables, 1);
+		s = StringUtils.replace(s, "[FIELDMAP]", fieldmap.toString(), 1);
+		s = StringUtils.replace(s, "[TYPEINFO]", typeinfo.toString(), 1);
+		s = StringUtils.replace(s, "[VARIABLES]", variables.toString(), 1);
 		s = StringUtils.replace(s, "[CUSTOM]", type.def.customCode + runCustomCodeInjector(type.def), 1);
-		
-		ArrayList<String> lines = new ArrayList<>();
-		for(String s2 : s.split("\n"))
-			lines.add(s2);
-		
-		return lines;
+
+        return new ArrayList<>(Arrays.asList(s.split("\n")));
 	}
 	
 	private String getType(StructureField f)
@@ -117,7 +113,7 @@ public class StructureHaxeType extends HaxeDataType
 	@Override
 	public List<String> generateHaxeReader()
 	{
-		return Lang.arraylist("StringData.registerStructureReader(\"" + getHaxeType() + "\");");
+		return List.of("StringData.registerStructureReader(\"" + getHaxeType() + "\");");
 	}
 	
 	//SERIALIZATION KEYS -- do not change these.

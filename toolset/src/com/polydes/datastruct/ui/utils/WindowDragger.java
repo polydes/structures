@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class WindowDragger implements MouseListener, MouseMotionListener
 {
-	private Component comp;
+	private final Component comp;
 	private Point beginPos;
 	private Point beginDrag;
 	private Point lastMousePos;

@@ -169,7 +169,7 @@ public class SetHaxeType extends HaxeDataType
 			Predicate<?> predicate = props.get(SOURCE_FILTER);
 			String conditionText = props.get(FILTER_PROXY);
 			StructureCondition condition = null;
-			if(predicate != null && predicate instanceof StructureConditionPredicate)
+			if(predicate instanceof StructureConditionPredicate)
 				condition = ((StructureConditionPredicate) predicate).condition;
 
 			if(condition == null && !conditionText.isEmpty())
@@ -194,7 +194,7 @@ public class SetHaxeType extends HaxeDataType
 
 	private static final class StructureConditionPredicate implements Predicate<Object>
 	{
-		private StructureCondition condition;
+		private final StructureCondition condition;
 
 		public StructureConditionPredicate(StructureCondition condition)
 		{

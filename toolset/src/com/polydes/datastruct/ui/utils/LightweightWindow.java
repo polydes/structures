@@ -2,7 +2,6 @@ package com.polydes.datastruct.ui.utils;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
@@ -19,7 +18,7 @@ import stencyl.core.loc.LanguagePack;
 
 public abstract class LightweightWindow extends SnappingDialog
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	private static final LanguagePack lang = LanguagePack.get();
 	
@@ -30,7 +29,7 @@ public abstract class LightweightWindow extends SnappingDialog
 	private JPanel wrapper;
 	private JPanel contents;
 	
-	private Action closeWindowAction = new AbstractAction()
+	private final Action closeWindowAction = new AbstractAction()
 	{
 		@Override
 		public void actionPerformed(ActionEvent e)

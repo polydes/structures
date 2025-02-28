@@ -25,7 +25,7 @@ public class HaxeTypeConverter
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private static HashMap<String, Coder> coders;
+	private static final HashMap<String, Coder> coders;
 	static
 	{
 		coders = new HashMap<>();
@@ -60,7 +60,7 @@ public class HaxeTypeConverter
 		return "";
 	}
 	
-	static interface Coder<T>
+	interface Coder<T>
 	{
 		T decode(String s, DataContext ctx);
 		String encode(T t, DataContext ctx);
@@ -91,13 +91,13 @@ public class HaxeTypeConverter
 			if(array == null)
 				return "";
 			
-			String s = "[";
+			StringBuilder s = new StringBuilder("[");
 			
 			for(int i = 0; i < array.size(); ++i)
-				s += HaxeTypeConverter.encode(array.genType.getObject(), array.get(i), ctx) + (i < array.size() - 1 ? "," : "");
-			s += "]:" + getHT().getHaxeFromDT(array.genType.getId()).getHaxeType();
+				s.append(HaxeTypeConverter.encode(array.genType.getObject(), array.get(i), ctx)).append(i < array.size() - 1 ? "," : "");
+			s.append("]:").append(getHT().getHaxeFromDT(array.genType.getId()).getHaxeType());
 			
-			return s;
+			return s.toString();
 		}
 	}
 	
@@ -126,20 +126,20 @@ public class HaxeTypeConverter
 		public String encode(DataSet t, DataContext ctx)
 		{
 			Object[] a = t.toArray(new Object[0]);
-			String s = "[";
+			StringBuilder s = new StringBuilder("[");
 			DataType<?> type = t.genType;
 			
 			for(int i = 0; i < a.length; ++i)
 			{
-				s += HaxeTypeConverter.encode(type, a[i], ctx);
+				s.append(HaxeTypeConverter.encode(type, a[i], ctx));
 				
 				if(i < a.length - 1)
-					s += ",";
+					s.append(",");
 			}
 			
-			s += "]:" + getHT().getHaxeFromDT(type.getId()).getHaxeType();
+			s.append("]:").append(getHT().getHaxeFromDT(type.getId()).getHaxeType());
 			
-			return s;
+			return s.toString();
 		}
 	}
 }

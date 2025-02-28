@@ -29,7 +29,7 @@ public class SnappingDialog extends JDialog
 	private Component snapTo;
 	private Component root;
 	
-	private int sd = 10;
+	private final int sd = 10;
 	
 	private Integer xPos;
 	private Integer yPos;
@@ -63,7 +63,7 @@ public class SnappingDialog extends JDialog
 		update();
 	}
 	
-	private ComponentAdapter snapToChanged = new ComponentAdapter()
+	private final ComponentAdapter snapToChanged = new ComponentAdapter()
 	{
 		@Override
 		public void componentMoved(ComponentEvent e)
@@ -81,16 +81,16 @@ public class SnappingDialog extends JDialog
 		public void componentHidden(ComponentEvent e)
 		{
 			
-		};
-		
-		@Override
+		}
+
+        @Override
 		public void componentShown(ComponentEvent e)
 		{
 			
-		}; 
-	};
+		}
+    };
 	
-	private HierarchyListener snapToHierarchyChanged = new HierarchyListener()
+	private final HierarchyListener snapToHierarchyChanged = new HierarchyListener()
 	{
 		@Override
 		public void hierarchyChanged(HierarchyEvent e)

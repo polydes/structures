@@ -30,7 +30,7 @@ import stencyl.core.util.Lang;
 
 public class StructureCondition extends SDE
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	public StructureDefinition def;
 	public SyntaxNode root;
@@ -74,7 +74,7 @@ public class StructureCondition extends SDE
 	}
 	
 	//State variables.
-	private static HashMap<String, Object> idMap = new HashMap<>(2);
+	private static final HashMap<String, Object> idMap = new HashMap<>(2);
 	private static Structure structureRef;
 	
 	public static void dispose()
@@ -89,15 +89,11 @@ public class StructureCondition extends SDE
 		{
 			return (Boolean) eval(n);
 		}
-		catch(ClassCastException ex)
+		catch(ClassCastException | NullPointerException ex)
 		{
 			throw new SyntaxException(ex);
 		}
-		catch(NullPointerException ex)
-		{
-			throw new SyntaxException(ex);
-		}
-	}
+    }
 	
 	private Object eval(SyntaxNode n) throws SyntaxException
 	{
@@ -169,16 +165,12 @@ public class StructureCondition extends SDE
 					return RuntimeLanguage.invoke(callOn, methodName, args);
 			}
 		}
-		catch(ClassCastException ex)
+		catch(ClassCastException | NullPointerException ex)
 		{
 			throw new SyntaxException(ex);
 		}
-		catch(NullPointerException ex)
-		{
-			throw new SyntaxException(ex);
-		}
-		
-		return null;
+
+        return null;
 	}
 	
 	public void setText(String text)
@@ -218,13 +210,13 @@ public class StructureCondition extends SDE
 			tag = "if";
 			isBranchNode = true;
 			icon = res.loadThumbnail("condition.png", 16);
-			childTypes = Lang.arraylist(
+			childTypes = new ArrayList<>(List.of(
 				StructureCondition.class,
 				StructureField.class,
 				StructureHeader.class,
 				StructureTabset.class,
 				StructureText.class
-			);
+			));
 		}
 		
 		@Override

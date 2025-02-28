@@ -1,9 +1,10 @@
 package com.polydes.datastruct.updates;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import com.polydes.datastruct.DataStructuresExtension;
-
+import org.apache.commons.io.file.PathUtils;
 import stencyl.core.io.FileHelper;
 import stencyl.core.lib.IProject;
 import stencyl.core.util.Worker;
@@ -20,19 +21,23 @@ public class V3_GameExtensionUpdate implements Worker
 	@Override
 	public void doWork()
 	{
-		File oldExtrasFolder = project.getFile("extras", "[ext] data structures");
-		File oldExtrasDefsFolder = new File(oldExtrasFolder, "defs");
-		File oldExtrasDataFolder = new File(oldExtrasFolder, "data");
+		String EXTENSION_ID = "com.polydes.datastruct";
 
-		File dataFolder = new File(project.getFiles().getExtensionGameDataLocation("com.polydes.datastruct"));
-		File extrasFolder = new File(project.getFiles().getExtensionExtrasDataLocation("com.polydes.datastruct"));
-		File newExtrasDataFolder = new File(extrasFolder, "data");
-		File newExtrasDefsFolder = new File(dataFolder, "defs");
+		Path oldExtrasFolder = project.getPath("extras", "[ext] data structures");
+		Path oldExtrasDefsFolder = oldExtrasFolder.resolve("defs");
+		Path oldExtrasDataFolder = oldExtrasFolder.resolve("data");
 
-		if(oldExtrasDataFolder.exists())
-			FileHelper.copyDirectory(oldExtrasDataFolder, newExtrasDataFolder);
-		if(oldExtrasDefsFolder.exists())
-			FileHelper.copyDirectory(oldExtrasDefsFolder, newExtrasDefsFolder);
-		FileHelper.delete(oldExtrasFolder);
+		Path newExtrasDataFolder = project.getFiles().getExtensionExtrasDataLocation(EXTENSION_ID).resolve("data");
+		Path newExtrasDefsFolder = project.getFiles().getExtensionGameDataLocation(EXTENSION_ID).resolve("defs");
+
+        try {
+			if(Files.exists(oldExtrasDataFolder))
+				PathUtils.copyDirectory(oldExtrasDataFolder, newExtrasDataFolder);
+			if(Files.exists(oldExtrasDefsFolder))
+				PathUtils.copyDirectory(oldExtrasDefsFolder, newExtrasDefsFolder);
+			FileHelper.delete(oldExtrasFolder);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

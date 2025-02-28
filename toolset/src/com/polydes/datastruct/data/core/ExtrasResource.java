@@ -1,8 +1,8 @@
 package com.polydes.datastruct.data.core;
 
-import java.io.File;
+import java.nio.file.Path;
 
 public class ExtrasResource
 {
-	public File file;
+	public Path file;
 }

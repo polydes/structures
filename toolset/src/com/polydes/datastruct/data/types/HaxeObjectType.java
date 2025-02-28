@@ -16,7 +16,6 @@ import stencyl.app.api.datatypes.EditorProviders;
 import stencyl.app.api.datatypes.EditorSheet;
 import stencyl.app.api.datatypes.UpdateListener;
 import stencyl.app.comp.UI;
-import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.app.comp.util.Layout;
 import stencyl.core.api.datatypes.DataContext;
 import stencyl.core.api.datatypes.DataType;
@@ -24,7 +23,7 @@ import stencyl.core.api.datatypes.properties.DataTypeProperties;
 
 public class HaxeObjectType extends DataType<HaxeObject>
 {
-	private HaxeObjectDefinition def;
+	private final HaxeObjectDefinition def;
 	
 	public HaxeObjectType(HaxeObjectDefinition def)
 	{
@@ -116,7 +115,7 @@ public class HaxeObjectType extends DataType<HaxeObject>
 				jcomps.add(c);
 			}
 			
-			comps = jcomps.toArray(new JComponent[jcomps.size()]);
+			comps = jcomps.toArray(new JComponent[0]);
 		}
 		
 		@Override

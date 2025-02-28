@@ -1,6 +1,9 @@
 package com.polydes.datastruct.io.read;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.w3c.dom.Element;
 
@@ -13,11 +16,10 @@ import stencyl.core.api.datatypes.DataContext;
 import stencyl.core.io.FileHelper;
 import stencyl.core.io.XML;
 import stencyl.core.io.XmlHelper;
-import stencyl.core.util.Lang;
 
 public class HaxeObjectDefinitionReader
 {
-	public static HaxeObjectDefinition read(String path, DataContext ctx)
+	public static HaxeObjectDefinition read(Path path, DataContext ctx)
 	{
 		Element root;
 		try
@@ -29,9 +31,11 @@ public class HaxeObjectDefinitionReader
 			throw new RuntimeException(ex);
 		}
 		String haxeClass = root.getAttribute("class");
-		Element fields = XmlHelper.child(root, "fields");
-		
-		HaxeField[] hfs = Lang.mapCA(XmlHelper.children(fields), HaxeField.class, (field) ->
+		Element fieldsElement = XmlHelper.child(root, "fields");
+		List<Element> fields = XmlHelper.children(fieldsElement);
+		List<HaxeField> hfs = new ArrayList<>(fields.size());
+
+		for(Element field : fields)
 		{
 			String name = field.getAttribute("name");
 			String type = field.getAttribute("type");
@@ -52,13 +56,13 @@ public class HaxeObjectDefinitionReader
 			
 			if(field.hasAttribute("default"))
 				hf.defaultValue = field.getAttribute("default");
-			
-			return hf;
-		});
+
+			hfs.add(hf);
+		}
 		
-		HaxeObjectDefinition def = new HaxeObjectDefinition(haxeClass, hfs);
+		HaxeObjectDefinition def = new HaxeObjectDefinition(haxeClass, hfs.toArray(new HaxeField[0]));
 		
-		def.showLabels = XML.readBoolean(fields, "showlabels", true);
+		def.showLabels = XML.readBoolean(fieldsElement, "showlabels", true);
 		
 		Element reader = XmlHelper.child(root, "haxereader");
 		if(reader != null)

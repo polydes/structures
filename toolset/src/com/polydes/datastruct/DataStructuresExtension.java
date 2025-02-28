@@ -1,13 +1,13 @@
 package com.polydes.datastruct;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 import javax.swing.*;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.file.PathUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -35,7 +35,7 @@ import stencyl.core.ext.GameExtension;
 import stencyl.core.ext.engine.ExtensionInstanceManager.FormatUpdateSubmitter;
 import stencyl.sw.app.center.GameLibrary;
 
-import static stencyl.core.api.fs.LocationProvider.DefaultLocations.getFile;
+import static stencyl.core.api.fs.LocationProvider.DefaultLocations.getPath;
 
 public class DataStructuresExtension extends GameExtension
 {
@@ -112,12 +112,12 @@ public class DataStructuresExtension extends GameExtension
 			haxeTypes = new HaxeTypes();
 			structureDefinitions = new StructureDefinitions(getProject());
 
-			new File(getDataFolder(), "defs").mkdirs();
-			DataStructuresExtension.get().getStructureDefinitions().addFolder(new File(getDataFolder(), "defs"), "My Structures");
+			Files.createDirectories(getDataFolder().resolve("defs"));
+			DataStructuresExtension.get().getStructureDefinitions().addFolder(getDataFolder().resolve("defs"), "My Structures");
 
-			new File(getExtrasFolder(), "data").mkdirs();
-//			Images.get().load(new File(Locations.getGameLocation(getGame()), "extras"));
-			Structures.get().load(new File(getExtrasFolder(), "data"));
+			Files.createDirectories(getExtrasFolder().resolve("data"));
+//			Images.get().load(getExtrasFolder());
+			Structures.get().load(getExtrasFolder().resolve("data"));
 
 			initialized = true;
 		}
@@ -165,7 +165,7 @@ public class DataStructuresExtension extends GameExtension
 		return initialized;
 	}
 
-	private static String sourceDir;
+	private static Path sourceDir;
 
 	@Override
 	protected void onSave()
@@ -187,21 +187,21 @@ public class DataStructuresExtension extends GameExtension
 				Structures.root.setDirty(true);
 			}
 
-			File saveTo = new File(getExtrasFolder(), "data");
+			Path saveTo = getExtrasFolder().resolve("data");
 			if(Structures.root.isDirty())
 			{
-				File temp = getFile(Locations.STENCYL_TEMP, "data structures save");
-				temp.mkdirs();
+				Path temp = getPath(Locations.STENCYL_TEMP, "data structures save");
+				try{Files.createDirectories(temp);}catch(IOException e){log.error(e.getMessage(), e);}
 				boolean failedToSave = false;
 
-				try{FileUtils.deleteDirectory(temp);}catch(IOException e){log.error(e.getMessage(), e);}
-				temp.mkdirs();
+				try{PathUtils.deleteDirectory(temp);}catch(IOException e){log.error(e.getMessage(), e);}
+				try{Files.createDirectories(temp);}catch(IOException e){log.error(e.getMessage(), e);}
 				try{Structures.get().saveChanges(temp);}catch(IOException e){failedToSave = true; log.error(e.getMessage(), e);}
 				if(!failedToSave)
 				{
-					try{FileUtils.deleteDirectory(saveTo);}catch(IOException e){log.error(e.getMessage(), e);}
-					saveTo.mkdirs();
-					try{FileUtils.copyDirectory(temp, saveTo);}catch(IOException e){log.error(e.getMessage(), e);}
+					try{PathUtils.deleteDirectory(saveTo);}catch(IOException e){log.error(e.getMessage(), e);}
+					try{Files.createDirectories(saveTo);}catch(IOException e){log.error(e.getMessage(), e);}
+					try{PathUtils.copyDirectory(temp, saveTo);}catch(IOException e){log.error(e.getMessage(), e);}
 				}
 			}
 		}
@@ -212,11 +212,11 @@ public class DataStructuresExtension extends GameExtension
 	{
 		if(initialized)
 		{
-			String hxProjectDir = StringUtils.stripEnd(Locations.getHXProjectDir(getProject()), "/\\");
-			sourceDir = hxProjectDir + File.separator + "Source";
+			Path hxProjectDir = Locations.getHXProjectDir(getProject());
+			sourceDir = hxProjectDir.resolve("Source");
 
-			File dataList = Path.of(hxProjectDir, "Assets", "data", "MyDataStructures.txt").toFile();
-			Text.writeLines(dataList, HXGenerator.generateFileList(new File(getExtrasFolder(), "data")));
+			Path dataList = hxProjectDir.resolve("Assets/data/MyDataStructures.txt");
+			Text.writeLines(dataList, HXGenerator.generateFileList(getExtrasFolder().resolve("data")));
 
 			write("com.polydes.datastruct.DataStructureReader", HXGenerator.generateReader());
 			for(HaxeDataType type : haxeTypes.values())
@@ -230,24 +230,37 @@ public class DataStructuresExtension extends GameExtension
 
 	private void write(String path, List<String> lines)
 	{
-		path = StringUtils.replace(path, ".", File.separator) + ".hx";
-		File out = new File(sourceDir, path);
-		if(!out.getParentFile().exists())
-			out.getParentFile().mkdirs();
+		path = StringUtils.replace(path, ".", "/") + ".hx";
+		Path out = sourceDir.resolve(path);
+		try
+		{
+			Files.createDirectories(out.getParent());
+		}
+		catch(IOException ex)
+		{
+			throw new RuntimeException(ex);
+		}
 		Text.writeLines(out, lines);
 	}
 
 	@Override
 	protected void onInstalled()
 	{
-		new File(getExtrasFolder(), "data").mkdirs();
-		new File(getDataFolder(), "defs").mkdirs();
+		try
+		{
+			Files.createDirectories(getExtrasFolder().resolve("data"));
+			Files.createDirectories(getDataFolder().resolve("defs"));
+		}
+		catch(IOException ex)
+		{
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override
 	protected int detectOldInstall()
 	{
-		return getProject().getFile("extras", "[ext] data structures").exists() ? 2 : -1;
+		return Files.exists(getProject().getPath("extras", "[ext] data structures")) ? 2 : -1;
 	}
 
 	@Override

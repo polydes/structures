@@ -1,6 +1,7 @@
 package com.polydes.datastruct.ui.datatypes;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.swing.*;
 
@@ -16,6 +17,9 @@ import stencyl.core.api.datatypes.properties.DataTypeProperties;
 import stencyl.core.datatypes.Types;
 import stencyl.core.util.Lang;
 
+import static stencyl.core.lib.ProjectLocations.EXTRA_DATA;
+import static stencyl.core.util.PathHelper.abs;
+
 public class ExtrasResourceEditorDE extends DataEditor<ExtrasResource>
 {
     final FileEditor fileEditor;
@@ -26,7 +30,7 @@ public class ExtrasResourceEditorDE extends DataEditor<ExtrasResource>
 
         fileEditor =
             (FileEditor) DataEditorBuilder.create(FileEditor.Builder.class, Types._File, new DataTypeProperties())
-                .rootDirectory(sheet.getProject().getLocation("extras")).filter(type.getFilter()).rendered()
+                .rootDirectory(abs(sheet.getProject().getPath(EXTRA_DATA))).filter(type.getFilter()).rendered()
                 .build(sheet, sheet.getSheetStyle());
 
         fileEditor.addListener(() -> updated());
@@ -35,10 +39,10 @@ public class ExtrasResourceEditorDE extends DataEditor<ExtrasResource>
     @Override
     public ExtrasResource getValue()
     {
-        File f = fileEditor.getValue();
+        Path f = fileEditor.getValue();
         if(f == null)
             return null;
-        if(!f.exists())
+        if(!Files.exists(f))
             return null;
         ExtrasResource r = new ExtrasResource();
         r.file = f;

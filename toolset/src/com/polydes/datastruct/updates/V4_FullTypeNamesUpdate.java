@@ -1,22 +1,23 @@
 package com.polydes.datastruct.updates;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.polydes.datastruct.DataStructuresExtension;
-
 import stencyl.core.api.VerificationHelper;
 import stencyl.core.io.FileHelper;
 import stencyl.core.io.XML;
 import stencyl.core.io.XmlHelper;
 import stencyl.core.lib.IProject;
-import stencyl.core.util.Lang;
 import stencyl.core.util.Worker;
+
+import static stencyl.core.util.PathHelper.extensionOf;
+import static stencyl.core.util.PathHelper.filenameOf;
 
 public class V4_FullTypeNamesUpdate implements Worker
 {
@@ -32,29 +33,28 @@ public class V4_FullTypeNamesUpdate implements Worker
 	@Override
 	public void doWork()
 	{
-		File dataFolder = new File(project.getFiles().getExtensionGameDataLocation("com.polydes.datastruct"));
-		File extrasFolder = new File(project.getFiles().getExtensionExtrasDataLocation("com.polydes.datastruct"));
+		String EXTENSION_ID = "com.polydes.datastruct";
 
-		File data = new File(extrasFolder, "data");
-		File defs = new File(dataFolder, "defs");
+		Path data = project.getFiles().getExtensionExtrasDataLocation(EXTENSION_ID).resolve("data");
+		Path defs = project.getFiles().getExtensionGameDataLocation(EXTENSION_ID).resolve("defs");
 		
 		TypenameUpdater tu = TypenameUpdater.get();
-		tu.addTypes(Lang.hashmap(
-			"Boolean", "Bool",
-			"Color", "com.polydes.datastruct.Color",
-			"Control", "com.polydes.datastruct.Control",
-			"Image", "com.polydes.datastruct.ExtrasImage",
-			"Selection", "com.polydes.datastruct.Selection",
-			"Set", "com.polydes.datastruct.Set",
-			"ActorType", "com.stencyl.models.actor.ActorType",
-			"Background", "com.stencyl.models.Background",
-			"Font", "com.stencyl.models.Font",
-			"Sound", "com.stencyl.models.Sound",
-			"Tileset", "com.stencyl.models.scene.Tileset"
+		tu.addTypes(Map.ofEntries(
+			Map.entry("Boolean", "Bool"),
+			Map.entry("Color", "com.polydes.datastruct.Color"),
+			Map.entry("Control", "com.polydes.datastruct.Control"),
+			Map.entry("Image", "com.polydes.datastruct.ExtrasImage"),
+			Map.entry("Selection", "com.polydes.datastruct.Selection"),
+			Map.entry("Set", "com.polydes.datastruct.Set"),
+			Map.entry("ActorType", "com.stencyl.models.actor.ActorType"),
+			Map.entry("Background", "com.stencyl.models.Background"),
+			Map.entry("Font", "com.stencyl.models.Font"),
+			Map.entry("Sound", "com.stencyl.models.Sound"),
+			Map.entry("Tileset", "com.stencyl.models.scene.Tileset")
 		));
-		for(File xmlFile : FileHelper.listFiles(defs, "xml"))
+		for(Path xmlFile : FileHelper.listFiles(defs, true, false, "xml"))
 		{
-			String name = xmlFile.getName();
+			String name = filenameOf(xmlFile);
 			name = name.substring(0, name.length() - ".xml".length());
 			try
 			{
@@ -67,7 +67,7 @@ public class V4_FullTypeNamesUpdate implements Worker
 				log.error(e.getMessage(), e);
 			}
 		}
-		for(File xmlFile : FileHelper.listFiles(defs, "xml"))
+		for(Path xmlFile : FileHelper.listFiles(defs, true, false, "xml"))
 		{
 			try
 			{
@@ -97,9 +97,9 @@ public class V4_FullTypeNamesUpdate implements Worker
 				log.error(e.getMessage(), e);
 			}
 		}
-		for(File dataFile : FileHelper.listFiles(data))
+		for(Path dataFile : FileHelper.listFiles(data, true, false))
 		{
-			if(dataFile.getName().endsWith(".txt"))
+			if(extensionOf(dataFile).equals("txt"))
 				continue;
 			
 			tu.applyToData(dataFile);

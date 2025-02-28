@@ -23,7 +23,7 @@ public class Structure
 {
 	private static final Logger log = Logger.getLogger(Structure.class);
 	
-	private static HashMap<StructureDefinition, ArrayList<Structure>> allStructures = new HashMap<>();
+	private static final HashMap<StructureDefinition, ArrayList<Structure>> allStructures = new HashMap<>();
 	
 	public final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	private StructureDefinition template;
@@ -239,8 +239,8 @@ public class Structure
 	}
 	
 	private Map<String, String> unknownData;
-	
-	class NoNullStringMap extends HashMap<String,String>
+
+	static class NoNullStringMap extends HashMap<String,String>
 	{
 		@Override
 		public String put(String key, String value)

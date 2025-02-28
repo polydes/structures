@@ -1,15 +1,12 @@
 package com.polydes.datastruct.data.structure.elements;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import javax.swing.*;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -31,9 +28,7 @@ import com.polydes.datastruct.ui.table.RowGroup;
 
 import stencyl.app.api.datatypes.DataEditor;
 import stencyl.app.api.datatypes.EditorProviders;
-import stencyl.app.api.datatypes.UpdateListener;
 import stencyl.app.comp.DisabledPanel;
-import stencyl.app.comp.UI;
 import stencyl.app.comp.datatypes.array.StandardArrayEditor;
 import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.app.comp.util.Layout;
@@ -48,15 +43,14 @@ import stencyl.core.datatypes.ArrayType;
 import stencyl.core.ext.registry.RORealizer;
 import stencyl.core.io.XML;
 import stencyl.core.io.XmlHelper;
-import stencyl.core.util.ColorUtil;
 
 public class StructureField extends SDE implements RORealizer<HaxeDataType>
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
-	private StructureDefinition owner;
+	private final StructureDefinition owner;
 	
-	private String varname;
+	private final String varname;
 	private HaxeDataType type;
 	private String label;
 	private String hint;
@@ -199,7 +193,7 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 
 	public static String formatVarname(String s)
 	{
-		s = StringUtils.removePattern(s, "[^a-zA-Z0-9_]");
+		s = RegExUtils.removePattern(s, "[^a-zA-Z0-9_]");
 		
 		if(s.isEmpty())
 			return s;

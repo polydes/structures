@@ -23,10 +23,10 @@ public class StructureDefinitionsWindow extends JDialog
 		return _instance;
 	}
 	
-	private MiniSplitPane splitPane;
-	private JPanel contents;
+	private final MiniSplitPane splitPane;
+	private final JPanel contents;
 	private boolean initialized;
-	private PropertiesWindow propsWindow;
+	private final PropertiesWindow propsWindow;
 	
 	public StructureDefinitionsWindow()
 	{

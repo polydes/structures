@@ -28,7 +28,7 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
         public <T, U extends T> T put(PropertyKey<T> key, U value)
         {
             throw new RuntimeException();
-        };
+        }
     };
 
     private final HaxeDataTypeEditorDE typeChooser;
@@ -38,8 +38,8 @@ public class DynamicEditorDE extends DataEditor<Dynamic>
     private DataEditor valueEditor;
 
     private Dynamic data;
-    private EditorSheet sheet;
-    private DataContext dataContext;
+    private final EditorSheet sheet;
+    private final DataContext dataContext;
 
     public DynamicEditorDE(DataTypeProperties props, EditorSheet sheet)
     {

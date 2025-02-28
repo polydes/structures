@@ -104,8 +104,8 @@ public class ExpressionParser
 		walker.walk(builder, tree); // initiate walk of tree with listener
 		return builder.getResult();	
 	}
-	
-	class SimpleTreeBuilder extends ConditionBaseListener
+
+	static class SimpleTreeBuilder extends ConditionBaseListener
 	{
 		Stack<SyntaxNode> stack = new Stack<>();
 		

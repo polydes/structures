@@ -21,7 +21,7 @@ import stencyl.core.io.XML;
 
 public class StructureHeader extends SDE
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	private String label;
 	

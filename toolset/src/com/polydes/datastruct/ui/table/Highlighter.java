@@ -8,7 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 public class Highlighter extends JComponent
 {
-	private Stroke stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+	private final Stroke stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 	
 	public JComponent[] target;
 	public Rectangle r;

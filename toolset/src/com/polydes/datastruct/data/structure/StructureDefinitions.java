@@ -1,16 +1,15 @@
 package com.polydes.datastruct.data.structure;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.file.PathUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,17 +38,20 @@ import stencyl.core.ext.res.ResourceLoader;
 import stencyl.core.ext.res.Resources;
 import stencyl.core.io.FileHelper;
 import stencyl.core.lib.IProject;
+import stencyl.core.util.gfx.ImageUtil;
 
 import static stencyl.core.api.datatypes.DataType.UNSET_EDITOR;
+import static stencyl.core.util.PathHelper.extensionOf;
+import static stencyl.core.util.PathHelper.filenameOf;
 
 public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 {
 	private static final Logger log = Logger.getLogger(StructureDefinitions.class);
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	private static final Resources res = ResourceLoader.getResources("com.polydes.datastruct");
 
-	private IProject project;
+	private final IProject project;
 	public Folder root;
-	private HashMap<Folder, File> baseFolders;
+	private final HashMap<Folder, Path> baseFolders;
 
 	public StructureDefinitions(IProject project)
 	{
@@ -72,30 +74,30 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 		root.setPolicy(policy);
 	}
 
-	public void addFolder(File fsfolder, String name)
+	public void addFolder(Path fsfolder, String name)
 	{
 		Folder newFolder = new Folder(name);
 		newFolder.setPolicy(new UniqueRootPolicy());
 		baseFolders.put(newFolder, fsfolder);
-		for(File f : FileHelper.listFiles(fsfolder))
+		for(Path f : FileHelper.listFiles(fsfolder, true, false))
 			load(f, newFolder);
 		root.markAsLoading(true);
 		root.addItem(newFolder);
 		root.markAsLoading(false);
 	}
 
-	public void load(File fsfile, Folder dsfolder)
+	public void load(Path fsfile, Folder dsfolder)
 	{
 		dsfolder.markAsLoading(true);
-		if(fsfile.isDirectory())
+		if(Files.isDirectory(fsfile))
 		{
-			Folder newFolder = new Folder(fsfile.getName());
-			for(File f : fsfile.listFiles())
+			Folder newFolder = new Folder(filenameOf(fsfile));
+			for(Path f : FileHelper.listFilesSimple(fsfile))
 				load(f, newFolder);
 		}
 		else
 		{
-			if(fsfile.getName().endsWith(".xml"))
+			if(extensionOf(fsfile).equals("xml"))
 			{
 				dsfolder.addItem(loadDefinition(fsfile).dref);
 			}
@@ -105,9 +107,9 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 
 	//If the definition already exists as an unknown definition,
 	//it will simply have its data set
-	public StructureDefinition loadDefinition(File fsfile)
+	public StructureDefinition loadDefinition(Path fsfile)
 	{
-		String fname = fsfile.getName();
+		String fname = filenameOf(fsfile);
 
 		if(!fname.endsWith(".xml"))
 			return null;
@@ -134,15 +136,15 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 
 		StructureDefinitionReader.read(structure, def);
 
-		File parent = fsfile.getParentFile();
+		Path parent = fsfile.getParent();
 
-		File haxeFile = new File(parent, defname + ".hx");
-		if(haxeFile.exists())
+		Path haxeFile = parent.resolve(defname + ".hx");
+		if(Files.exists(haxeFile))
 			def.customCode = Text.readString(haxeFile);
 
 		try
 		{
-			def.setImage(ImageIO.read(new File(parent, defname + ".png")));
+			def.setImage(ImageUtil.readImage(parent.resolve(defname + ".png")));
 		}
 		catch (IOException e)
 		{
@@ -231,31 +233,30 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 		{
 			if(dsfolder.isDirty())
 			{
-				File fsfolder = baseFolders.get(dsfolder);
-				File temp = new File(DefaultLocations.getLocation(Locations.STENCYL_TEMP) + File.separator + "data structure defs save");
-				temp.mkdirs();
+				Path fsfolder = baseFolders.get(dsfolder);
+				Path temp = DefaultLocations.getPath(Locations.STENCYL_TEMP, "data structure defs save");
 
-				FileUtils.deleteDirectory(temp);
-				temp.mkdirs();
+				if(Files.exists(temp))
+					PathUtils.deleteDirectory(temp);
+				Files.createDirectories(temp);
 
 				for(DefaultLeaf d : dsfolder.getItems())
 					save(d, temp);
 
-				FileUtils.deleteDirectory(fsfolder);
-				fsfolder.mkdirs();
-				FileUtils.copyDirectory(temp, fsfolder);
+				PathUtils.deleteDirectory(fsfolder);
+				Files.createDirectories(fsfolder);
+				PathUtils.copyDirectory(temp, fsfolder);
 			}
 		}
 		root.setDirty(false);
 	}
 
-	public void save(DefaultLeaf item, File file) throws IOException
+	public void save(DefaultLeaf item, Path file) throws IOException
 	{
 		if(item instanceof DefaultBranch)
 		{
-			File saveDir = new File(file, item.getName());
-			if(!saveDir.exists())
-				saveDir.mkdirs();
+			Path saveDir = file.resolve(item.getName());
+			Files.createDirectories(saveDir);
 
 			for(DefaultLeaf d : ((DefaultBranch) item).getItems())
 				save(d, saveDir);
@@ -268,11 +269,11 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 			Element e = doc.createElement("structure");
 			StructureDefinitionWriter.write(doc, e, def);
 			doc.appendChild(e);
-			FileHelper.writeXMLToFile(doc, new File(file, def.getName() + ".xml"));
+			FileHelper.writeXMLToFile(doc, file.resolve(def.getName() + ".xml"));
 			if(def.getIconImg() != null)
-				ImageIO.write(def.getIconImg(), "png", new File(file, def.getName() + ".png"));
+				FileHelper.writeToPNG(file.resolve(def.getName() + ".png"), def.getIconImg());
 			if(!def.customCode.isEmpty())
-				FileUtils.writeStringToFile(new File(file, def.getName() + ".hx"), def.customCode);
+				Files.writeString(file.resolve(def.getName() + ".hx"), def.customCode);
 		}
 	}
 
@@ -284,7 +285,7 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 		root = null;
 	}
 
-	class UniqueRootPolicy extends FolderPolicy
+	static class UniqueRootPolicy extends FolderPolicy
 	{
 		public UniqueRootPolicy()
 		{
@@ -308,9 +309,9 @@ public class StructureDefinitions extends ObjectRegistry<StructureDefinition>
 		}
 	}
 
-	public void removeFolder(File fsfolder)
+	public void removeFolder(Path fsfolder)
 	{
-		for(Entry<Folder, File> f : baseFolders.entrySet())
+		for(Entry<Folder, Path> f : baseFolders.entrySet())
 		{
 			if(f.getValue().equals(fsfolder))
 			{

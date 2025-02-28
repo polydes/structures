@@ -8,6 +8,10 @@ import stencyl.core.api.datatypes.DataType;
 import stencyl.core.api.datatypes.properties.PropertyKey;
 import stencyl.core.io.FileFilter;
 
+import java.nio.file.Path;
+
+import static stencyl.core.lib.ProjectLocations.EXTRA_DATA;
+
 public class ExtrasResourceType extends DataType<ExtrasResource>
 {
 	public ExtrasResourceType()
@@ -21,7 +25,7 @@ public class ExtrasResourceType extends DataType<ExtrasResource>
 	public ExtrasResource decode(String s, DataContext ctx)
 	{
 		ExtrasResource r = new ExtrasResource();
-		r.file = ctx.getProject().getFile("extras", s);
+		r.file = ctx.getProject().getPath(EXTRA_DATA, s);
 		return r;
 	}
 
@@ -31,10 +35,10 @@ public class ExtrasResourceType extends DataType<ExtrasResource>
 		if(i == null)
 			return "";
 		
-		String root = ctx.getProject().getLocation("extras");
-		String full = i.file.getAbsolutePath();
+		Path root = ctx.getProject().getPath(EXTRA_DATA);
+		Path full = i.file;
 		
-		return full.substring(root.length() + 1);
+		return root.relativize(full).toString();
 	}
 
 	@Override
@@ -48,9 +52,9 @@ public class ExtrasResourceType extends DataType<ExtrasResource>
 		ANY(null),
 		IMAGE(Prompt.ExtensionFilter.PNG_FILTER);
 
-		FileFilter filter;
+		final FileFilter filter;
 
-		private ResourceType(FileFilter filter)
+		ResourceType(FileFilter filter)
 		{
 			this.filter = filter;
 		}

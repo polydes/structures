@@ -95,7 +95,7 @@ public class HaxeTypes extends ObjectRegistry<HaxeDataType>
 	 | DataType Glue
 	\*================================================*/
 
-	private HashMap<String, HaxeDataType> haxeFromDt = new HashMap<>();
+	private final HashMap<String, HaxeDataType> haxeFromDt = new HashMap<>();
 
 	public HaxeDataType getHaxeFromDT(String dataType)
 	{

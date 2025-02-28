@@ -76,7 +76,7 @@ public class PropertiesSheet extends JPanel implements HierarchyRepresentation<D
 	public ArrayList<Card> conditionalCards = new ArrayList<>();
 	public JScrollPane scroller;
 	
-	private Map<String, Object> sheetProperties = new HashMap<>();
+	private final Map<String, Object> sheetProperties = new HashMap<>();
 	
 	/**
 	 * folderModel is null if this isn't the preview of a structure definition editor

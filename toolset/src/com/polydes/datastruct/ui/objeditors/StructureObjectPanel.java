@@ -1,6 +1,5 @@
 package com.polydes.datastruct.ui.objeditors;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -29,7 +28,6 @@ import stencyl.app.comp.propsheet.PropertiesSheetSupport.FieldInfo;
 import stencyl.app.comp.propsheet.PropertiesSheetWrapper;
 import stencyl.app.comp.util.Layout;
 import stencyl.core.api.pnodes.DefaultLeaf;
-import stencyl.core.util.ColorUtil;
 
 import static stencyl.core.util.Lang.asArray;
 
@@ -111,7 +109,7 @@ public class StructureObjectPanel extends Table implements EditorSheet, ObjectEd
 		setSize(getPreferredSize());
 	}
 	
-	private ComponentListener resizeListener = new ComponentAdapter()
+	private final ComponentListener resizeListener = new ComponentAdapter()
 	{
 		@Override
 		public void componentResized(ComponentEvent e)

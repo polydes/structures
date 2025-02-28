@@ -139,7 +139,7 @@ public class StructureEditorDE extends DataEditor<Structure> implements Property
         editor.dispose();
     }
 
-    public class Builder extends DataEditorBuilder
+    public static class Builder extends DataEditorBuilder
     {
         public Builder filter(StructureCondition filter)
         {
@@ -160,10 +160,10 @@ public class StructureEditorDE extends DataEditor<Structure> implements Property
         }
     }
 
-    class StructurePredicate implements Predicate<Structure>
+    static class StructurePredicate implements Predicate<Structure>
     {
-        private StructureCondition condition;
-        private Structure s;
+        private final StructureCondition condition;
+        private final Structure s;
 
         public StructurePredicate(StructureCondition condition, Structure s)
         {

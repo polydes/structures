@@ -1,7 +1,7 @@
 package com.polydes.datastruct.io.write;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -17,7 +17,7 @@ public class HaxeObjectDefinitionWriter
 {
 	private static final Logger log = Logger.getLogger(HaxeObjectDefinitionWriter.class);
 	
-	public static void write(HaxeObjectDefinition def, String path)
+	public static void write(HaxeObjectDefinition def, Path path)
 	{
 		Document doc = FileHelper.newDocument();
 		Element type = doc.createElement("type");
@@ -50,7 +50,7 @@ public class HaxeObjectDefinitionWriter
 		doc.appendChild(type);
 		try
 		{
-			FileHelper.writeXMLToFile(doc, new File(path));
+			FileHelper.writeXMLToFile(doc, path);
 		}
 		catch (IOException e)
 		{

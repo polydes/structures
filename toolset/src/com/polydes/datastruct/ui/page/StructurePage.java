@@ -35,9 +35,9 @@ public class StructurePage
 {
 	private static StructurePage _instance;
 
-	private HierarchyModelInterface<DefaultLeaf,DefaultBranch> modelInterface;
-	private HierarchyModel<DefaultLeaf,DefaultBranch> model;
-	private TreePage<DefaultLeaf, DefaultBranch> treePage;
+	private final HierarchyModelInterface<DefaultLeaf,DefaultBranch> modelInterface;
+	private final HierarchyModel<DefaultLeaf,DefaultBranch> model;
+	private final TreePage<DefaultLeaf, DefaultBranch> treePage;
 	private JComponent sidebar;
 	private Boolean listEditEnabled;
 
@@ -79,7 +79,7 @@ public class StructurePage
 		}
 		
 		@Override
-		public ArrayList<CreatableNodeInfo> getCreatableNodeList(DefaultBranch branchNode)
+		public List<CreatableNodeInfo> getCreatableNodeList(DefaultBranch branchNode)
 		{
 			StructureFolder parent = (StructureFolder) modelInterface.getCreationParentFolder(treePage.getTree().getSelectionState());
 

@@ -1,7 +1,6 @@
 package com.polydes.datastruct;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
@@ -17,8 +16,8 @@ import stencyl.app.comp.darktree.DarkTree;
 public class MainPage extends JPanel
 {
 	private static MainPage _instance;
-	private JPanel pageView;
-	private MiniSplitPane splitPane;
+	private final JPanel pageView;
+	private final MiniSplitPane splitPane;
 	
 	
 	private JButton defButton;

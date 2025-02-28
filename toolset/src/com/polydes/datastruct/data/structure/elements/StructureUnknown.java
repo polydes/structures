@@ -23,7 +23,7 @@ import stencyl.core.io.XML;
 
 public class StructureUnknown extends SDE
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	public String namespace;
 	public String tag;

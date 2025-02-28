@@ -1,6 +1,8 @@
 package com.polydes.datastruct.data.types.haxe;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,12 +26,17 @@ public class HaxeObjectHaxeType extends HaxeDataType
 	{
 		if(type.getDef().haxereaderExpression != null)
 		{
-			return Lang.arraylist(String.format("StringData.registerReader(\"%s\", function(s) return %s);", getHaxeType(), type.getDef().haxereaderExpression));
+			return List.of(
+					String.format("StringData.registerReader(\"%s\", function(s) return %s);", getHaxeType(), type.getDef().haxereaderExpression)
+			);
 		}
 		else
 		{
-			String[] types = Lang.map(type.getDef().fields, String.class, (field) -> "\"" + field.type.getHaxeType() + "\"");
-			return Lang.arraylist(String.format("StringData.registerHaxeObjectReader(\"%s\", %s, [%s]);", getHaxeType(), getHaxeType(), StringUtils.join(types, ",")));
+			String typeList = Arrays.stream(type.getDef().fields)
+					.map((field) -> "\"" + field.type.getHaxeType() + "\"")
+					.collect(Collectors.joining(",", "[", "]"));
+
+			return List.of(String.format("StringData.registerHaxeObjectReader(\"%s\", %s, %s);", getHaxeType(), getHaxeType(), typeList));
 		}
 	}
 }

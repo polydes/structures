@@ -24,7 +24,7 @@ public class Deck extends JPanel implements GuiObject
 	
 	public Card[] cards = null;
 	public String[] labels = null;
-	private CardLayout layout;
+	private final CardLayout layout;
 	
 	public Deck()
 	{
@@ -71,8 +71,8 @@ public class Deck extends JPanel implements GuiObject
 	{
 		card.setDeck(this);
 		
-		cards = ArrayUtils.add(cards, i, card);
-		labels = ArrayUtils.add(labels, i, card.name);
+		cards = ArrayUtils.insert(i, cards, card);
+		labels = ArrayUtils.insert(i, labels, card.name);
 		refreshButtons();
 		bgroup.add(card.button);
 		add(card, card.name);

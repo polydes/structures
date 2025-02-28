@@ -1,6 +1,6 @@
 package com.polydes.datastruct.ext;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -16,6 +16,7 @@ import stencyl.core.datatypes.Types;
 import stencyl.core.io.FileHelper;
 
 import static stencyl.core.api.datatypes.DataType.UNSET_EDITOR;
+import static stencyl.core.util.PathHelper.extensionOf;
 
 public class HaxeDataTypeExtension
 {
@@ -23,18 +24,18 @@ public class HaxeDataTypeExtension
 	 * Building from xml
 	\*-------------------------------------*/ 
 	
-	public static ArrayList<HaxeDataType> readTypesFolder(File f, DataContext ctx)
+	public static ArrayList<HaxeDataType> readTypesFolder(Path f, DataContext ctx)
 	{
 		ArrayList<HaxeDataType> types = new ArrayList<>();
 		
-		for(File file : FileHelper.listFiles(f))
-			if(file.getName().endsWith(".xml"))
-				types.add(readType(file.getAbsolutePath(), ctx));
+		for(Path file : FileHelper.listFiles(f, true, false))
+			if(extensionOf(file).equals("xml"))
+				types.add(readType(file, ctx));
 		
 		return types;
 	}
 	
-	public static HaxeDataType readType(String path, DataContext ctx)
+	public static HaxeDataType readType(Path path, DataContext ctx)
 	{
 		HaxeObjectType newDT = new HaxeObjectType(HaxeObjectDefinitionReader.read(path, ctx));
 		//TODO [2023-06-18] these aren't unregistered anywhere

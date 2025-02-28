@@ -18,7 +18,7 @@ import stencyl.core.api.pnodes.DefaultLeaf;
 
 public class StructureDefinitionWriter
 {
-	private static HashMap<String, String> namespaces = new HashMap<>();
+	private static final HashMap<String, String> namespaces = new HashMap<>();
 	
 	private static String getNS(String ext)
 	{

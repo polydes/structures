@@ -12,7 +12,7 @@ public class DelayedInitialize
 {
 	private static final Logger log = Logger.getLogger(DelayedInitialize.class);
 	
-	private static HashMap<String, ArrayList<DelayedSet>> initList = new HashMap<>();
+	private static final HashMap<String, ArrayList<DelayedSet>> initList = new HashMap<>();
 	
 	public static void addMethod(Object o, String name, Object[] args, String prop)
 	{

@@ -6,7 +6,7 @@ import com.polydes.datastruct.data.types.HaxeDataType;
 
 import stencyl.core.lib.code.design.Definition;
 import stencyl.sw.app.ext.SWExtensionInstance;
-import stencyl.sw.core.lib.snippet.designer.Definitions.DefinitionMap;
+import stencyl.core.lib.code.design.Definitions.DefinitionMap;
 
 public class Blocks
 {

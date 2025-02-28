@@ -48,21 +48,21 @@ public class StructureDefinitionPage extends JPanel
 	private static StructureDefinitionPage _instance;
 
 	public MiniSplitPane splitPane;
-	private JPanel emptySidebarBottom;
+	private final JPanel emptySidebarBottom;
 
-	private HierarchyModel<DefaultLeaf, DefaultBranch> definitionsfm;
-	private DarkTree<DefaultLeaf,DefaultBranch> definitionTree;
+	private final HierarchyModel<DefaultLeaf, DefaultBranch> definitionsfm;
+	private final DarkTree<DefaultLeaf,DefaultBranch> definitionTree;
 
-	private JComponent definitionTreeView;
+	private final JComponent definitionTreeView;
 
 	protected JScrollPane scroller;
 	protected JPanel page;
 
 	private StructureDefinitionEditor editor;
-	private Map<StructureDefinition, StructureDefinitionEditor> editors = new IdentityHashMap<>();
-	private Map<SDE, StructureObjectPanel> sdeEditors = new IdentityHashMap<>();
+	private final Map<StructureDefinition, StructureDefinitionEditor> editors = new IdentityHashMap<>();
+	private final Map<SDE, StructureObjectPanel> sdeEditors = new IdentityHashMap<>();
 
-	private NodeSelectionListener<DefaultLeaf,DefaultBranch> definitionStateListener = new NodeSelectionListener<>()
+	private final NodeSelectionListener<DefaultLeaf,DefaultBranch> definitionStateListener = new NodeSelectionListener<>()
 	{
 		@Override
 		public void selectionChanged(NodeSelectionEvent<DefaultLeaf, DefaultBranch> e)
@@ -105,7 +105,7 @@ public class StructureDefinitionPage extends JPanel
 		}
 	};
 
-	private NodeSelectionListener<DefaultLeaf,DefaultBranch> editorStateListener = new NodeSelectionListener<>()
+	private final NodeSelectionListener<DefaultLeaf,DefaultBranch> editorStateListener = new NodeSelectionListener<>()
 	{
 		@Override
 		public void selectionChanged(NodeSelectionEvent<DefaultLeaf, DefaultBranch> e)
@@ -164,7 +164,7 @@ public class StructureDefinitionPage extends JPanel
 		}
 	};
 
-	private ComponentAdapter propsWindowAdapter = new ComponentAdapter()
+	private final ComponentAdapter propsWindowAdapter = new ComponentAdapter()
 	{
 		@Override
 		public void componentHidden(ComponentEvent e)
@@ -226,7 +226,7 @@ public class StructureDefinitionPage extends JPanel
 		definitionsFmUi.setNodeCreator(new DefaultNodeCreator<>()
 		{
 			@Override
-			public ArrayList<CreatableNodeInfo> getCreatableNodeList(DefaultBranch creationBranch)
+			public List<CreatableNodeInfo> getCreatableNodeList(DefaultBranch creationBranch)
 			{
 				return createNodeList;
 			}
@@ -284,7 +284,7 @@ public class StructureDefinitionPage extends JPanel
 			@Override
 			public boolean attemptRemove(List<DefaultLeaf> toRemove)
 			{
-				if (toRemove.size() > 0 && toRemove.get(0).getUserData() instanceof StructureDefinition def)
+				if (!toRemove.isEmpty() && toRemove.getFirst().getUserData() instanceof StructureDefinition def)
 				{
 					Choice result =
 						Prompt.showYesCancelPrompt(
@@ -341,12 +341,9 @@ public class StructureDefinitionPage extends JPanel
 		definitionTree.getSelectionState().set(def.dref);
 	}
 
-	private static final ArrayList<CreatableNodeInfo> createNodeList = new ArrayList<>();
-
-	static
-	{
-		createNodeList.add(new CreatableNodeInfo("Structure", null, null));
-	}
+	private static final List<CreatableNodeInfo> createNodeList = List.of(
+			new CreatableNodeInfo("Structure", null, null)
+	);
 
 	public JComponent getSidebar()
 	{

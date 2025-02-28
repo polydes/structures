@@ -1,12 +1,8 @@
 package com.polydes.datastruct.io;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,22 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 public class Text
 {
 	private static final Logger log = Logger.getLogger(Text.class);
 	
-	private static HashMap<File, FileOutputStream> outstreams = new HashMap<>();
-	private static HashMap<File, OutputStreamWriter> writers = new HashMap<>();
-	
-	public static List<String> readLines(File file)
+	public static List<String> readLines(Path file)
 	{
 		try
 		{
-			return FileUtils.readLines(file);
+			return Files.readAllLines(file);
 		}
 		catch (IOException e)
 		{
@@ -38,24 +29,11 @@ public class Text
 		}
 	}
 	
-	public static List<String> readLines(InputStream stream)
+	public static String readString(Path file)
 	{
 		try
 		{
-			return IOUtils.readLines(stream);
-		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-			return new ArrayList<>();
-		}
-	}
-	
-	public static String readString(File file)
-	{
-		try
-		{
-			return FileUtils.readFileToString(file);
+			return Files.readString(file);
 		}
 		catch (IOException e)
 		{
@@ -64,26 +42,13 @@ public class Text
 		}
 	}
 	
-	public static String readString(InputStream stream)
-	{
-		try
-		{
-			return IOUtils.toString(stream);
-		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-			return "";
-		}
-	}
-	
-	public static HashMap<String, String> readKeyValues(File file)
+	public static HashMap<String, String> readKeyValues(Path file)
 	{
 		HashMap<String, String> map = new HashMap<>();
 		
 		for(String s : readLines(file))
 		{
-			if(s.indexOf("=") == -1)
+			if(!s.contains("="))
 				continue;
 			
 			String[] parts = s.split("=");
@@ -93,7 +58,7 @@ public class Text
 		return map;
 	}
 	
-	public static void writeKeyValues(File file, Map<String, String> map)
+	public static void writeKeyValues(Path file, Map<String, String> map)
 	{
 		List<String> lines = new ArrayList<>();
 		
@@ -103,56 +68,15 @@ public class Text
 		writeLines(file, lines);
 	}
 	
-	public static void writeLines(File file, Collection<String> lines)
+	public static void writeLines(Path file, Collection<String> lines)
 	{
 		try
 		{
-			FileUtils.writeLines(file, lines, "\n");
+			Files.write(file, lines);
 		}
 		catch (IOException e)
 		{
 			log.error(e.getMessage(), e);
 		}
-	}
-	
-	public static void startWriting(File file)
-	{
-		FileOutputStream os = null;
-		try
-		{
-			os = new FileOutputStream(file);
-		}
-		catch (FileNotFoundException e)
-		{
-			log.error(e.getMessage(), e);
-		}
-		outstreams.put(file, os);
-		writers.put(file, new OutputStreamWriter(os, Charset.forName("UTF-8")));
-	}
-	
-	public static void writeLine(File file, String s)
-	{
-		try
-		{
-			writers.get(file).write(s + "\n");
-		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-		}
-	}
-	
-	public static void closeOutput(File file)
-	{
-		try
-		{
-			writers.get(file).close();
-		}
-		catch (IOException e)
-		{
-			log.error(e.getMessage(), e);
-		}
-		writers.remove(file);
-		outstreams.remove(file);
 	}
 }

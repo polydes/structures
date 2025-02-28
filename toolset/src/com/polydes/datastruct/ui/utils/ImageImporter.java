@@ -3,7 +3,7 @@ package com.polydes.datastruct.ui.utils;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.nio.file.Path;
 
 import javax.swing.*;
 
@@ -27,7 +27,7 @@ public class ImageImporter implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		File file = null;
+		Path file = null;
 		
 		if(OS.isMacOSX()) 
 		{
@@ -38,7 +38,7 @@ public class ImageImporter implements ActionListener
 			
 			if(fc.getFile() != null)
 			{
-				file = new File(fc.getDirectory(), fc.getFile());
+				file = Path.of(fc.getDirectory(), fc.getFile());
 			}
 		}
 		
@@ -54,7 +54,7 @@ public class ImageImporter implements ActionListener
 		    
 			if(returnVal == JFileChooser.APPROVE_OPTION)
 		    {
-		        file = fc.getSelectedFile();
+		        file = fc.getSelectedFile().toPath();
 		    }
 		}
 

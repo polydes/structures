@@ -20,9 +20,12 @@ import stencyl.core.api.pnodes.DefaultBranch;
 import stencyl.core.api.pnodes.DefaultLeaf;
 import stencyl.core.util.Lang;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StructureTabset extends SDE
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	@Override
 	public String toString()
@@ -44,7 +47,7 @@ public class StructureTabset extends SDE
 			tag = "tabset";
 			isBranchNode = true;
 			icon = res.loadThumbnail("tabset.png", 16);
-			childTypes = Lang.arraylist(StructureTab.class);
+			childTypes = new ArrayList<>(List.of(StructureTab.class));
 		}
 		
 		@Override

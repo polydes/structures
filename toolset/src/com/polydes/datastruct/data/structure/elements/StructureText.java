@@ -23,7 +23,7 @@ import stencyl.core.io.XML;
 
 public class StructureText extends SDE
 {
-	private static AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
+	private static final AppResources res = AppResourceLoader.getResources("com.polydes.datastruct");
 	
 	private String label;
 	private String text;

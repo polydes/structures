@@ -1,7 +1,7 @@
 package com.polydes.datastruct.updates;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +15,9 @@ import com.polydes.datastruct.io.Text;
 
 import stencyl.core.io.FileHelper;
 import stencyl.core.util.Lang;
+
+import static stencyl.core.util.PathHelper.extensionOf;
+import static stencyl.core.util.PathHelper.filenameOf;
 
 public class TypenameUpdater
 {
@@ -44,10 +47,10 @@ public class TypenameUpdater
 	public void convert()
 	{
 		DataStructuresExtension dse = DataStructuresExtension.get();
-		File data = new File(dse.getExtrasFolder(), "data");
-		File defs = new File(dse.getDataFolder(), "defs");
+		Path data = dse.getExtrasFolder().resolve("data");
+		Path defs = dse.getDataFolder().resolve("defs");
 		
-		for(File xmlFile : FileHelper.listFiles(defs, "xml"))
+		for(Path xmlFile : FileHelper.listFiles(defs, true, false, "xml"))
 		{
 			try
 			{
@@ -60,9 +63,9 @@ public class TypenameUpdater
 				log.error(e.getMessage(), e);
 			}
 		}
-		for(File dataFile : FileHelper.listFiles(data))
+		for(Path dataFile : FileHelper.listFiles(data, true, false))
 		{
-			if(dataFile.getName().endsWith(".txt"))
+			if(extensionOf(dataFile).equals("txt"))
 				continue;
 			
 			applyToData(dataFile);
@@ -80,7 +83,7 @@ public class TypenameUpdater
 		}
 	}
 	
-	public void applyToData(File dataFile)
+	public void applyToData(Path dataFile)
 	{
 		HashMap<String, String> props = Text.readKeyValues(dataFile);
 		String type = props.get("struct_type");
@@ -88,12 +91,12 @@ public class TypenameUpdater
 		if(newtype != null)
 		{
 			props.put("struct_type", newtype);
-			log.debug(dataFile.getName() + " converted: " + type + " -> " + newtype);
+			log.debug(filenameOf(dataFile) + " converted: " + type + " -> " + newtype);
 			Text.writeKeyValues(dataFile, props);
 		}
 		else
 		{
-			log.debug(dataFile.getName() + " is " + type);
+			log.debug(filenameOf(dataFile) + " is " + type);
 		}
 	}
 }

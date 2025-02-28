@@ -47,9 +47,9 @@ public class StructureDefinitionEditor extends JPanel
 	public DarkTree<DefaultLeaf,DefaultBranch> tree;
 	public JComponent treeView;
 	public Structure preview;
-	private StructureEditor previewEditor;
+	private final StructureEditor previewEditor;
 
-	private boolean savedDefinitionDirtyState;
+	private final boolean savedDefinitionDirtyState;
 	
 	private int getPosAvoidingTabsetParent(DefaultBranch newNodeFolder)
 	{
@@ -154,7 +154,7 @@ public class StructureDefinitionEditor extends JPanel
 		modelInterface.setNodeCreator(new DefaultNodeCreator<>()
 		{
 			@Override
-			public ArrayList<CreatableNodeInfo> getCreatableNodeList(DefaultBranch creationBranch)
+			public List<CreatableNodeInfo> getCreatableNodeList(DefaultBranch creationBranch)
 			{
 				if(tree.getSelectionState().isEmpty())
 					return null;
@@ -185,7 +185,7 @@ public class StructureDefinitionEditor extends JPanel
 				return leaf;
 			}
 			
-			NodeAction<DefaultLeaf> setAsIcon = new NodeAction<>("Set as Icon", null, leaf -> {
+			final NodeAction<DefaultLeaf> setAsIcon = new NodeAction<>("Set as Icon", null, leaf -> {
 				StructureField field = (StructureField) leaf.getUserData();
 				def.iconSource = field.getVarname();
 			});

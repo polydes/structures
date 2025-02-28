@@ -86,9 +86,9 @@ public abstract class HaxeDataType implements RegistryObject
 	public /*abstract*/ void applyToFieldPanel(StructureFieldPanel panel)
 	{
 		log.debug("APPLYING OTHER " + haxeType);
-	};
-	
-	public ArrayList<Definition> getBlocks()
+	}
+
+    public ArrayList<Definition> getBlocks()
 	{
 		return null;
 	}

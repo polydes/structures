@@ -3,10 +3,8 @@ package com.polydes.datastruct.ui.page;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,16 +25,16 @@ import stencyl.app.comp.text.FieldVerifier;
 import stencyl.app.comp.util.Layout;
 import stencyl.app.lnf.Theme;
 import stencyl.core.api.VerificationHelper;
-import stencyl.core.ext.FileHandler;
 import stencyl.core.ext.res.ResourceLoader;
 import stencyl.core.ext.res.Resources;
 import stencyl.core.lib.IProject;
+import stencyl.core.util.gfx.ImageUtil;
 
 public class CreateStructureDefinitionDialog extends StencylDialog
 {
 	private static final Logger log = Logger.getLogger(CreateStructureDefinitionDialog.class);
 	
-	private static Resources res = ResourceLoader.getResources("com.polydes.datastruct");
+	private static final Resources res = ResourceLoader.getResources("com.polydes.datastruct");
 	
 	FieldVerifier nameVerifier;
 	FieldVerifier classVerifier;
@@ -142,7 +140,7 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 		button.addActionListener(new ImageImporter(f -> {
 			try
 			{
-				iconImg = ImageIO.read(f);
+				iconImg = ImageUtil.readImage(f);
 				iconLabel.repaint();
 			}
 			catch (IOException e1)
