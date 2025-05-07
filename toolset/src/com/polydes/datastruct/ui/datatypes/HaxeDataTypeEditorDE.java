@@ -12,7 +12,6 @@ import stencyl.app.api.datatypes.DataEditorBuilder;
 import stencyl.app.api.datatypes.EditorSheet;
 import stencyl.app.api.datatypes.PropertyBuilder;
 import stencyl.app.comp.UpdatingCombo;
-import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.core.api.datatypes.properties.DataTypeProperties;
 
 public class HaxeDataTypeEditorDE extends DataEditor<HaxeDataType>

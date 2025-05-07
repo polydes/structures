@@ -54,8 +54,8 @@ public class MiniDialog extends StencylDialog
 	@Override
 	public JPanel createButtonPanel()
 	{
-		JButton okButton = new GroupButton(0);
-		JButton cancelButton = new GroupButton(0);
+		JButton okButton = new GroupButton(GroupButton.GROUP_SINGLE);
+		JButton cancelButton = new GroupButton(GroupButton.GROUP_SINGLE);
 
 		okButton.setAction
 		(

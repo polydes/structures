@@ -128,7 +128,7 @@ public abstract class LightweightWindow extends SnappingDialog
 	
 	public JPanel createButtonBar()
 	{
-		okButton = new GroupButton(0);
+		okButton = new GroupButton(GroupButton.GROUP_SINGLE);
 		
 		okButton.setAction(new AbstractAction(lang.get("globals.apply"))
 		{

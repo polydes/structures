@@ -382,7 +382,6 @@ public class StructureField extends SDE implements RORealizer<HaxeDataType>
 				group.add(sheet.style.layout().hintgap());
 				group.add(null, sheet.style.createDescriptionRow(f.getHint()));
 			}
-			UI.endForcedStyle();
 			group.add(sheet.style.layout().rowgap());
 		}
 		

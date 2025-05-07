@@ -12,7 +12,6 @@ import com.polydes.datastruct.ui.table.PropertiesSheet;
 
 import stencyl.app.api.nodes.NodeUIProperties;
 import stencyl.app.comp.TitledPanel;
-import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.app.comp.util.IconUtil;
 import stencyl.app.comp.util.Layout;
 import stencyl.app.lnf.Theme;

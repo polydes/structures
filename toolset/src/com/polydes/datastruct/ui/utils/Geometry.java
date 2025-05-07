@@ -5,8 +5,6 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 
-import stencyl.app.lnf.Theme;
-
 public class Geometry
 {
 	public static Point getCenteredStringTopLeft(String draw, Graphics g, Font font, Component c)

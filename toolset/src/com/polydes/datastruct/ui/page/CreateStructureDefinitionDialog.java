@@ -137,7 +137,7 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 		
 		iconImg = res.loadImage("newStructureDef.png");
 		
-		GroupButton button = new GroupButton(4);
+		GroupButton button = new GroupButton(GroupButton.GROUP_SINGLE_COMPACT);
 		button.setText("Choose an Image");
 		button.addActionListener(new ImageImporter(f -> {
 			try
@@ -196,7 +196,7 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 	@Override
 	public JPanel createButtonPanel()
 	{
-		okButton = new GroupButton(0);
+		okButton = new GroupButton(GroupButton.GROUP_SINGLE);
 
 		okButton.setAction(new AbstractAction("OK")
 		{
@@ -208,7 +208,7 @@ public class CreateStructureDefinitionDialog extends StencylDialog
 			}
 		});
 
-		AbstractButton cancelButton = new GroupButton(0);
+		AbstractButton cancelButton = new GroupButton(GroupButton.GROUP_SINGLE);
 
 		cancelButton.setAction(new AbstractAction("Cancel")
 		{

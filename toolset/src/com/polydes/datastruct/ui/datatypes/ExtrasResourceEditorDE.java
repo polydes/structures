@@ -12,7 +12,6 @@ import stencyl.app.api.datatypes.DataEditor;
 import stencyl.app.api.datatypes.DataEditorBuilder;
 import stencyl.app.api.datatypes.EditorSheet;
 import stencyl.app.comp.datatypes.file.FileEditor;
-import stencyl.app.comp.propsheet.PropertiesSheetStyle;
 import stencyl.core.api.datatypes.properties.DataTypeProperties;
 import stencyl.core.datatypes.Types;
 import stencyl.core.util.Lang;

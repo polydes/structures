@@ -83,7 +83,7 @@ public class EditFolderDialog extends StencylDialog
 	@Override
 	public JPanel createButtonPanel()
 	{
-		okButton = new GroupButton(0);
+		okButton = new GroupButton(GroupButton.GROUP_SINGLE);
 
 		okButton.setAction(new AbstractAction("OK")
 		{
@@ -95,7 +95,7 @@ public class EditFolderDialog extends StencylDialog
 			}
 		});
 
-		AbstractButton cancelButton = new GroupButton(0);
+		AbstractButton cancelButton = new GroupButton(GroupButton.GROUP_SINGLE);
 
 		cancelButton.setAction(new AbstractAction("Cancel")
 		{
