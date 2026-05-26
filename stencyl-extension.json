@@ -13,7 +13,6 @@
   "icon": "icon.png",
 
   "toolset": {
-    "build": "gradle",
     "root": "toolset",
     "src": [
       {"type": "java", "path": "src"},
@@ -25,7 +24,8 @@
       "platform:ch.qos.reload4j:reload4j",
       "platform:commons-io:commons-io",
       "platform:com.formdev:flatlaf",
-      "maven:tablelayout:TableLayout:20050920"
+      "maven:tablelayout:TableLayout:20050920",
+      "maven:org.antlr:antlr4-runtime:4.5"
     ],
     "mainClass": "com.polydes.datastruct.DataStructuresExtension",
     "internalVersion": "4"
