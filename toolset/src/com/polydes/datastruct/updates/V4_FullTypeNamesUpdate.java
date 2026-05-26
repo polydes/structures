@@ -14,21 +14,31 @@ import stencyl.core.api.VerificationHelper;
 import stencyl.core.io.FileHelper;
 import stencyl.core.io.XML;
 import stencyl.core.io.XmlHelper;
+import stencyl.core.lib.IProject;
 import stencyl.core.util.Lang;
 import stencyl.core.util.Worker;
 
 public class V4_FullTypeNamesUpdate implements Worker
 {
 	private static final Logger log = Logger.getLogger(V4_FullTypeNamesUpdate.class);
-	
+
+	private final IProject project;
+
+	public V4_FullTypeNamesUpdate(IProject project)
+	{
+		this.project = project;
+	}
+
 	@Override
 	public void doWork()
 	{
-		DataStructuresExtension dse = DataStructuresExtension.get();
-		File data = new File(dse.getExtrasFolder(), "data");
-		File defs = new File(dse.getDataFolder(), "defs");
+		File dataFolder = new File(project.getFiles().getExtensionGameDataLocation("com.polydes.datastruct"));
+		File extrasFolder = new File(project.getFiles().getExtensionExtrasDataLocation("com.polydes.datastruct"));
+
+		File data = new File(extrasFolder, "data");
+		File defs = new File(dataFolder, "defs");
 		
-		TypenameUpdater tu = dse.getTypenameUpdater();
+		TypenameUpdater tu = TypenameUpdater.get();
 		tu.addTypes(Lang.hashmap(
 			"Boolean", "Bool",
 			"Color", "com.polydes.datastruct.Color",

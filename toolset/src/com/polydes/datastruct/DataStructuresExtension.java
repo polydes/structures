@@ -23,7 +23,6 @@ import com.polydes.datastruct.data.types.HaxeTypes;
 import com.polydes.datastruct.io.HXGenerator;
 import com.polydes.datastruct.io.Text;
 import com.polydes.datastruct.ui.datatypes.DSEditorProviders;
-import com.polydes.datastruct.updates.TypenameUpdater;
 import com.polydes.datastruct.updates.V3_GameExtensionUpdate;
 import com.polydes.datastruct.updates.V4_FullTypeNamesUpdate;
 
@@ -51,8 +50,6 @@ public class DataStructuresExtension extends GameExtension
 	public static boolean forceUpdateData = false;
 	private boolean initialized = false;
 
-	private TypenameUpdater typenameUpdater = new TypenameUpdater();
-
 	public static DataStructuresExtension get()
 	{
 		return instance;
@@ -71,11 +68,6 @@ public class DataStructuresExtension extends GameExtension
 	public StructureDefinitions getStructureDefinitions()
 	{
 		return structureDefinitions;
-	}
-
-	public TypenameUpdater getTypenameUpdater()
-	{
-		return typenameUpdater;
 	}
 
 	/*
@@ -270,7 +262,7 @@ public class DataStructuresExtension extends GameExtension
 		if(fromVersion < 3)
 			updateQueue.add(new V3_GameExtensionUpdate(getProject()));
 		if(fromVersion < 4)
-			updateQueue.after(V3_GameExtensionUpdate.class).add(new V4_FullTypeNamesUpdate());
+			updateQueue.after(V3_GameExtensionUpdate.class).add(new V4_FullTypeNamesUpdate(getProject()));
 		forceUpdateData = true;
 	}
 }

@@ -19,7 +19,16 @@ import stencyl.core.util.Lang;
 public class TypenameUpdater
 {
 	private static final Logger log = Logger.getLogger(TypenameUpdater.class);
-	
+
+	private static TypenameUpdater instance;
+
+	public static TypenameUpdater get()
+	{
+		if(instance == null)
+			instance = new TypenameUpdater();
+		return instance;
+	}
+
 	HashMap<String, String> typeBackMap = new HashMap<>();
 	
 	public void addTypes(Map<String, String> types)
