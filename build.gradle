@@ -1,12 +1,38 @@
-tasks.register('buildForEngine', Copy) {
-    from(project('toolset').tasks.named("jar")) {
-        rename { fileName -> "toolset-extension.jar" }
-    }
-    into "engine"
+plugins {
+    id("antlr")
+    id("com.stencyl.gradle.extension") version "1.0.0"
 }
 
-tasks.register('installToWorkspace', Sync) {
-    dependsOn(":buildForEngine")
-    from('engine')
-    into stencylWorkspace+"/engine-extensions/com.polydes.datastruct"
+stencyl {
+    fromJsonFile(file("stencyl-extension.json"))
+}
+
+sourceSets {
+    main {
+        antlr {
+            srcDirs = ['toolset/src-antlr']
+        }
+        java {
+            srcDir "${project.buildDir}/generated-src/antlr/main"
+        }
+    }
+}
+
+compileJava.dependsOn generateGrammarSource
+
+configurations {
+    api {
+        // Undo extendsFrom relationship between the 'antlr' configuration and the 'api' configuration
+        // https://github.com/gradle/gradle/issues/820#issuecomment-748623864
+        extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+    }
+}
+
+def antlrVersion = '4.5'
+dependencies {
+    antlr "org.antlr:antlr4:$antlrVersion"
+    
+    implementation ("org.antlr:antlr4-runtime:$antlrVersion") {
+        exclude group: 'org.abego.treelayout', module: 'org.abego.treelayout.core'
+    }
 }

@@ -1,0 +1,38 @@
+{
+  "group": "com.polydes",
+  "id": "com.polydes.datastruct",
+  "name": "Structures Extension",
+  "description": "Create and Manage Structured Data",
+  "type": "game",
+  "author": "Justin Espedal",
+  "website": "https://www.polydes.com/repo/engine/com.polydes.datastruct",
+  "repository": "https://www.polydes.com/repo",
+  "target": "stencyl-4.2.0",
+  "version": "2.2.0",
+
+  "icon": "icon.png",
+
+  "toolset": {
+    "build": "gradle",
+    "root": "toolset",
+    "src": [
+      {"type": "java", "path": "src"},
+      {"type": "res", "path": "res", "target": "res/com/polydes/datastruct"}
+    ],
+    "dependencies": [
+      "platform:com.stencyl:jide-oss",
+      "platform:org.apache.commons:commons-lang3",
+      "platform:ch.qos.reload4j:reload4j",
+      "platform:commons-io:commons-io",
+      "platform:com.formdev:flatlaf",
+      "maven:tablelayout:TableLayout:20050920"
+    ],
+    "mainClass": "com.polydes.datastruct.DataStructuresExtension",
+    "internalVersion": "4"
+  },
+
+  "engine": {
+    "root": "engine",
+    "compatibility": "all"
+  }
+}
