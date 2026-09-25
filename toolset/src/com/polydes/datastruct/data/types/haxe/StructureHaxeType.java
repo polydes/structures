@@ -1,11 +1,13 @@
 package com.polydes.datastruct.data.types.haxe;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
 
+import com.polydes.datastruct.DataStructuresExtension;
 import org.apache.commons.lang3.StringUtils;
 
 import com.polydes.datastruct.data.structure.SDE;
@@ -50,7 +52,8 @@ public class StructureHaxeType extends HaxeDataType
 	@Override
 	public List<String> generateHaxeClass()
 	{
-		File file = new File(Locations.getGameExtensionLocation("com.polydes.datastruct"), "templates/Structure.hx");
+		Path engineRoot = DataStructuresExtension.get().getInfo().getEngineRootPath();
+		File file = engineRoot.resolve("templates/Structure.hx").toFile();
 		String s = Text.readString(file);
 		
 		String fieldmap = "";

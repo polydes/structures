@@ -1,6 +1,7 @@
 package com.polydes.datastruct.io;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.polydes.datastruct.DataStructuresExtension;
 import com.polydes.datastruct.data.structure.StructureDefinition;
 import com.polydes.datastruct.data.types.HaxeDataType;
-
-import stencyl.core.api.fs.Locations;
 
 public class HXGenerator
 {
@@ -41,7 +40,8 @@ public class HXGenerator
 	
 	public static List<String> generateReader()
 	{
-		File f = new File(Locations.getGameExtensionLocation("com.polydes.datastruct"), "templates/DataStructureReader.hx");
+		Path engineRoot = DataStructuresExtension.get().getInfo().getEngineRootPath();
+		File f = engineRoot.resolve("templates/DataStructureReader.hx").toFile();
 		String s = Text.readString(f);
 		
 		String imports = "";
