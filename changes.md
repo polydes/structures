@@ -1,3 +1,7 @@
+# 2.2.1 (2026-09-25)
+
+- Fixes for Stencyl 4.2.0
+
 # 2.2.0 (2026-05-27)
 
 - Fixes for Stencyl 4.2.0
