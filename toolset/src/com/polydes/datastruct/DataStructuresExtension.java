@@ -36,6 +36,7 @@ import stencyl.core.ext.engine.ExtensionInstanceManager.FormatUpdateSubmitter;
 import stencyl.sw.app.center.GameLibrary;
 
 import static stencyl.core.api.fs.LocationProvider.DefaultLocations.getPath;
+import static stencyl.sw.core.lib.game.GameLocations.GAME_EXPORT_OPENFL;
 
 public class DataStructuresExtension extends GameExtension
 {
@@ -212,7 +213,7 @@ public class DataStructuresExtension extends GameExtension
 	{
 		if(initialized)
 		{
-			Path hxProjectDir = Locations.getHXProjectDir(getProject());
+			Path hxProjectDir = getProject().getPath(GAME_EXPORT_OPENFL);
 			sourceDir = hxProjectDir.resolve("Source");
 
 			Path dataList = hxProjectDir.resolve("Assets/data/MyDataStructures.txt");
