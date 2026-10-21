@@ -8,6 +8,10 @@
     {
       "version": "2.2.1",
       "dependencies": "stencyl-4.2.0"
+    },
+    {
+      "version": "2.3.0",
+      "dependencies": "stencyl-4.3.0-b13010"
     }
   ]
 }
